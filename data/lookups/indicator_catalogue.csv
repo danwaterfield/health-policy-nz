@@ -1,0 +1,20 @@
+id,name,slug,category,direction,unit,gps_priority
+1,Current Smoker,current_smoker,determinants,lower_better,%,
+2,Adult Obesity,obesity_adult,outcomes,lower_better,%,
+3,Heavy Drinker,heavy_drinker,determinants,lower_better,%,
+4,Sufficient Physical Activity,physical_activity_sufficient,determinants,higher_better,%,
+5,Adequate Fruit and Vegetable Intake,fruit_veg_adequate,determinants,higher_better,%,
+6,Unmet Need for GP,unmet_need_gp,access,lower_better,%,Access
+7,Diabetes (Diagnosed),diabetes_diagnosed,outcomes,lower_better,%,
+8,Hypertension (Diagnosed),hypertension_diagnosed,outcomes,lower_better,%,
+9,Poor Mental Health (K10),poor_mental_health,outcomes,lower_better,%,
+10,Child Obesity,obesity_child,outcomes,lower_better,%,
+11,Asthma (Diagnosed),asthma_diagnosed,outcomes,lower_better,%,
+12,ED 6-Hour Target,ed_6hr_target,access,higher_better,%,Timeliness
+13,First Specialist Assessment Wait Days,fsa_wait_days,access,lower_better,days,Timeliness
+14,Elective Treatment Rate,elective_treatment_pct,access,higher_better,%,Timeliness
+15,Cancer Treatment 62-Day,cancer_treatment_62day,quality,higher_better,%,Quality
+16,Childhood Immunisation Rate,childhood_immunisation,outcomes,higher_better,%,Quality
+17,GP Density,gp_density,workforce,higher_better,per 100k,Workforce
+18,Nurse Vacancy Rate,nurse_vacancy_rate,workforce,lower_better,%,Workforce
+19,Insufficient Physical Activity,physical_activity_insufficient,determinants,lower_better,%,

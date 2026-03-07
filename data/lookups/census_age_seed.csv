@@ -1,0 +1,26 @@
+ethnicity_name,age_band,age_from,age_to,pct,census_year,source
+Maori,0-14,0,14,28.2,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Maori,15-24,15,24,16.2,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Maori,25-44,25,44,26.1,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Maori,45-64,45,64,20.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Maori,65+,65,120,9.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Pacific,0-14,0,14,30.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Pacific,15-24,15,24,17.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Pacific,25-44,25,44,28.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Pacific,45-64,45,64,17.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Pacific,65+,65,120,7.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Asian,0-14,0,14,22.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Asian,15-24,15,24,18.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Asian,25-44,25,44,35.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Asian,45-64,45,64,19.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Asian,65+,65,120,6.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+European/Other,0-14,0,14,18.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+European/Other,15-24,15,24,13.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+European/Other,25-44,25,44,23.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+European/Other,45-64,45,64,24.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+European/Other,65+,65,120,20.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Total,0-14,0,14,20.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Total,15-24,15,24,13.8,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Total,25-44,25,44,26.5,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Total,45-64,45,64,23.0,2018,Stats NZ 2018 Census QuickStats on culture and identity
+Total,65+,65,120,16.7,2018,Stats NZ 2018 Census QuickStats on culture and identity

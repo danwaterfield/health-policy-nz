@@ -1,0 +1,46 @@
+year,district,role_type,fte_filled,fte_vacant,vacancy_rate,international_pct
+2023,New Zealand,gp,5450,,0.085,0.22
+2023,New Zealand,nurse,52000,,0.12,0.18
+2023,New Zealand,specialist,3200,,0.09,0.15
+2023,Northland,gp,195,,0.14,0.28
+2023,Northland,nurse,1850,,0.18,0.22
+2023,Auckland,gp,820,,0.06,0.18
+2023,Auckland,nurse,8500,,0.09,0.15
+2023,Counties Manukau,gp,680,,0.09,0.24
+2023,Counties Manukau,nurse,7200,,0.13,0.21
+2023,Waikato,gp,520,,0.11,0.25
+2023,Waikato,nurse,5200,,0.14,0.20
+2023,Bay of Plenty,gp,340,,0.12,0.26
+2023,Bay of Plenty,nurse,3400,,0.15,0.22
+2023,Canterbury,gp,780,,0.07,0.20
+2023,Canterbury,nurse,7800,,0.10,0.16
+2023,Capital Coast & Hutt Valley,gp,620,,0.08,0.21
+2023,Capital Coast & Hutt Valley,nurse,6200,,0.11,0.17
+2023,Hawke's Bay,gp,220,,0.15,0.30
+2023,Hawke's Bay,nurse,2200,,0.17,0.25
+2023,West Coast,gp,45,,0.22,0.35
+2023,West Coast,nurse,420,,0.25,0.30
+2023,Tairawhiti,gp,60,,0.20,0.32
+2023,Tairawhiti,nurse,580,,0.22,0.28
+2024,New Zealand,gp,5380,,0.092,0.24
+2024,New Zealand,nurse,51500,,0.13,0.20
+2024,Northland,gp,188,,0.15,0.29
+2024,Northland,nurse,1820,,0.19,0.23
+2024,Auckland,gp,815,,0.07,0.19
+2024,Auckland,nurse,8450,,0.10,0.16
+2024,Counties Manukau,gp,665,,0.10,0.25
+2024,Counties Manukau,nurse,7100,,0.14,0.22
+2024,Waikato,gp,508,,0.12,0.26
+2024,Waikato,nurse,5100,,0.15,0.21
+2024,Bay of Plenty,gp,330,,0.13,0.27
+2024,Bay of Plenty,nurse,3350,,0.16,0.23
+2024,Canterbury,gp,770,,0.08,0.21
+2024,Canterbury,nurse,7700,,0.11,0.17
+2024,Capital Coast & Hutt Valley,gp,608,,0.09,0.22
+2024,Capital Coast & Hutt Valley,nurse,6100,,0.12,0.18
+2024,Hawke's Bay,gp,210,,0.16,0.31
+2024,Hawke's Bay,nurse,2160,,0.18,0.26
+2024,West Coast,gp,42,,0.24,0.36
+2024,West Coast,nurse,410,,0.26,0.31
+2024,Tairawhiti,gp,57,,0.22,0.33
+2024,Tairawhiti,nurse,565,,0.23,0.29

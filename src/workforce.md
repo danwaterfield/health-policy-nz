@@ -1,0 +1,156 @@
+---
+title: Workforce
+---
+
+# Workforce Pressure
+
+GP density, nursing vacancy rates, and workforce shortfalls by region.
+
+```js
+const db = await DuckDBClient.of({
+  fact_workforce: FileAttachment("data/fact_workforce.parquet"),
+  dim_geography: FileAttachment("data/dim_geography.parquet"),
+  dim_time: FileAttachment("data/dim_time.parquet"),
+});
+```
+
+```js
+const workforce = Array.from(await db.query(`
+  SELECT
+    fw.role_type,
+    fw.fte_filled,
+    fw.fte_vacant,
+    fw.vacancy_rate,
+    fw.international_pct,
+    g.name AS region,
+    g.level,
+    t.year
+  FROM fact_workforce fw
+  JOIN dim_geography g ON fw.geography_id = g.id
+  JOIN dim_time t ON fw.time_id = t.id
+  ORDER BY t.year DESC, g.name
+`));
+
+const gps = workforce.filter(d => d.role_type === "gp");
+const nurses = workforce.filter(d => d.role_type === "nurse");
+const latestYear = Math.max(...workforce.map(d => d.year).filter(Boolean));
+const latestGps = gps.filter(d => d.year === latestYear);
+const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "district");
+```
+
+## GP Vacancy Rate by Region (${latestYear})
+
+```js
+if (latestGps.length === 0) {
+  display(html`<p style="color: #888; font-style: italic;">No workforce data yet. Run the pipeline.</p>`);
+} else {
+  const sorted = [...latestGps].sort((a, b) => b.vacancy_rate - a.vacancy_rate);
+  display(Plot.plot({
+    title: "GP vacancy rate by region",
+    marginLeft: 200,
+    width: 700,
+    height: Math.max(300, sorted.length * 22),
+    x: { label: "Vacancy rate (%)", domain: [0, Math.max(...sorted.map(d => d.vacancy_rate ?? 0)) * 1.1] },
+    y: { domain: sorted.map(d => d.region) },
+    color: { legend: false },
+    marks: [
+      Plot.ruleX([0.08], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "8% threshold" }),
+      Plot.barX(sorted, {
+        x: d => (d.vacancy_rate ?? 0) * 100,
+        y: "region",
+        fill: d => d.vacancy_rate > 0.15 ? "#c0392b" : d.vacancy_rate > 0.08 ? "#e5850b" : "#2d8a4e",
+        title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy rate\nFTE filled: ${d.fte_filled ?? "—"}`,
+      }),
+    ],
+  }));
+}
+```
+
+## International Recruitment Dependency
+
+```js
+if (latestGps.length > 0) {
+  const withIntl = latestGps.filter(d => d.international_pct !== null);
+  if (withIntl.length > 0) {
+    display(Plot.plot({
+      title: "GP workforce: international recruitment % by region",
+      marginLeft: 200,
+      width: 700,
+      height: Math.max(200, withIntl.length * 18),
+      x: { label: "International GPs (%)" },
+      marks: [
+        Plot.barX(withIntl.sort((a, b) => b.international_pct - a.international_pct), {
+          x: d => (d.international_pct ?? 0) * 100,
+          y: "region",
+          fill: "#7b6db8",
+          title: d => `${d.region}: ${((d.international_pct ?? 0) * 100).toFixed(1)}% internationally trained`,
+        }),
+      ],
+    }));
+  }
+}
+```
+
+## Nursing Vacancy by Region
+
+```js
+if (latestNurses.length > 0) {
+  display(Plot.plot({
+    title: "Nursing vacancy rate by district",
+    marginLeft: 200,
+    width: 700,
+    height: Math.max(200, latestNurses.length * 18),
+    x: { label: "Vacancy rate (%)" },
+    marks: [
+      Plot.ruleX([0.12], { stroke: "#e5850b", strokeDasharray: "4,4" }),
+      Plot.barX(latestNurses.sort((a, b) => b.vacancy_rate - a.vacancy_rate), {
+        x: d => (d.vacancy_rate ?? 0) * 100,
+        y: "region",
+        fill: d => d.vacancy_rate > 0.20 ? "#c0392b" : "#e5850b",
+        title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy`,
+      }),
+    ],
+  }));
+}
+```
+
+## Workforce Data Summary
+
+```js
+display(Inputs.table(workforce.filter(d => d.year === latestYear), {
+  columns: ["region", "role_type", "fte_filled", "fte_vacant", "vacancy_rate", "international_pct"],
+  header: {
+    region: "Region",
+    role_type: "Role",
+    fte_filled: "FTE (Filled)",
+    fte_vacant: "FTE (Vacant)",
+    vacancy_rate: "Vacancy %",
+    international_pct: "Intl %",
+  },
+  format: {
+    vacancy_rate: d => d ? `${(d * 100).toFixed(1)}%` : "—",
+    international_pct: d => d ? `${(d * 100).toFixed(1)}%` : "—",
+    fte_filled: d => d?.toFixed(0) ?? "—",
+    fte_vacant: d => d?.toFixed(0) ?? "—",
+  },
+}));
+```
+
+---
+
+*Source: Health New Zealand / Medical Council NZ workforce reports (seed data, manually compiled) | Crown Copyright*
+
+<div style="
+  border-left: 4px solid #e5850b;
+  background: #fef9ec;
+  border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.85em;
+  color: #222;
+">
+  <strong style="color: #b36000;">⚠ Data provenance note</strong><br>
+  2023 district figures are sourced from Health NZ and Medical Council of NZ annual workforce reports (manually extracted — no machine-readable download is available). <strong>2024 district-level figures are modelled estimates</strong>, extrapolated from 2023 values using the observed national trend (vacancy rates +0.7–2 pp, FTE counts −1–2%). They should not be cited as official statistics. The national 2024 totals are from Health NZ published data and are authoritative. District-level 2024 data will be updated when Health NZ publishes the next workforce census.
+</div>
+
+*Note: Nursing vacancy data is less complete than GP data — see [Blind Spots](/blind-spots) for details.*

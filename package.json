@@ -1,0 +1,14 @@
+{
+  "name": "nz-health-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "observable preview",
+    "build": "observable build",
+    "deploy": "observable deploy"
+  },
+  "dependencies": {
+    "@observablehq/framework": "latest"
+  },
+  "devDependencies": {}
+}

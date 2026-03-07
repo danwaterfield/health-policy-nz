@@ -1,0 +1,14 @@
+data/raw/
+data/dist/
+data/nz_health.duckdb
+node_modules/
+.env
+dist/
+src/.observablehq/cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+.playwright-mcp/
+pipeline/src/

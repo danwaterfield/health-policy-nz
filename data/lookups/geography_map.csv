@@ -1,0 +1,80 @@
+source_label,source_type,canonical_geography_id
+New Zealand,health_region,1
+National,health_region,1
+NZ,health_region,1
+Total,health_region,1
+All,health_region,1
+Te Tai Tokerau / Northland,health_region,2
+Te Tai Tokerau,health_region,2
+Northland,health_region,2
+Waitematā,health_region,3
+Waitemata,health_region,3
+Auckland,health_region,4
+Auckland Metro,health_region,4
+Counties Manukau,health_region,5
+Waikato,health_region,6
+Lakes,health_region,7
+Bay of Plenty,health_region,8
+Tairāwhiti,health_region,9
+Tairawhiti,health_region,9
+Hawke's Bay,health_region,10
+Hawkes Bay,health_region,10
+Taranaki,health_region,11
+MidCentral,health_region,12
+Midcentral,health_region,12
+Whanganui,health_region,13
+"Capital, Coast & Hutt Valley",health_region,14
+Capital Coast & Hutt Valley,health_region,14
+Capital and Coast,health_region,14
+Wairarapa,health_region,15
+Nelson Marlborough,health_region,16
+West Coast,health_region,17
+Canterbury,health_region,18
+South Canterbury,health_region,19
+Te Whatu Ora Southern,health_region,20
+Southern,health_region,20
+Otago and Southland,health_region,20
+Northland DHB,dhb_name,2
+Northland,dhb_name,2
+Waitemata DHB,dhb_name,3
+Auckland DHB,dhb_name,4
+Counties Manukau DHB,dhb_name,5
+Waikato DHB,dhb_name,6
+Lakes DHB,dhb_name,7
+Bay of Plenty DHB,dhb_name,8
+Tairawhiti DHB,dhb_name,9
+Hawke's Bay DHB,dhb_name,10
+Hawkes Bay DHB,dhb_name,10
+Taranaki DHB,dhb_name,11
+MidCentral DHB,dhb_name,12
+Whanganui DHB,dhb_name,13
+Capital and Coast DHB,dhb_name,14
+Wairarapa DHB,dhb_name,15
+Nelson Marlborough DHB,dhb_name,16
+West Coast DHB,dhb_name,17
+Canterbury DHB,dhb_name,18
+South Canterbury DHB,dhb_name,19
+Southern DHB,dhb_name,20
+NLD,dhb_code,2
+WMT,dhb_code,3
+AKL,dhb_code,4
+CMK,dhb_code,5
+WKT,dhb_code,6
+LKS,dhb_code,7
+BOP,dhb_code,8
+TAI,dhb_code,9
+HKB,dhb_code,10
+TRK,dhb_code,11
+MDC,dhb_code,12
+WHU,dhb_code,13
+CCH,dhb_code,14
+WRP,dhb_code,15
+NLM,dhb_code,16
+WCO,dhb_code,17
+CTB,dhb_code,18
+SCT,dhb_code,19
+STH,dhb_code,20
+Northern | Te Tai Tokerau,nzhs_region,21
+Midland | Te Manawa Taki,nzhs_region,22
+Central | Te Ikaroa,nzhs_region,23
+South Island | Te Waipounamu,nzhs_region,24

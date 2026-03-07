@@ -1,0 +1,28 @@
+year,quarter,district,service_type,median_wait_days,pct_within_target,volume_seen,volume_waiting,volume_overdue
+2023,3,New Zealand,ed,,87.2,342000,,
+2023,4,New Zealand,ed,,86.5,338000,,
+2024,1,New Zealand,ed,,85.8,335000,,
+2024,2,New Zealand,ed,,86.1,340000,,
+2023,3,New Zealand,fsa,49,,85000,42000,8500
+2023,4,New Zealand,fsa,51,,84000,44000,9200
+2024,1,New Zealand,fsa,53,,83000,46000,9800
+2024,2,New Zealand,fsa,52,,84500,45000,9500
+2023,3,New Zealand,elective,,98.2,42000,18000,1200
+2023,4,New Zealand,elective,,97.8,41000,19000,1400
+2024,1,New Zealand,elective,,97.5,40000,20000,1600
+2024,2,New Zealand,elective,,97.9,41500,19500,1500
+2023,3,Northland,fsa,68,,3200,2800,850
+2023,4,Northland,fsa,72,,3100,3000,920
+2024,1,Northland,fsa,75,,3000,3200,980
+2024,2,Northland,fsa,71,,3100,3100,950
+2023,3,Auckland,fsa,38,,12000,5200,800
+2023,4,Auckland,fsa,40,,11800,5400,850
+2024,1,Auckland,fsa,42,,11500,5600,900
+2024,2,Auckland,fsa,41,,11700,5500,880
+2023,3,Canterbury,fsa,45,,8500,4800,720
+2023,4,Canterbury,fsa,47,,8300,5000,780
+2024,1,Canterbury,fsa,49,,8200,5200,820
+2024,2,Canterbury,fsa,48,,8350,5100,800
+2023,1,New Zealand,primary,,92.5,1850000,,
+2023,2,New Zealand,primary,,91.8,1870000,,
+2024,1,New Zealand,primary,,91.2,1900000,,
