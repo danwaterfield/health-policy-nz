@@ -1,0 +1,56 @@
+name: Refresh and Deploy
+
+on:
+  schedule:
+    - cron: '0 18 * * 0'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache raw data
+        uses: actions/cache@v4
+        with:
+          path: data/raw/
+          key: raw-data-${{ hashFiles('pipeline/config.py') }}
+          restore-keys: raw-data-
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Run data pipeline
+        run: python pipeline/run_all.py
+        env:
+          PIPELINE_STALENESS_DAYS: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Copy Parquet to Observable data dir
+        run: mkdir -p src/data && cp data/dist/*.parquet src/data/
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
