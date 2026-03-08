@@ -53,7 +53,6 @@ const projections = Array.from(await db.query(`
   JOIN dim_time t ON fdp.time_id = t.id
   WHERE fdp.service_type = '${selectedService}'
     AND fdp.geography_id = ${selectedGeo}
-    AND LOWER(fdp.projection_basis) LIKE '%utilisation%'
   GROUP BY fdp.scenario, t.year
   ORDER BY t.year, fdp.scenario
 `));
