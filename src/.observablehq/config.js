@@ -1,7 +1,6 @@
 export default {
   root: "src",
-  // Set base to match your GitHub repo name if deploying to GitHub Pages,
-  // e.g. base: "/health-policy-nz/" — remove for custom domain
+  base: "/health-policy-nz/",
   title: "NZ Health System Dashboard",
   pages: [
     { name: "Overview", path: "/" },
