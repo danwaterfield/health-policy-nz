@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Workforce</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="modulepreload" href="./_observablehq/client.ead6257c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.a50b4fda.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/duckdb.e74f0a12.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.0f731a21.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/7c43807f.js">
+<link rel="modulepreload" href="./_npm/apache-arrow@21.1.0/63de76cd.js">
+<link rel="modulepreload" href="./_npm/parquet-wasm@0.7.1/68d81b68.js">
+<link rel="modulepreload" href="./_npm/@duckdb/duckdb-wasm@1.29.0/d1cf3c5a.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/e324157d.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/tslib@2.8.1/b62a9c4a.js">
+<link rel="modulepreload" href="./_npm/flatbuffers@25.9.23/c82700c2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/5ced1d52.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/02d43215.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/aa00730b.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.ead6257c.js";
+import {registerFile} from "./_observablehq/stdlib.a50b4fda.js";
+
+registerFile("./data/dim_geography.parquet", {"name":"./data/dim_geography.parquet","path":"./_file/data/dim_geography.6e4723c7.parquet","lastModified":1772954745131,"size":1887});
+registerFile("./data/dim_time.parquet", {"name":"./data/dim_time.parquet","path":"./_file/data/dim_time.08967e9a.parquet","lastModified":1772954745131,"size":902});
+registerFile("./data/fact_workforce.parquet", {"name":"./data/fact_workforce.parquet","path":"./_file/data/fact_workforce.22e6fc0b.parquet","lastModified":1772954745132,"size":2257});
+
+define({id: "def6c600", inputs: ["DuckDBClient","FileAttachment"], outputs: ["db"], body: async (DuckDBClient,FileAttachment) => {
+const db = await DuckDBClient.of({
+  fact_workforce: FileAttachment("./data/fact_workforce.parquet"),
+  dim_geography: FileAttachment("./data/dim_geography.parquet"),
+  dim_time: FileAttachment("./data/dim_time.parquet"),
+});
+return {db};
+}});
+
+define({id: "1d8d55d0", inputs: ["db"], outputs: ["workforce","gps","nurses","latestYear","latestGps","latestNurses"], body: async (db) => {
+const workforce = Array.from(await db.query(`
+  SELECT
+    fw.role_type,
+    fw.fte_filled,
+    fw.fte_vacant,
+    fw.vacancy_rate,
+    fw.international_pct,
+    g.name AS region,
+    g.level,
+    t.year
+  FROM fact_workforce fw
+  JOIN dim_geography g ON fw.geography_id = g.id
+  JOIN dim_time t ON fw.time_id = t.id
+  ORDER BY t.year DESC, g.name
+`));
+
+const gps = workforce.filter(d => d.role_type === "gp");
+const nurses = workforce.filter(d => d.role_type === "nurse");
+const latestYear = Math.max(...workforce.map(d => d.year).filter(Boolean));
+const latestGps = gps.filter(d => d.year === latestYear);
+const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "district");
+return {workforce,gps,nurses,latestYear,latestGps,latestNurses};
+}});
+
+define({id: "5924371f", mode: "inline", inputs: ["latestYear","display"], body: async (latestYear,display) => {
+display(await(
+latestYear
+))
+}});
+
+define({id: "dff4144d", inputs: ["latestGps","display","html","Plot"], body: (latestGps,display,html,Plot) => {
+if (latestGps.length === 0) {
+  display(html`<p style="color: #888; font-style: italic;">No workforce data yet. Run the pipeline.</p>`);
+} else {
+  const sorted = [...latestGps].sort((a, b) => b.vacancy_rate - a.vacancy_rate);
+  display(Plot.plot({
+    title: "GP vacancy rate by region",
+    marginLeft: 200,
+    width: 700,
+    height: Math.max(300, sorted.length * 22),
+    x: { label: "Vacancy rate (%)", domain: [0, Math.max(...sorted.map(d => d.vacancy_rate ?? 0)) * 1.1] },
+    y: { domain: sorted.map(d => d.region) },
+    color: { legend: false },
+    marks: [
+      Plot.ruleX([0.08], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "8% threshold" }),
+      Plot.barX(sorted, {
+        x: d => (d.vacancy_rate ?? 0) * 100,
+        y: "region",
+        fill: d => d.vacancy_rate > 0.15 ? "#c0392b" : d.vacancy_rate > 0.08 ? "#e5850b" : "#2d8a4e",
+        title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy rate\nFTE filled: ${d.fte_filled ?? "—"}`,
+      }),
+    ],
+  }));
+}
+}});
+
+define({id: "20d34f31", inputs: ["latestGps","display","Plot"], body: (latestGps,display,Plot) => {
+if (latestGps.length > 0) {
+  const withIntl = latestGps.filter(d => d.international_pct !== null);
+  if (withIntl.length > 0) {
+    display(Plot.plot({
+      title: "GP workforce: international recruitment % by region",
+      marginLeft: 200,
+      width: 700,
+      height: Math.max(200, withIntl.length * 18),
+      x: { label: "International GPs (%)" },
+      marks: [
+        Plot.barX(withIntl.sort((a, b) => b.international_pct - a.international_pct), {
+          x: d => (d.international_pct ?? 0) * 100,
+          y: "region",
+          fill: "#7b6db8",
+          title: d => `${d.region}: ${((d.international_pct ?? 0) * 100).toFixed(1)}% internationally trained`,
+        }),
+      ],
+    }));
+  }
+}
+}});
+
+define({id: "b3971c99", inputs: ["latestNurses","display","Plot"], body: (latestNurses,display,Plot) => {
+if (latestNurses.length > 0) {
+  display(Plot.plot({
+    title: "Nursing vacancy rate by district",
+    marginLeft: 200,
+    width: 700,
+    height: Math.max(200, latestNurses.length * 18),
+    x: { label: "Vacancy rate (%)" },
+    marks: [
+      Plot.ruleX([0.12], { stroke: "#e5850b", strokeDasharray: "4,4" }),
+      Plot.barX(latestNurses.sort((a, b) => b.vacancy_rate - a.vacancy_rate), {
+        x: d => (d.vacancy_rate ?? 0) * 100,
+        y: "region",
+        fill: d => d.vacancy_rate > 0.20 ? "#c0392b" : "#e5850b",
+        title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy`,
+      }),
+    ],
+  }));
+}
+}});
+
+define({id: "9f2e1f44", inputs: ["display","Inputs","workforce","latestYear"], body: (display,Inputs,workforce,latestYear) => {
+display(Inputs.table(workforce.filter(d => d.year === latestYear), {
+  columns: ["region", "role_type", "fte_filled", "fte_vacant", "vacancy_rate", "international_pct"],
+  header: {
+    region: "Region",
+    role_type: "Role",
+    fte_filled: "FTE (Filled)",
+    fte_vacant: "FTE (Vacant)",
+    vacancy_rate: "Vacancy %",
+    international_pct: "Intl %",
+  },
+  format: {
+    vacancy_rate: d => d ? `${(d * 100).toFixed(1)}%` : "—",
+    international_pct: d => d ? `${(d * 100).toFixed(1)}%` : "—",
+    fte_filled: d => d?.toFixed(0) ?? "—",
+    fte_vacant: d => d?.toFixed(0) ?? "—",
+  },
+}));
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Home</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./blind-spots">Blind Spots</a></li>
+    <li class="observablehq-link"><a href="./equity">Equity Gap Explorer</a></li>
+    <li class="observablehq-link"><a href="./forecast">Demand Forecast</a></li>
+    <li class="observablehq-link"><a href="./scorecard">GPS Scorecard</a></li>
+    <li class="observablehq-link"><a href="./trends">Pandemic Break Analysis</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./workforce">Workforce</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#gp-vacancy-rate-by-region">GP Vacancy Rate by Region ()</a></li>
+<li class="observablehq-secondary-link"><a href="#international-recruitment-dependency">International Recruitment Dependency</a></li>
+<li class="observablehq-secondary-link"><a href="#nursing-vacancy-by-region">Nursing Vacancy by Region</a></li>
+<li class="observablehq-secondary-link"><a href="#workforce-data-summary">Workforce Data Summary</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<h1 id="workforce-pressure" tabindex="-1"><a class="observablehq-header-anchor" href="#workforce-pressure">Workforce Pressure</a></h1>
+<p>GP density, nursing vacancy rates, and workforce shortfalls by region.</p>
+<div class="observablehq observablehq--block"><!--:def6c600:--></div>
+<div class="observablehq observablehq--block"><!--:1d8d55d0:--></div>
+<h2 id="gp-vacancy-rate-by-region" tabindex="-1"><a class="observablehq-header-anchor" href="#gp-vacancy-rate-by-region">GP Vacancy Rate by Region (<observablehq-loading></observablehq-loading><!--:5924371f:-->)</a></h2>
+<div class="observablehq observablehq--block"><!--:dff4144d:--></div>
+<h2 id="international-recruitment-dependency" tabindex="-1"><a class="observablehq-header-anchor" href="#international-recruitment-dependency">International Recruitment Dependency</a></h2>
+<div class="observablehq observablehq--block"><!--:20d34f31:--></div>
+<h2 id="nursing-vacancy-by-region" tabindex="-1"><a class="observablehq-header-anchor" href="#nursing-vacancy-by-region">Nursing Vacancy by Region</a></h2>
+<div class="observablehq observablehq--block"><!--:b3971c99:--></div>
+<h2 id="workforce-data-summary" tabindex="-1"><a class="observablehq-header-anchor" href="#workforce-data-summary">Workforce Data Summary</a></h2>
+<div class="observablehq observablehq--block"><!--:9f2e1f44:--></div>
+<hr>
+<p><em>Source: Health New Zealand / Medical Council NZ workforce reports (seed data, manually compiled) | Crown Copyright</em></p>
+<div style="
+  border-left: 4px solid #e5850b;
+  background: #fef9ec;
+  border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.85em;
+  color: #222;
+">
+  <strong style="color: #b36000;">⚠ Data provenance note</strong><br>
+  2023 district figures are sourced from Health NZ and Medical Council of NZ annual workforce reports (manually extracted — no machine-readable download is available). <strong>2024 district-level figures are modelled estimates</strong>, extrapolated from 2023 values using the observed national trend (vacancy rates +0.7–2 pp, FTE counts −1–2%). They should not be cited as official statistics. The national 2024 totals are from Health NZ published data and are authoritative. District-level 2024 data will be updated when Health NZ publishes the next workforce census.
+</div>
+<p><em>Note: Nursing vacancy data is less complete than GP data — see <a href="./blind-spots">Blind Spots</a> for details.</em></p>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./trends"><span>Pandemic Break Analysis</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-03-08T07:25:46">Mar 8, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

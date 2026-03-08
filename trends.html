@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Pandemic Break Analysis</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="modulepreload" href="./_observablehq/client.ead6257c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.a50b4fda.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/duckdb.e74f0a12.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.0f731a21.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/7c43807f.js">
+<link rel="modulepreload" href="./_npm/apache-arrow@21.1.0/63de76cd.js">
+<link rel="modulepreload" href="./_npm/parquet-wasm@0.7.1/68d81b68.js">
+<link rel="modulepreload" href="./_npm/@duckdb/duckdb-wasm@1.29.0/d1cf3c5a.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/e324157d.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/tslib@2.8.1/b62a9c4a.js">
+<link rel="modulepreload" href="./_npm/flatbuffers@25.9.23/c82700c2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/5ced1d52.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/02d43215.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/aa00730b.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.ead6257c.js";
+import {registerFile} from "./_observablehq/stdlib.a50b4fda.js";
+
+registerFile("./data/dim_ethnicity.parquet", {"name":"./data/dim_ethnicity.parquet","path":"./_file/data/dim_ethnicity.c38f90bc.parquet","lastModified":1772954745131,"size":991});
+registerFile("./data/dim_geography.parquet", {"name":"./data/dim_geography.parquet","path":"./_file/data/dim_geography.6e4723c7.parquet","lastModified":1772954745131,"size":1887});
+registerFile("./data/dim_indicator.parquet", {"name":"./data/dim_indicator.parquet","path":"./_file/data/dim_indicator.62b2151b.parquet","lastModified":1772954745131,"size":2258});
+registerFile("./data/dim_time.parquet", {"name":"./data/dim_time.parquet","path":"./_file/data/dim_time.08967e9a.parquet","lastModified":1772954745131,"size":902});
+registerFile("./data/equity_gap.parquet", {"name":"./data/equity_gap.parquet","path":"./_file/data/equity_gap.bcf713ff.parquet","lastModified":1772954745132,"size":312});
+
+define({id: "101d20e5", inputs: ["DuckDBClient","FileAttachment"], outputs: ["db"], body: async (DuckDBClient,FileAttachment) => {
+const db = await DuckDBClient.of({
+  equity_gap:          FileAttachment("./data/equity_gap.parquet"),
+  dim_indicator:       FileAttachment("./data/dim_indicator.parquet"),
+  dim_ethnicity:       FileAttachment("./data/dim_ethnicity.parquet"),
+  dim_geography:       FileAttachment("./data/dim_geography.parquet"),
+  dim_time:            FileAttachment("./data/dim_time.parquet"),
+});
+return {db};
+}});
+
+define({id: "31039591", inputs: ["db"], outputs: ["slopeData"], body: async (db) => {
+// Pre/post slope comparison (COVID years 2020–2022 excluded from both regressions)
+// REGR_SLOPE(y, x) = OLS slope coefficient; returns NULL if < 2 observations
+const slopeData = Array.from(await db.query(`
+  WITH national AS (
+    SELECT
+      eg.indicator_id,
+      eg.target_ethnicity_id,
+      t.year,
+      eg.absolute_gap,
+      eg.gap_direction,
+      -- Signed gap: positive = worse for target group regardless of indicator direction
+      CASE eg.gap_direction
+        WHEN 'adverse'    THEN  ABS(eg.absolute_gap)
+        WHEN 'favourable' THEN -ABS(eg.absolute_gap)
+        ELSE 0
+      END AS severity
+    FROM equity_gap eg
+    JOIN dim_time     t ON eg.time_id     = t.id
+    JOIN dim_geography g ON eg.geography_id = g.id
+    WHERE g.level = 'national'
+  ),
+  pre AS (
+    SELECT indicator_id, target_ethnicity_id,
+      REGR_SLOPE(severity, year) AS slope,
+      COUNT(*)                    AS n,
+      AVG(severity)               AS mean_severity
+    FROM national
+    WHERE year BETWEEN 2011 AND 2019
+    GROUP BY indicator_id, target_ethnicity_id
+    HAVING COUNT(*) >= 3
+  ),
+  post AS (
+    SELECT indicator_id, target_ethnicity_id,
+      REGR_SLOPE(severity, year) AS slope,
+      COUNT(*)                    AS n,
+      AVG(severity)               AS mean_severity
+    FROM national
+    WHERE year >= 2023
+    GROUP BY indicator_id, target_ethnicity_id
+    HAVING COUNT(*) >= 2
+  )
+  SELECT
+    i.name      AS indicator,
+    i.direction,
+    e.name      AS ethnicity,
+    pre.slope   AS pre_slope,
+    post.slope  AS post_slope,
+    post.slope - pre.slope          AS slope_change,
+    pre.mean_severity               AS pre_mean,
+    post.mean_severity              AS post_mean,
+    post.mean_severity - pre.mean_severity AS level_change,
+    pre.n AS pre_n,
+    post.n AS post_n
+  FROM pre
+  JOIN post USING (indicator_id, target_ethnicity_id)
+  JOIN dim_indicator i ON i.id  = pre.indicator_id
+  JOIN dim_ethnicity e ON e.id  = pre.target_ethnicity_id
+  WHERE e.name IN ('Maori', 'Pacific')
+    AND pre.slope  IS NOT NULL
+    AND post.slope IS NOT NULL
+  ORDER BY ABS(post.slope - pre.slope) DESC
+`));
+return {slopeData};
+}});
+
+define({id: "68f9bdcb", inputs: ["db"], outputs: ["allYears"], body: async (db) => {
+// Full annual time series for all national + Māori/Pacific gaps (excluding COVID years from regression but showing them)
+const allYears = Array.from(await db.query(`
+  SELECT
+    t.year,
+    i.name  AS indicator,
+    e.name  AS ethnicity,
+    CASE eg.gap_direction
+      WHEN 'adverse'    THEN  ABS(eg.absolute_gap)
+      WHEN 'favourable' THEN -ABS(eg.absolute_gap)
+      ELSE 0
+    END AS severity,
+    eg.gap_direction
+  FROM equity_gap eg
+  JOIN dim_time     t ON eg.time_id     = t.id
+  JOIN dim_geography g ON eg.geography_id = g.id
+  JOIN dim_indicator i ON eg.indicator_id = i.id
+  JOIN dim_ethnicity e ON eg.target_ethnicity_id = e.id
+  WHERE g.level = 'national'
+    AND e.name IN ('Maori', 'Pacific')
+  ORDER BY i.name, e.name, t.year
+`));
+return {allYears};
+}});
+
+define({id: "31d38067", outputs: ["linFit","worsened"], body: () => {
+// Helper: linear fit y = m*x + b for a set of {x, y} points
+function linFit(pts) {
+  const n = pts.length;
+  if (n < 2) return null;
+  const mx = pts.reduce((s, p) => s + p.x, 0) / n;
+  const my = pts.reduce((s, p) => s + p.y, 0) / n;
+  const ss = pts.reduce((s, p) => s + (p.x - mx) ** 2, 0);
+  if (ss === 0) return null;
+  const m  = pts.reduce((s, p) => s + (p.x - mx) * (p.y - my), 0) / ss;
+  const b  = my - m * mx;
+  return { m, b, predict: x => m * x + b };
+}
+
+// Worsened = slope became more positive (gap widening faster, or narrowing slower)
+const worsened = d => d.slope_change > 0;
+return {linFit,worsened};
+}});
+
+define({id: "fa07e35f", inputs: ["display","html"], body: (display,html) => {
+display(html`
+  <div style="
+    border-left: 4px solid #666;
+    background: #f7f7f7;
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85em;
+    color: #333;
+  ">
+    <strong>Methodological note</strong> — Pre-COVID period: 2011–2019 (9 annual data points).
+    Post-COVID period: 2023–2024 (2 points only). COVID years 2020–2022 are excluded from both
+    regressions as the NZHS methodology notes reduced participation and service disruption make
+    those years non-comparable. <strong>Post-COVID slopes are based on two points — they describe
+    observed direction, not a stable trend.</strong> Treat slope magnitudes as indicative;
+    treat sign (widening vs. narrowing) as the primary finding.
+  </div>
+`);
+}});
+
+define({id: "c26dd20c", inputs: ["slopeData","display","html","Plot","worsened"], body: (slopeData,display,html,Plot,worsened) => {
+if (slopeData.length === 0) {
+  display(html`<p style="color: #888; font-style: italic;">No slope data available — need at least 3 pre-COVID and 2 post-COVID data points per indicator.</p>`);
+} else {
+  const sorted = [...slopeData].sort((a, b) => b.slope_change - a.slope_change);
+
+  display(Plot.plot({
+    title: "Annual rate of change in equity gap: pre-COVID (2011–19) vs post-COVID (2023–24)",
+    subtitle: "Positive = gap worsening faster after COVID · Negative = gap narrowing faster after COVID",
+    marginLeft: 240,
+    marginRight: 80,
+    width: 750,
+    height: Math.max(300, sorted.length * 26),
+    x: {
+      label: "Annual slope change (pp/year)",
+      zero: true,
+    },
+    y: {
+      domain: sorted.map(d => `${d.indicator} — ${d.ethnicity}`),
+      label: null,
+    },
+    marks: [
+      Plot.ruleX([0], { stroke: "#999" }),
+
+      // Connecting line between pre and post slope
+      Plot.link(sorted, {
+        x1: "pre_slope",
+        x2: "post_slope",
+        y1: d => `${d.indicator} — ${d.ethnicity}`,
+        y2: d => `${d.indicator} — ${d.ethnicity}`,
+        stroke: d => worsened(d) ? "#c0392b" : "#4575b4",
+        strokeWidth: 1.5,
+        strokeOpacity: 0.6,
+      }),
+
+      // Pre-COVID dot (open circle)
+      Plot.dot(sorted, {
+        x: "pre_slope",
+        y: d => `${d.indicator} — ${d.ethnicity}`,
+        fill: "white",
+        stroke: "#555",
+        strokeWidth: 1.5,
+        r: 5,
+        title: d => `${d.indicator} — ${d.ethnicity}\nPre-COVID slope: ${d.pre_slope >= 0 ? "+" : ""}${d.pre_slope?.toFixed(3)} pp/yr`,
+      }),
+
+      // Post-COVID dot (filled)
+      Plot.dot(sorted, {
+        x: "post_slope",
+        y: d => `${d.indicator} — ${d.ethnicity}`,
+        fill: d => worsened(d) ? "#c0392b" : "#4575b4",
+        r: 5,
+        title: d => `${d.indicator} — ${d.ethnicity}\nPost-COVID slope: ${d.post_slope >= 0 ? "+" : ""}${d.post_slope?.toFixed(3)} pp/yr\nChange: ${d.slope_change >= 0 ? "+" : ""}${d.slope_change?.toFixed(3)} pp/yr`,
+      }),
+
+      // Slope change label on right
+      Plot.text(sorted, {
+        x: d => Math.max(d.pre_slope, d.post_slope),
+        y: d => `${d.indicator} — ${d.ethnicity}`,
+        text: d => `${d.slope_change >= 0 ? "+" : ""}${d.slope_change?.toFixed(2)}`,
+        dx: 8,
+        textAnchor: "start",
+        fontSize: 10,
+        fill: d => worsened(d) ? "#c0392b" : "#4575b4",
+        fontWeight: "600",
+      }),
+    ],
+  }));
+
+  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.4rem;">
+    Open circle = pre-COVID slope (2011–19) · Filled circle = post-COVID slope (2023–24) ·
+    Line colour = direction of change. Units: percentage points per year.
+  </p>`);
+}
+}});
+
+define({id: "13455f87", inputs: ["slopeData","display","html","allYears","linFit","worsened","Plot"], body: (slopeData,display,html,allYears,linFit,worsened,Plot) => {
+{
+  const topN = 6;
+  const topIndicators = [...new Set(
+    [...slopeData]
+      .sort((a, b) => Math.abs(b.slope_change) - Math.abs(a.slope_change))
+      .slice(0, topN)
+      .map(d => d.indicator + "||" + d.ethnicity)
+  )];
+
+  if (topIndicators.length === 0) {
+    display(html`<p style="color: #888; font-style: italic;">Insufficient data for time series.</p>`);
+  } else {
+    const plots = topIndicators.map(key => {
+      const [indicator, ethnicity] = key.split("||");
+      const rows = allYears.filter(d => d.indicator === indicator && d.ethnicity === ethnicity);
+      if (rows.length < 3) return null;
+
+      // Compute trend lines
+      const prePts  = rows.filter(d => d.year <= 2019).map(d => ({ x: d.year, y: d.severity }));
+      const postPts = rows.filter(d => d.year >= 2023).map(d => ({ x: d.year, y: d.severity }));
+      const preFit  = linFit(prePts);
+      const postFit = linFit(postPts);
+
+      const xMin = Math.min(...rows.map(d => d.year));
+      const xMax = Math.max(...rows.map(d => d.year));
+      const yExt = rows.map(d => d.severity);
+      const yMin = Math.min(...yExt);
+      const yMax = Math.max(...yExt);
+      const yPad = (yMax - yMin) * 0.15 || 1;
+
+      // Pre-trend line extended to 2022 (to show where it would have gone)
+      const preLine = preFit
+        ? [{ year: 2011, sev: preFit.predict(2011) }, { year: 2024, sev: preFit.predict(2024) }]
+        : [];
+
+      // Post-trend line (2023-2024)
+      const postLine = postFit
+        ? [{ year: 2023, sev: postFit.predict(2023) }, { year: 2024, sev: postFit.predict(2024) }]
+        : [];
+
+      const meta = slopeData.find(d => d.indicator === indicator && d.ethnicity === ethnicity);
+      const dir  = meta ? (worsened(meta) ? "worsened" : "improved") : "";
+      const col  = meta ? (worsened(meta) ? "#c0392b" : "#4575b4") : "#888";
+
+      return Plot.plot({
+        title: `${indicator} — ${ethnicity}`,
+        subtitle: meta
+          ? `Slope: pre ${meta.pre_slope >= 0 ? "+" : ""}${meta.pre_slope?.toFixed(3)} → post ${meta.post_slope >= 0 ? "+" : ""}${meta.post_slope?.toFixed(3)} pp/yr (${dir})`
+          : "",
+        width: 340,
+        height: 220,
+        marginRight: 10,
+        x: { label: "Year", tickFormat: d => String(d) },
+        y: { label: "Gap severity (pp)", domain: [yMin - yPad, yMax + yPad] },
+        marks: [
+          // COVID shading
+          Plot.rectX(
+            [{ x1: 2019.5, x2: 2022.5 }],
+            { x1: "x1", x2: "x2", y1: yMin - yPad * 2, y2: yMax + yPad * 2, fill: "#f0f0f0" }
+          ),
+          Plot.text([{ year: 2021, label: "COVID" }], {
+            x: "year", y: yMax + yPad * 0.5,
+            text: "label", fontSize: 9, fill: "#bbb", textAnchor: "middle",
+          }),
+
+          // Zero line
+          Plot.ruleY([0], { stroke: "#ddd" }),
+
+          // Actual data points
+          Plot.lineY(rows, {
+            x: "year", y: "severity",
+            stroke: "#999", strokeWidth: 1,
+          }),
+          Plot.dot(rows, {
+            x: "year", y: "severity",
+            fill: d => d.year >= 2020 && d.year <= 2022 ? "#ccc" : col,
+            r: 3,
+            title: d => `${d.year}: ${d.severity >= 0 ? "+" : ""}${d.severity?.toFixed(1)} pp (${d.gap_direction})`,
+          }),
+
+          // Pre-COVID trend extrapolated (dashed)
+          ...(preLine.length > 0 ? [
+            Plot.lineY(preLine, {
+              x: "year", y: "sev",
+              stroke: "#aaa", strokeWidth: 1.5, strokeDasharray: "5,4",
+            }),
+          ] : []),
+
+          // Post-COVID trend (solid, coloured)
+          ...(postLine.length > 0 ? [
+            Plot.lineY(postLine, {
+              x: "year", y: "sev",
+              stroke: col, strokeWidth: 2.5,
+            }),
+          ] : []),
+        ],
+      });
+    }).filter(Boolean);
+
+    // Render in a 2-column grid
+    display(html`
+      <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0;">
+        ${plots.map(p => html`<div>${p}</div>`)}
+      </div>
+    `);
+
+    display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+      Grey shading = COVID period (2020–22), excluded from regressions.
+      Dashed grey line = pre-COVID trend extrapolated forward.
+      Coloured line = post-COVID observed trend.
+      <span style="color: #c0392b;">Red</span> = worsened trajectory. <span style="color: #4575b4;">Blue</span> = improved.
+    </p>`);
+  }
+}
+}});
+
+define({id: "ceaf4c84", inputs: ["slopeData","worsened","display","html","Inputs"], body: (slopeData,worsened,display,html,Inputs) => {
+if (slopeData.length > 0) {
+  const worsenedCount  = slopeData.filter(worsened).length;
+  const improvedCount  = slopeData.filter(d => !worsened(d)).length;
+  const biggestWorsen  = [...slopeData].filter(worsened).sort((a, b) => b.slope_change - a.slope_change)[0];
+  const biggestImprove = [...slopeData].filter(d => !worsened(d)).sort((a, b) => a.slope_change - b.slope_change)[0];
+
+  display(html`
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
+      <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
+        <strong style="color: #c0392b;">${worsenedCount}</strong> indicator–ethnicity pairs
+        worsened trajectory post-COVID
+        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(3)} pp/yr</small>` : ""}
+      </div>
+      <div style="padding: 0.75rem 1.25rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222;">
+        <strong style="color: #2d8a4e;">${improvedCount}</strong> indicator–ethnicity pairs
+        improved trajectory post-COVID
+        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(3)} pp/yr</small>` : ""}
+      </div>
+    </div>
+  `);
+
+  display(Inputs.table(
+    [...slopeData].sort((a, b) => b.slope_change - a.slope_change),
+    {
+      columns: ["indicator", "ethnicity", "pre_slope", "post_slope", "slope_change", "pre_mean", "post_mean", "level_change"],
+      header: {
+        indicator:    "Indicator",
+        ethnicity:    "Ethnicity",
+        pre_slope:    "Pre slope (pp/yr)",
+        post_slope:   "Post slope (pp/yr)",
+        slope_change: "Slope change",
+        pre_mean:     "Pre avg gap (pp)",
+        post_mean:    "Post avg gap (pp)",
+        level_change: "Level change (pp)",
+      },
+      format: {
+        pre_slope:    d => (d >= 0 ? "+" : "") + d?.toFixed(3),
+        post_slope:   d => (d >= 0 ? "+" : "") + d?.toFixed(3),
+        slope_change: d => (d >= 0 ? "+" : "") + d?.toFixed(3),
+        pre_mean:     d => d?.toFixed(1),
+        post_mean:    d => d?.toFixed(1),
+        level_change: d => (d >= 0 ? "+" : "") + d?.toFixed(1),
+      },
+    }
+  ));
+}
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Home</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./blind-spots">Blind Spots</a></li>
+    <li class="observablehq-link"><a href="./equity">Equity Gap Explorer</a></li>
+    <li class="observablehq-link"><a href="./forecast">Demand Forecast</a></li>
+    <li class="observablehq-link"><a href="./scorecard">GPS Scorecard</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./trends">Pandemic Break Analysis</a></li>
+    <li class="observablehq-link"><a href="./workforce">Workforce</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#slope-change-which-indicators-shifted-most">Slope Change — Which Indicators Shifted Most?</a></li>
+<li class="observablehq-secondary-link"><a href="#top-movers-full-time-series">Top Movers — Full Time Series</a></li>
+<li class="observablehq-secondary-link"><a href="#summary-table">Summary Table</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<h1 id="did-covid-change-the-trajectory-of-inequity" tabindex="-1"><a class="observablehq-header-anchor" href="#did-covid-change-the-trajectory-of-inequity">Did COVID Change the Trajectory of Inequity?</a></h1>
+<p>Comparing the <em>rate of change</em> of equity gaps before and after the pandemic — not just levels, but whether the gap was widening or narrowing and at what speed.</p>
+<div class="observablehq observablehq--block"><!--:101d20e5:--></div>
+<div class="observablehq observablehq--block"><!--:31039591:--></div>
+<div class="observablehq observablehq--block"><!--:68f9bdcb:--></div>
+<div class="observablehq observablehq--block"><!--:31d38067:--></div>
+<div class="observablehq observablehq--block"><!--:fa07e35f:--></div>
+<h2 id="slope-change-which-indicators-shifted-most" tabindex="-1"><a class="observablehq-header-anchor" href="#slope-change-which-indicators-shifted-most">Slope Change — Which Indicators Shifted Most?</a></h2>
+<p>Each row is an indicator × ethnicity pair. The pre-COVID annual change rate is compared to the post-COVID annual change rate. <strong>Positive slope change = the gap is now worsening faster (or improving more slowly) than before the pandemic.</strong></p>
+<div class="observablehq observablehq--block"><!--:c26dd20c:--></div>
+<h2 id="top-movers-full-time-series" tabindex="-1"><a class="observablehq-header-anchor" href="#top-movers-full-time-series">Top Movers — Full Time Series</a></h2>
+<p>Indicators where the trajectory changed most, showing all years including the COVID period (shaded).</p>
+<div class="observablehq observablehq--block"><!--:13455f87:--></div>
+<h2 id="summary-table" tabindex="-1"><a class="observablehq-header-anchor" href="#summary-table">Summary Table</a></h2>
+<div class="observablehq observablehq--block"><!--:ceaf4c84:--></div>
+<hr>
+<p><em>Source: NZ Health Survey (Ministry of Health) 2011–2024, via NZHS Annual Data Explorer | CC BY 4.0</em></p>
+<p><em>Pre-COVID regression: 2011–2019 (n=9). Post-COVID regression: 2023–2024 (n=2). COVID years 2020–2022 excluded. Slope = OLS coefficient (pp/year). Severity = signed gap magnitude, positive = worse for Māori/Pacific. Analysis is descriptive — statistical significance of slope change is not assessable with 2 post-COVID observations.</em></p>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./scorecard"><span>GPS Scorecard</span></a><a rel="next" href="./workforce"><span>Workforce</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-03-08T07:25:46">Mar 8, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

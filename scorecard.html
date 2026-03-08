@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>GPS Scorecard</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="modulepreload" href="./_observablehq/client.ead6257c.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.a50b4fda.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/duckdb.e74f0a12.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/7c43807f.js">
+<link rel="modulepreload" href="./_npm/apache-arrow@21.1.0/63de76cd.js">
+<link rel="modulepreload" href="./_npm/parquet-wasm@0.7.1/68d81b68.js">
+<link rel="modulepreload" href="./_npm/@duckdb/duckdb-wasm@1.29.0/d1cf3c5a.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/e324157d.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/tslib@2.8.1/b62a9c4a.js">
+<link rel="modulepreload" href="./_npm/flatbuffers@25.9.23/c82700c2.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/5ced1d52.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/02d43215.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/aa00730b.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.ead6257c.js";
+import {registerFile} from "./_observablehq/stdlib.a50b4fda.js";
+
+registerFile("./data/dim_data_source.parquet", {"name":"./data/dim_data_source.parquet","path":"./_file/data/dim_data_source.757fa6c8.parquet","lastModified":1772954745131,"size":3125});
+registerFile("./data/dim_geography.parquet", {"name":"./data/dim_geography.parquet","path":"./_file/data/dim_geography.6e4723c7.parquet","lastModified":1772954745131,"size":1887});
+registerFile("./data/dim_indicator.parquet", {"name":"./data/dim_indicator.parquet","path":"./_file/data/dim_indicator.62b2151b.parquet","lastModified":1772954745131,"size":2258});
+registerFile("./data/dim_time.parquet", {"name":"./data/dim_time.parquet","path":"./_file/data/dim_time.08967e9a.parquet","lastModified":1772954745131,"size":902});
+registerFile("./data/fact_service_access.parquet", {"name":"./data/fact_service_access.parquet","path":"./_file/data/fact_service_access.8219b2ba.parquet","lastModified":1772954745132,"size":2145});
+
+define({id: "aa9a8ff0", inputs: ["DuckDBClient","FileAttachment"], outputs: ["db"], body: async (DuckDBClient,FileAttachment) => {
+const db = await DuckDBClient.of({
+  fact_service_access: FileAttachment("./data/fact_service_access.parquet"),
+  dim_indicator: FileAttachment("./data/dim_indicator.parquet"),
+  dim_data_source: FileAttachment("./data/dim_data_source.parquet"),
+  dim_time: FileAttachment("./data/dim_time.parquet"),
+  dim_geography: FileAttachment("./data/dim_geography.parquet"),
+});
+return {db};
+}});
+
+define({id: "0989e589", outputs: ["GPS_PRIORITIES","trafficLight"], body: () => {
+// GPS priority areas and rules
+const GPS_PRIORITIES = [
+  {
+    priority: "Access",
+    indicators: ["Unmet Need for GP"],
+    metric: "% with unmet GP need",
+    target: "< 10%",
+    greenThreshold: 10,
+    direction: "lower_better",
+    icon: "🏥",
+  },
+  {
+    priority: "Timeliness",
+    indicators: ["ED 6-Hour Target", "First Specialist Assessment Wait Days"],
+    metric: "ED within 6hrs / FSA median days",
+    target: "> 95% / < 42 days",
+    greenThreshold: 95,
+    direction: "higher_better",
+    icon: "⏱",
+  },
+  {
+    priority: "Quality",
+    indicators: ["Childhood Immunisation Rate", "Cancer Treatment 62-Day"],
+    metric: "Immunisation / Cancer treatment",
+    target: "> 95% / > 85%",
+    greenThreshold: 95,
+    direction: "higher_better",
+    icon: "✓",
+  },
+  {
+    priority: "Workforce",
+    indicators: ["Nurse Vacancy Rate"],
+    metric: "Nursing vacancy rate",
+    target: "< 8%",
+    greenThreshold: 8,
+    direction: "lower_better",
+    icon: "👩‍⚕️",
+  },
+  {
+    priority: "Value",
+    indicators: [],
+    metric: "Cost per weighted unit",
+    target: "Data gap",
+    greenThreshold: null,
+    direction: null,
+    icon: "$",
+  },
+];
+
+function trafficLight(value, threshold, direction) {
+  if (value === null || threshold === null) return { color: "#999", label: "No data", symbol: "●" };
+  const better = direction === "higher_better" ? value >= threshold : value <= threshold;
+  const borderline = direction === "higher_better"
+    ? (value >= threshold * 0.85 && value < threshold)
+    : (value <= threshold * 1.15 && value > threshold);
+
+  if (better) return { color: "#2d8a4e", label: "On track", symbol: "●" };
+  if (borderline) return { color: "#e5850b", label: "At risk", symbol: "●" };
+  return { color: "#c0392b", label: "Off track", symbol: "●" };
+}
+return {GPS_PRIORITIES,trafficLight};
+}});
+
+define({id: "4a78c91d", inputs: ["db"], outputs: ["latestAccess"], body: async (db) => {
+// Fetch latest service access data for national level
+const latestAccess = Array.from(await db.query(`
+  SELECT
+    fsa.service_type,
+    fsa.pct_within_target,
+    fsa.median_wait_days,
+    t.year, t.quarter
+  FROM fact_service_access fsa
+  JOIN dim_time t ON fsa.time_id = t.id
+  WHERE fsa.geography_id = 1
+  ORDER BY t.year DESC, t.quarter DESC NULLS LAST
+`));
+return {latestAccess};
+}});
+
+define({id: "3ceffab3", inputs: ["GPS_PRIORITIES","latestAccess","trafficLight","html","display"], outputs: ["scorecardRows"], body: (GPS_PRIORITIES,latestAccess,trafficLight,html,display) => {
+// Render scorecard
+const scorecardRows = GPS_PRIORITIES.map(p => {
+  let value = null;
+  let displayValue = "—";
+
+  if (p.priority === "Timeliness") {
+    const edRow = latestAccess.find(d => d.service_type === "ed");
+    if (edRow?.pct_within_target) {
+      value = edRow.pct_within_target;
+      displayValue = `${value.toFixed(1)}% within 6hrs`;
+    }
+  } else if (p.priority === "Workforce") {
+    displayValue = "See Workforce page";
+  }
+
+  const tl = trafficLight(value, p.greenThreshold, p.direction);
+
+  return html`<tr>
+    <td style="font-size: 1.4em; text-align: center;">${p.icon}</td>
+    <td><strong>${p.priority}</strong></td>
+    <td>${p.metric}</td>
+    <td>${p.target}</td>
+    <td>${displayValue}</td>
+    <td style="color: ${tl.color}; font-size: 1.2em; text-align: center;"
+        title="${tl.label}">${tl.symbol}</td>
+    <td style="color: ${tl.color};">${tl.label}</td>
+  </tr>`;
+});
+
+display(html`
+  <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+    <thead>
+      <tr style="border-bottom: 2px solid #ccc;">
+        <th></th>
+        <th>Priority Area</th>
+        <th>Key Metric</th>
+        <th>Target</th>
+        <th>Latest Value</th>
+        <th>Status</th>
+        <th>Assessment</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${scorecardRows}
+    </tbody>
+  </table>
+`);
+return {scorecardRows};
+}});
+
+define({id: "deabdf81", inputs: ["db","display","Plot","html"], outputs: ["edTrend"], body: async (db,display,Plot,html) => {
+const edTrend = Array.from(await db.query(`
+  SELECT
+    fsa.pct_within_target,
+    fsa.volume_seen,
+    t.year, t.quarter,
+    t.period_label
+  FROM fact_service_access fsa
+  JOIN dim_time t ON fsa.time_id = t.id
+  WHERE fsa.service_type = 'ed'
+    AND fsa.geography_id = 1
+  ORDER BY t.year, t.quarter
+`));
+
+if (edTrend.length > 0) {
+  display(Plot.plot({
+    title: "ED 6-hour target — national",
+    marginLeft: 60,
+    width: 700,
+    y: {
+      label: "% seen within 6 hours",
+      domain: [75, 100],
+    },
+    marks: [
+      Plot.ruleY([95], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "Target: 95%" }),
+      Plot.lineY(edTrend, {
+        x: d => `${d.year} Q${d.quarter}`,
+        y: "pct_within_target",
+        stroke: "#1f77b4",
+        strokeWidth: 2,
+      }),
+      Plot.dot(edTrend, {
+        x: d => `${d.year} Q${d.quarter}`,
+        y: "pct_within_target",
+        fill: d => d.pct_within_target >= 95 ? "#2d8a4e" : "#c0392b",
+        title: d => `Q${d.quarter} ${d.year}: ${d.pct_within_target?.toFixed(1)}%`,
+      }),
+    ],
+  }));
+} else {
+  display(html`<p style="color: #888; font-style: italic;">No ED time series data yet. Run the pipeline.</p>`);
+}
+return {edTrend};
+}});
+
+define({id: "326563b9", inputs: ["db","display","Plot"], outputs: ["fsaTrend"], body: async (db,display,Plot) => {
+const fsaTrend = Array.from(await db.query(`
+  SELECT
+    fsa.median_wait_days,
+    t.year, t.quarter
+  FROM fact_service_access fsa
+  JOIN dim_time t ON fsa.time_id = t.id
+  WHERE fsa.service_type = 'fsa'
+    AND fsa.geography_id = 1
+  ORDER BY t.year, t.quarter
+`));
+
+if (fsaTrend.length > 0) {
+  display(Plot.plot({
+    title: "First Specialist Assessment — median wait days (national)",
+    marginLeft: 60,
+    width: 700,
+    y: { label: "Median wait (days)" },
+    marks: [
+      Plot.ruleY([42], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "Target: 42 days" }),
+      Plot.lineY(fsaTrend, {
+        x: d => `${d.year} Q${d.quarter}`,
+        y: "median_wait_days",
+        stroke: "#e5850b",
+        strokeWidth: 2,
+      }),
+      Plot.dot(fsaTrend, {
+        x: d => `${d.year} Q${d.quarter}`,
+        y: "median_wait_days",
+        fill: d => d.median_wait_days <= 42 ? "#2d8a4e" : "#c0392b",
+      }),
+    ],
+  }));
+}
+return {fsaTrend};
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Home</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./blind-spots">Blind Spots</a></li>
+    <li class="observablehq-link"><a href="./equity">Equity Gap Explorer</a></li>
+    <li class="observablehq-link"><a href="./forecast">Demand Forecast</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./scorecard">GPS Scorecard</a></li>
+    <li class="observablehq-link"><a href="./trends">Pandemic Break Analysis</a></li>
+    <li class="observablehq-link"><a href="./workforce">Workforce</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#ed-wait-times-quarterly-trend">ED Wait Times — Quarterly Trend</a></li>
+<li class="observablehq-secondary-link"><a href="#fsa-wait-times-quarterly-trend">FSA Wait Times — Quarterly Trend</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<h1 id="gps-2024-27-accountability-scorecard" tabindex="-1"><a class="observablehq-header-anchor" href="#gps-2024-27-accountability-scorecard">GPS 2024–27 Accountability Scorecard</a></h1>
+<p>New Zealand Government Policy Statement on Health 2024–27 priority areas.</p>
+<div class="observablehq observablehq--block"><!--:aa9a8ff0:--></div>
+<div class="observablehq observablehq--block"><!--:0989e589:--></div>
+<div class="observablehq observablehq--block"><!--:4a78c91d:--></div>
+<div class="observablehq observablehq--block"><!--:3ceffab3:--></div>
+<h2 id="ed-wait-times-quarterly-trend" tabindex="-1"><a class="observablehq-header-anchor" href="#ed-wait-times-quarterly-trend">ED Wait Times — Quarterly Trend</a></h2>
+<div class="observablehq observablehq--block"><!--:deabdf81:--></div>
+<h2 id="fsa-wait-times-quarterly-trend" tabindex="-1"><a class="observablehq-header-anchor" href="#fsa-wait-times-quarterly-trend">FSA Wait Times — Quarterly Trend</a></h2>
+<div class="observablehq observablehq--block"><!--:326563b9:--></div>
+<hr>
+<p><em>Source: Health New Zealand Quarterly Health Targets | Crown Copyright</em></p>
+<p><em>Traffic light rules: On track = meeting target; At risk = within 15% of target; Off track = beyond 15% from target.</em></p>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./forecast"><span>Demand Forecast</span></a><a rel="next" href="./trends"><span>Pandemic Break Analysis</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-03-08T07:25:46">Mar 8, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>
