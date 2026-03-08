@@ -42,19 +42,19 @@ const selectedGeo = view(Inputs.select(
 ```
 
 ```js
-// Query projection data for all scenarios
+// Query projection data for all scenarios — aggregate sub-projections per year
 const projections = Array.from(await db.query(`
   SELECT
     fdp.scenario,
-    fdp.projected_volume,
-    fdp.capacity_gap,
-    fdp.projection_basis,
+    SUM(fdp.projected_volume) AS projected_volume,
+    SUM(fdp.capacity_gap)    AS capacity_gap,
     t.year
   FROM fact_demand_projection fdp
   JOIN dim_time t ON fdp.time_id = t.id
   WHERE fdp.service_type = '${selectedService}'
     AND fdp.geography_id = ${selectedGeo}
-    AND fdp.projection_basis LIKE '%utilisation%'
+    AND LOWER(fdp.projection_basis) LIKE '%utilisation%'
+  GROUP BY fdp.scenario, t.year
   ORDER BY t.year, fdp.scenario
 `));
 
@@ -132,10 +132,12 @@ if (!hasData) {
 ## Methodology Note
 
 ```js
-if (hasData && projections[0]?.projection_basis) {
+if (hasData) {
   display(html`
     <blockquote style="border-left: 3px solid #ccc; padding: 0.5rem 1rem; color: #333; font-size: 0.9rem;">
-      ${projections[0].projection_basis}
+      Utilisation-based projection: current service volume scaled by Stats NZ subnational
+      population growth ratios (low / medium / high scenarios). Deferred demand factor applied
+      where specified. Projections run in 5-year steps from 2023 baseline.
     </blockquote>
   `);
 }
