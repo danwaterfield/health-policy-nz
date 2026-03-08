@@ -13,6 +13,7 @@
  */
 import * as topojson from "npm:topojson-client";
 import * as d3 from "npm:d3";
+import * as Plot from "npm:@observablehq/plot";
 
 /**
  * @param {object} topo       - Pre-loaded TopoJSON object
@@ -28,11 +29,10 @@ export function choropleth(topo, gapData, {
   ethnicity = "",
 } = {}) {
   if (!topo || !gapData?.length) {
-    return html`
-      <div style="padding:1rem; background:#f5f5f5; border-radius:6px; color:#888; font-size:0.9em; border:1px dashed #ccc;">
-        Map unavailable — no regional gap data for this selection.
-      </div>
-    `;
+    const div = document.createElement("div");
+    div.style = "padding:1rem; background:#f5f5f5; border-radius:6px; color:#666; font-size:0.9em; border:1px dashed #ccc;";
+    div.textContent = "Map unavailable — no regional gap data for this selection.";
+    return div;
   }
 
   // Decode TopoJSON → GeoJSON feature collection
