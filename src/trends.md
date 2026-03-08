@@ -16,70 +16,6 @@ const db = await DuckDBClient.of({
 });
 ```
 
-```js
-// Pre/post slope comparison (COVID years 2020–2022 excluded from both regressions)
-// REGR_SLOPE(y, x) = OLS slope coefficient; returns NULL if < 2 observations
-const slopeData = Array.from(await db.query(`
-  WITH national AS (
-    SELECT
-      eg.indicator_id,
-      eg.target_ethnicity_id,
-      t.year,
-      eg.absolute_gap,
-      eg.gap_direction,
-      -- Signed gap: positive = worse for target group regardless of indicator direction
-      CASE eg.gap_direction
-        WHEN 'adverse'    THEN  ABS(eg.absolute_gap)
-        WHEN 'favourable' THEN -ABS(eg.absolute_gap)
-        ELSE 0
-      END AS severity
-    FROM equity_gap eg
-    JOIN dim_time     t ON eg.time_id     = t.id
-    JOIN dim_geography g ON eg.geography_id = g.id
-    WHERE g.level = 'national'
-  ),
-  pre AS (
-    SELECT indicator_id, target_ethnicity_id,
-      REGR_SLOPE(severity, year) AS slope,
-      COUNT(*)                    AS n,
-      AVG(severity)               AS mean_severity
-    FROM national
-    WHERE year BETWEEN 2011 AND 2019
-    GROUP BY indicator_id, target_ethnicity_id
-    HAVING COUNT(*) >= 3
-  ),
-  post AS (
-    SELECT indicator_id, target_ethnicity_id,
-      REGR_SLOPE(severity, year) AS slope,
-      COUNT(*)                    AS n,
-      AVG(severity)               AS mean_severity
-    FROM national
-    WHERE year >= 2023
-    GROUP BY indicator_id, target_ethnicity_id
-    HAVING COUNT(*) >= 2
-  )
-  SELECT
-    i.name      AS indicator,
-    i.direction,
-    e.name      AS ethnicity,
-    pre.slope   AS pre_slope,
-    post.slope  AS post_slope,
-    post.slope - pre.slope          AS slope_change,
-    pre.mean_severity               AS pre_mean,
-    post.mean_severity              AS post_mean,
-    post.mean_severity - pre.mean_severity AS level_change,
-    pre.n AS pre_n,
-    post.n AS post_n
-  FROM pre
-  JOIN post USING (indicator_id, target_ethnicity_id)
-  JOIN dim_indicator i ON i.id  = pre.indicator_id
-  JOIN dim_ethnicity e ON e.id  = pre.target_ethnicity_id
-  WHERE e.name IN ('Maori', 'Pacific')
-    AND pre.slope  IS NOT NULL
-    AND post.slope IS NOT NULL
-  ORDER BY ABS(post.slope - pre.slope) DESC
-`));
-```
 
 ```js
 // Full annual time series for all national + Māori/Pacific gaps (excluding COVID years from regression but showing them)
@@ -121,6 +57,46 @@ function linFit(pts) {
 
 // Worsened = slope became more positive (gap widening faster, or narrowing slower)
 const worsened = d => d.slope_change > 0;
+
+// Compute pre/post slopes in JS from allYears (avoids REGR_SLOPE in DuckDB-WASM)
+const slopeData = (() => {
+  // Group by indicator × ethnicity
+  const groups = new Map();
+  for (const row of allYears) {
+    const key = `${row.indicator}||${row.ethnicity}`;
+    if (!groups.has(key)) groups.set(key, { indicator: row.indicator, ethnicity: row.ethnicity, rows: [] });
+    groups.get(key).rows.push(row);
+  }
+
+  const result = [];
+  for (const [, g] of groups) {
+    const prePts  = g.rows.filter(r => r.year >= 2011 && r.year <= 2019).map(r => ({ x: r.year, y: r.severity }));
+    const postPts = g.rows.filter(r => r.year >= 2023).map(r => ({ x: r.year, y: r.severity }));
+    if (prePts.length < 3 || postPts.length < 2) continue;
+
+    const pre  = linFit(prePts);
+    const post = linFit(postPts);
+    if (!pre || !post) continue;
+
+    const preMean  = prePts.reduce((s, p) => s + p.y, 0) / prePts.length;
+    const postMean = postPts.reduce((s, p) => s + p.y, 0) / postPts.length;
+
+    result.push({
+      indicator:    g.indicator,
+      ethnicity:    g.ethnicity,
+      pre_slope:    pre.m,
+      post_slope:   post.m,
+      slope_change: post.m - pre.m,
+      pre_mean:     preMean,
+      post_mean:    postMean,
+      level_change: postMean - preMean,
+      pre_n:        prePts.length,
+      post_n:       postPts.length,
+    });
+  }
+
+  return result.sort((a, b) => Math.abs(b.slope_change) - Math.abs(a.slope_change));
+})();
 ```
 
 ```js
