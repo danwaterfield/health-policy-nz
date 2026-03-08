@@ -32,7 +32,7 @@ jobs:
         run: playwright install chromium --with-deps
 
       - name: Run data pipeline
-        run: python pipeline/run_all.py
+        run: python -m pipeline.run_all
         env:
           PIPELINE_STALENESS_DAYS: 0
 
@@ -43,8 +43,11 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Copy Parquet to Observable data dir
-        run: mkdir -p src/data && cp data/dist/*.parquet src/data/
+      - name: Copy Parquet and data files to Observable data dir
+        run: |
+          mkdir -p src/data
+          cp data/dist/*.parquet src/data/
+          cp src/data/nz-health-regions.json src/data/ 2>/dev/null || true
 
       - name: Build static site
         run: npm run build
@@ -54,3 +57,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          enable_jekyll: false
