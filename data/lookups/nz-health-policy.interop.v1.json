@@ -1,0 +1,1374 @@
+{
+  "schema_version": "pt_i4i_bundle_v1",
+  "generated_at": "2026-03-09T01:42:36.139650+00:00",
+  "producer": {
+    "system": "policytrace",
+    "version": "local"
+  },
+  "timeline": {
+    "slug": "nz-health-policy",
+    "title": "Nz Health Policy",
+    "source_csv": "timelines/nz-health-policy/timeline.csv",
+    "event_count": 25,
+    "coverage": {
+      "start_date": "1993-07-01",
+      "end_date": "2024-08-28"
+    }
+  },
+  "documents": [
+    {
+      "id": "doc_1c2c06372de295da",
+      "url": "https://www.health.govt.nz/our-work/preventative-health-wellness/oral-health",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_1d823819d535f925",
+      "url": "https://systemreview.health.govt.nz/final-report",
+      "domain": "systemreview.health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_210a05d68de9d499",
+      "url": "https://www.beehive.govt.nz/release/smokefree-law-repealed",
+      "domain": "beehive.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_2a3d35603e644dbc",
+      "url": "https://mentalhealth.inquiry.govt.nz/inquiry-report/",
+      "domain": "mentalhealth.inquiry.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_2e2d0ddaca206cfc",
+      "url": "https://www.legislation.govt.nz/act/public/2023/0081/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_3e855c39187941cb",
+      "url": "https://www.beehive.govt.nz/release/covid-19-new-zealand-moves-alert-level-3",
+      "domain": "beehive.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_4213b73790ff9115",
+      "url": "https://www.legislation.govt.nz/act/public/2022/0030/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_4c71674a1e73d579",
+      "url": "https://www.mcnz.org.nz/assets/Publications/Workforce-Survey/2024-Medical-Workforce-Survey.pdf",
+      "domain": "mcnz.org.nz",
+      "title": "",
+      "source_type": "other",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_4fb996c24779d6c8",
+      "url": "https://www.budget.govt.nz/budget/2024/index.htm",
+      "domain": "budget.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_60d5643fb7ca9b3b",
+      "url": "https://www.legislation.govt.nz/act/public/2000/0091/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_610d687817243b73",
+      "url": "https://www.legislation.govt.nz/act/public/2022/0057/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_65e80eca3afca7d0",
+      "url": "https://www.health.govt.nz/publication/new-zealand-health-strategy-2000",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_6a9e3ef193c1d4fa",
+      "url": "https://www.health.govt.nz/covid-19-novel-coronavirus",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_738905d08af47680",
+      "url": "https://www.rnz.co.nz/news/political/496000",
+      "domain": "rnz.co.nz",
+      "title": "",
+      "source_type": "media",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_759a781b0981ac71",
+      "url": "https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-vaccines",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_75faf87907ecda6a",
+      "url": "https://systemreview.health.govt.nz/",
+      "domain": "systemreview.health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_8c841fef4448dd0e",
+      "url": "https://www.health.govt.nz/about-ministry/history-ministry-health",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_91b1e739b3d4867d",
+      "url": "https://www.health.govt.nz/publication/primary-health-care-strategy",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_995e2345533349b6",
+      "url": "https://www.mhwc.govt.nz/our-work/te-huringa-1/",
+      "domain": "mhwc.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_9e1c632e1f6e513e",
+      "url": "https://www.legislation.govt.nz/act/public/2018/0057/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_9ec121359c3ffe1b",
+      "url": "https://www.health.govt.nz/publication/new-zealand-health-strategy-2016",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_9f8be87d237547fa",
+      "url": "https://www.childyouthwellbeing.govt.nz/",
+      "domain": "childyouthwellbeing.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_af40b25dd5d26cf2",
+      "url": "https://www.beehive.govt.nz/release/health-new-zealand-placed-statutory-management",
+      "domain": "beehive.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_cefd36cda6bdc3c1",
+      "url": "https://www.health.govt.nz/publication/government-policy-statement-health",
+      "domain": "health.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_e4763ff78b4e296d",
+      "url": "https://www.rnz.co.nz/news/national/524000",
+      "domain": "rnz.co.nz",
+      "title": "",
+      "source_type": "media",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_eb357d3102448bd9",
+      "url": "https://www.budget.govt.nz/budget/2019/index.htm",
+      "domain": "budget.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    },
+    {
+      "id": "doc_ed7591a7cbbafa53",
+      "url": "https://www.legislation.govt.nz/act/public/1993/0022/latest/whole.html",
+      "domain": "legislation.govt.nz",
+      "title": "",
+      "source_type": "official_policy",
+      "jurisdictions": [
+        "national"
+      ],
+      "countries": [],
+      "policy_refs": [],
+      "metadata": {
+        "access_date": "2026-03-09"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_nz-health-policy-0001",
+      "legacy_id": "nz-health-policy-0001",
+      "date": "1993-07-01",
+      "date_precision": "month",
+      "title": "Health and Disability Services Act 1993 corporatised public hospitals into Crown Health Enterprises operating on commercial basis.",
+      "actor": "Parliament | National Government",
+      "category": "legislation",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Introduced competitive internal market; hospitals required to operate at profit. Led to service cuts, deficits, and significant public opposition. Reversed within a decade.",
+      "source_document_ids": [
+        "doc_ed7591a7cbbafa53"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Market model proved unworkable: CHEs accumulated deficits and services deteriorated. Reversed by Hospital and Health Services (1998) and then DHB model (2000). Widely cited as cautionary example of health sector marketisation."
+    },
+    {
+      "id": "evt_nz-health-policy-0002",
+      "legacy_id": "nz-health-policy-0002",
+      "date": "1996-01-01",
+      "date_precision": "year",
+      "title": "Hospital and Health Services replaced Crown Health Enterprises; commercial model wound back.",
+      "actor": "National Government | Minister of Health",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Partial reversal of 1993 market model; HHSs no longer required to make profit but structural problems remained.",
+      "source_document_ids": [
+        "doc_8c841fef4448dd0e"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "medium",
+      "confidence_score": 0.65,
+      "treaty_relevance": "",
+      "notes": "Transitional arrangement ahead of full DHB reform. Acknowledged that competitive market model had failed in health context."
+    },
+    {
+      "id": "evt_nz-health-policy-0003",
+      "legacy_id": "nz-health-policy-0003",
+      "date": "2000-12-01",
+      "date_precision": "month",
+      "title": "Public Health and Disability Act 2000 established 21 District Health Boards replacing HHSs; restored population-based planning.",
+      "actor": "Parliament | Labour Government",
+      "category": "legislation",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Abolished internal market; DHBs responsible for funding and providing health services for defined populations. Introduced community governance with elected members. Endured for 22 years until 2022 restructure.",
+      "source_document_ids": [
+        "doc_60d5643fb7ca9b3b"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Foundation legislation for DHB era. Included explicit Treaty of Waitangi obligations on DHBs (s.4). 21 DHBs became fully operational July 2001."
+    },
+    {
+      "id": "evt_nz-health-policy-0004",
+      "legacy_id": "nz-health-policy-0004",
+      "date": "2001-01-01",
+      "date_precision": "year",
+      "title": "New Zealand Health Strategy published — first national health strategy; set population health goals and priority areas.",
+      "actor": "Ministry of Health | Minister Annette King",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Established framework of health goals including reducing inequalities. Introduced population health approach to replace hospital-centric focus. Named Māori, Pacific, and low-income populations as priority groups.",
+      "source_document_ids": [
+        "doc_65e80eca3afca7d0"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "First explicit national health strategy. Set precedent for 2016 refresh. Equity language was present but implementation was uneven across DHBs."
+    },
+    {
+      "id": "evt_nz-health-policy-0005",
+      "legacy_id": "nz-health-policy-0005",
+      "date": "2001-01-01",
+      "date_precision": "year",
+      "title": "Primary Health Care Strategy launched; introduced Primary Health Organisations (PHOs) with capitation-based funding.",
+      "actor": "Minister Annette King | Ministry of Health",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Shifted from fee-for-service GP model to enrolled population capitation funding through PHOs. Aimed to reduce cost barriers to GP access, particularly for high-need populations. Substantially reduced GP visit costs.",
+      "source_document_ids": [
+        "doc_91b1e739b3d4867d"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "catalyst"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "PHO model enrolled ~95% of population by 2010. Additional Services funding directed at high-need populations. Reduced but did not eliminate cost barriers — GP fees remained for many. Evidence of improved access for Māori and Pacific in some regions."
+    },
+    {
+      "id": "evt_nz-health-policy-0006",
+      "legacy_id": "nz-health-policy-0006",
+      "date": "2016-04-01",
+      "date_precision": "month",
+      "title": "New Zealand Health Strategy 2016 refreshed national strategy; added mental health and addiction as explicit priority alongside cancer and cardiovascular disease.",
+      "actor": "Minister Jonathan Coleman | Ministry of Health",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Updated health strategy for post-PHO era. Introduced 'One Team' and digital health themes. Less ambitious on equity than 2001 strategy.",
+      "source_document_ids": [
+        "doc_9ec121359c3ffe1b"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Followed decade of incremental DHB improvement. Equity gap persistence across most indicators not substantively addressed in strategy."
+    },
+    {
+      "id": "evt_nz-health-policy-0007",
+      "legacy_id": "nz-health-policy-0007",
+      "date": "2017-11-26",
+      "date_precision": "day",
+      "title": "Health and Disability System Review initiated; expert panel led by Heather Simpson tasked with \"once in a generation\" review of system.",
+      "actor": "Minister David Clark | Labour Government",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Triggered by persistent equity gaps, DHB deficits, mental health crisis, and workforce shortages. Broadest review since DHB establishment.",
+      "source_document_ids": [
+        "doc_75faf87907ecda6a"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Review findings ultimately led to Pae Ora Act 2022 and abolition of DHBs. Interim report 2019; final report March 2020."
+    },
+    {
+      "id": "evt_nz-health-policy-0008",
+      "legacy_id": "nz-health-policy-0008",
+      "date": "2018-11-01",
+      "date_precision": "month",
+      "title": "He Ara Oranga: Report of the Government Inquiry into Mental Health and Addiction found system was failing severely; 1 in 5 New Zealanders affected.",
+      "actor": "Government Inquiry Panel | Minister of Health",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Found mental health and addiction system underfunded, under-resourced, and stigmatising. Recommended shift to community-based, recovery-focused model. Māori and Pacific disproportionately affected and underserved.",
+      "source_document_ids": [
+        "doc_2a3d35603e644dbc"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "207 recommendations. Government accepted 38 immediately; committed $1.9B over 5 years in 2019 Budget. Community services remain underdeveloped relative to need. Equity gaps in mental health access persist."
+    },
+    {
+      "id": "evt_nz-health-policy-0009",
+      "legacy_id": "nz-health-policy-0009",
+      "date": "2019-05-30",
+      "date_precision": "day",
+      "title": "Wellbeing Budget 2019 allocated $1.9B to mental health and addiction over 5 years — largest-ever mental health investment in NZ.",
+      "actor": "Minister of Finance Grant Robertson | Labour Government",
+      "category": "cabinet",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Funded mental health workforce expansion, access and choice programme, kaupapa Māori services, and AOD treatment. Introduced wellbeing framework across government.",
+      "source_document_ids": [
+        "doc_eb357d3102448bd9"
+      ],
+      "related_event_ids": [],
+      "tags": [
+        "catalyst"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Significant investment but mental health workforce shortages limited roll-out speed. Access and Choice programme reached hundreds of thousands but wait times remained. Equity of access variable by region."
+    },
+    {
+      "id": "evt_nz-health-policy-0023",
+      "legacy_id": "nz-health-policy-0023",
+      "date": "2019-11-01",
+      "date_precision": "month",
+      "title": "Child and Youth Wellbeing Strategy published alongside child poverty reporting requirements under Child Poverty Reduction Act 2018.",
+      "actor": "Minister for Child Poverty Reduction | Labour Government",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Required government to report annually on child poverty measures including material hardship and housing. Health outcomes (e.g. hospitalisation rates) included as supplementary indicators. Māori and Pacific children overrepresented in poverty measures.",
+      "source_document_ids": [
+        "doc_9e1c632e1f6e513e",
+        "doc_9f8be87d237547fa"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Established legislative baseline for child poverty monitoring. Poverty rates highest for Māori and Pacific children (~40% material hardship vs ~15% European). Cross-cutting relevance for health outcomes — child poverty is strongest predictor of adult health outcomes."
+    },
+    {
+      "id": "evt_nz-health-policy-0012",
+      "legacy_id": "nz-health-policy-0012",
+      "date": "2020-03-01",
+      "date_precision": "month",
+      "title": "Health and Disability System Review final report published; recommended abolition of DHBs and creation of single national commissioning agency.",
+      "actor": "Heather Simpson (Chair) | Review Panel",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Recommended: abolish 21 DHBs; create Health New Zealand (national commissioning); create Māori Health Authority; strengthen public health agency. Accepted by Government July 2021.",
+      "source_document_ids": [
+        "doc_1d823819d535f925"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0013"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Most significant structural recommendation since 2000 PHD Act. Government response accepted all major recommendations in principle July 2021. Implementation timeline: Pae Ora Act passed 2022, entities operational July 2022."
+    },
+    {
+      "id": "evt_nz-health-policy-0010",
+      "legacy_id": "nz-health-policy-0010",
+      "date": "2020-03-21",
+      "date_precision": "day",
+      "title": "COVID-19 Alert Level 4 lockdown implemented; health system placed on pandemic footing with elective surgery suspended and primary care shifted to telehealth.",
+      "actor": "Director-General of Health | Minister Chris Hipkins | Prime Minister Jacinda Ardern",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Largest peacetime disruption to health service delivery in NZ history. Elective procedures deferred; primary care volumes dropped 40-60% in lockdown weeks. Māori and Pacific communities mobilised community response.",
+      "source_document_ids": [
+        "doc_3e855c39187941cb",
+        "doc_6a9e3ef193c1d4fa"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0011",
+        "evt_nz-health-policy-0012"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "no",
+      "notes": "Deferred demand estimated at 50% of normal elective volumes (DEFERRED_DEMAND_FACTOR = 0.5 in modelling). Rural and high-deprivation communities faced compounded access barriers. Equity gaps in primary care widened during 2020-2022."
+    },
+    {
+      "id": "evt_nz-health-policy-0011",
+      "legacy_id": "nz-health-policy-0011",
+      "date": "2020-09-01",
+      "date_precision": "month",
+      "title": "COVID-19 vaccine rollout prioritised border/MIQ workers and aged residential care, with Māori and Pacific groups in Priority Group 3.",
+      "actor": "Ministry of Health | COVID-19 Vaccine Technical Advisory Group",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Initial prioritisation did not place Māori and Pacific in highest priority groups despite higher risk. Later corrected with targeted vaccination events and community-led initiatives.",
+      "source_document_ids": [
+        "doc_759a781b0981ac71"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Significant equity debate: Māori health advocates argued Treaty obligations required Māori prioritisation. Community-led vaccination (marae-based) proved effective but deployed late. Final vaccination rates approached equity across ethnicity groups."
+    },
+    {
+      "id": "evt_nz-health-policy-0024",
+      "legacy_id": "nz-health-policy-0024",
+      "date": "2021-01-01",
+      "date_precision": "year",
+      "title": "Free dental care extended to under-18 years; subsequent extensions proposed for under-24 as part of wellbeing programme.",
+      "actor": "Minister of Health | Labour Government",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Addressed longstanding gap: NZ dental care excluded from public health system since 1990s. Māori and Pacific children have substantially higher rates of tooth decay and dental disease.",
+      "source_document_ids": [
+        "doc_1c2c06372de295da"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "medium",
+      "confidence_score": 0.65,
+      "treaty_relevance": "yes",
+      "notes": "Adult dental care remained largely unsubsidised — major equity gap. Emergency dental costs a significant source of financial hardship for low-income households. Extension to under-24 only partially implemented under subsequent government."
+    },
+    {
+      "id": "evt_nz-health-policy-0013",
+      "legacy_id": "nz-health-policy-0013",
+      "date": "2022-07-01",
+      "date_precision": "day",
+      "title": "Pae Ora (Healthy Futures) Act 2022 established Health New Zealand (Te Whatu Ora) and Māori Health Authority (Te Aka Whai Ora); 21 DHBs abolished.",
+      "actor": "Parliament | Labour Government",
+      "category": "legislation",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Largest health system restructure since 2000. Health NZ assumed DHB functions nationally. MHA held independent commissioning power for Māori health services. Workforce inherited from DHBs: ~70,000 staff.",
+      "source_document_ids": [
+        "doc_4213b73790ff9115"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0014",
+        "evt_nz-health-policy-0017"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Transition was administratively complex; DHB accumulated deficits inherited by Health NZ. MHA designed as Treaty partner with meaningful autonomy — first of its kind globally. Disestablished by incoming government 2024."
+    },
+    {
+      "id": "evt_nz-health-policy-0015",
+      "legacy_id": "nz-health-policy-0015",
+      "date": "2022-10-14",
+      "date_precision": "day",
+      "title": "Mental Health and Wellbeing Commission (Te Hiringa Mahara) published first Te Huringa report; found equity gaps in mental health access persisting despite $1.9B Wellbeing Budget investment.",
+      "actor": "Te Hiringa Mahara (Mental Health and Wellbeing Commission)",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Found Māori 2.2x more likely to be admitted involuntarily than European; access to community services remained unequal; workforce shortages limiting service delivery.",
+      "source_document_ids": [
+        "doc_995e2345533349b6"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Evidence that investment had not yet translated to equity of access. Involuntary admission rates for Māori remained elevated — indicator of crisis-driven rather than preventive care."
+    },
+    {
+      "id": "evt_nz-health-policy-0014",
+      "legacy_id": "nz-health-policy-0014",
+      "date": "2022-12-13",
+      "date_precision": "day",
+      "title": "Smokefree Environments and Regulated Products (Smoked Tobacco) Amendment Act 2022 enacted generational ban on tobacco sales to anyone born after 2008.",
+      "actor": "Parliament | Labour Government",
+      "category": "legislation",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "World-leading smokefree legislation. Would have eliminated commercial tobacco sales to future generations. Māori smoking rates (~29% at enactment) substantially higher than European rates (~12%) — expected disproportionate equity benefit.",
+      "source_document_ids": [
+        "doc_610d687817243b73"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0018"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Considered one of the most significant public health legislative achievements in NZ history. Repealed by incoming National-led government December 2023, citing revenue from tobacco excise and smoker autonomy. Equity benefit unrealised."
+    },
+    {
+      "id": "evt_nz-health-policy-0025",
+      "legacy_id": "nz-health-policy-0025",
+      "date": "2023-01-01",
+      "date_precision": "year",
+      "title": "Rural health workforce shortage intensified: GP vacancy rates in rural and provincial areas reached 20–35%; international GP dependency exceeded 35% in Northland and West Coast.",
+      "actor": "Health New Zealand | Medical Council NZ",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Rural GP shortage reached crisis levels. Medical Council data showed ~28% of GPs internationally trained nationally; rural areas substantially higher. Northland and West Coast most affected — areas with highest Māori population proportions.",
+      "source_document_ids": [
+        "doc_4c71674a1e73d579"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "medium",
+      "confidence_score": 0.65,
+      "treaty_relevance": "yes",
+      "notes": "Structural driver: NZ medical training pipeline insufficient for demand. International recruitment fills gap but increases vulnerability to immigration policy changes. Rural/Māori communities bear disproportionate burden of shortage. This dashboard's workforce page tracks vacancy rates by region."
+    },
+    {
+      "id": "evt_nz-health-policy-0016",
+      "legacy_id": "nz-health-policy-0016",
+      "date": "2023-07-01",
+      "date_precision": "month",
+      "title": "Health New Zealand reported structural deficit of approximately $1.4B; attributed to DHB-inherited deficits, post-COVID demand surge, and workforce costs.",
+      "actor": "Health New Zealand | Minister of Health Shane Reti",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Financial crisis became publicly visible mid-2023. DHB-era accumulated deficits transferred to Health NZ balance sheet. Post-COVID elective backlog drove volume costs. International nursing recruitment added agency costs.",
+      "source_document_ids": [
+        "doc_738905d08af47680"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "no",
+      "notes": "Preceded commissioner appointment. Minister's response framed crisis as management failure rather than structural underfunding. Subsequent review ordered cuts to non-clinical staff. Equity and public health teams disproportionately affected."
+    },
+    {
+      "id": "evt_nz-health-policy-0018",
+      "legacy_id": "nz-health-policy-0018",
+      "date": "2023-12-19",
+      "date_precision": "day",
+      "title": "Smokefree Environments and Regulated Products (Smoked Tobacco) Amendment Act 2022 repealed; generational tobacco ban removed.",
+      "actor": "Parliament | National-ACT-NZ First Government",
+      "category": "repeal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Reversed world-leading smokefree policy. Restored tobacco sales without age restriction beyond existing 18+ rule. Government cited smoker autonomy and tobacco excise revenue ($2B per year). Equity benefit of generational ban unrealised.",
+      "source_document_ids": [
+        "doc_210a05d68de9d499"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0014"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Māori smoking prevalence ~29% vs European ~12% at time of repeal. Expected to widen equity gap in smoking-related disease (lung cancer, COPD, cardiovascular disease) over long term. Critics noted ACT Party received tobacco industry donations."
+    },
+    {
+      "id": "evt_nz-health-policy-0020",
+      "legacy_id": "nz-health-policy-0020",
+      "date": "2024-01-01",
+      "date_precision": "year",
+      "title": "Government Policy Statement on Health 2024–27 set five priority areas: access, timeliness, quality, workforce, value. Replaced equity-centred framing of previous GPS.",
+      "actor": "Minister of Health Shane Reti | National Government",
+      "category": "proposal",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "New GPS prioritised elective surgery throughput, ED wait times, and cancer treatment over equity and social determinants. Māori and Pacific-specific targets removed. Accountability scorecard focused on volume metrics.",
+      "source_document_ids": [
+        "doc_cefd36cda6bdc3c1"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Represented shift from equity-centred (2019 GPS) to efficiency-centred accountability framework. Five priority indicators measurable and output-focused. Critics argued decontextualises outcomes from structural causes. This dashboard's scorecard page tracks GPS 2024-27 indicators."
+    },
+    {
+      "id": "evt_nz-health-policy-0022",
+      "legacy_id": "nz-health-policy-0022",
+      "date": "2024-01-01",
+      "date_precision": "year",
+      "title": "Health New Zealand restructuring under Commissioner resulted in disestablishment of approximately 400–600 roles; public health, equity, and regional functions most affected.",
+      "actor": "Health New Zealand | Commissioner Lester Levy",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Restructure focused on reducing management layers and consolidating back-office functions. Clinical frontline relatively protected. Equity, public health, and Māori health directorate roles reduced. Regional hospital services under review for potential consolidation.",
+      "source_document_ids": [
+        "doc_e4763ff78b4e296d"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "medium",
+      "confidence_score": 0.65,
+      "treaty_relevance": "yes",
+      "notes": "Scale of workforce reductions still emerging at time of writing. Evidence of reduced capacity in health equity analytics and public health surveillance. Impacts on data collection and monitoring likely to affect quality of evidence base over medium term."
+    },
+    {
+      "id": "evt_nz-health-policy-0021",
+      "legacy_id": "nz-health-policy-0021",
+      "date": "2024-06-01",
+      "date_precision": "month",
+      "title": "Budget 2024 cut public health funding by approximately $280M over four years; public health agency Manatū Hauora reduced; health promotion programmes cut.",
+      "actor": "Minister of Finance Nicola Willis | National Government",
+      "category": "cabinet",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Cuts included health promotion, tobacco control, nutrition, and physical activity programmes. Public Health Agency restructured. Several equity-focused programmes discontinued.",
+      "source_document_ids": [
+        "doc_4fb996c24779d6c8"
+      ],
+      "related_event_ids": [],
+      "tags": [],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Public health sector described cuts as disproportionate to sector size. Health promotion has long-lag prevention value difficult to defend in short-term fiscal analysis. Equity-focused programmes bear higher share of cuts than acute/hospital services."
+    },
+    {
+      "id": "evt_nz-health-policy-0017",
+      "legacy_id": "nz-health-policy-0017",
+      "date": "2024-07-01",
+      "date_precision": "day",
+      "title": "Te Aka Whai Ora (Māori Health Authority) disestablished; functions absorbed into Health New Zealand directorate, removing independent commissioning power.",
+      "actor": "Parliament | National-ACT-NZ First Government",
+      "category": "legislation",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Reversed the Treaty-based institutional design of Pae Ora Act. MHA's independent commissioning power eliminated; replaced with internal Health NZ directorate. Iwi and Māori health providers lost direct commissioning partner.",
+      "source_document_ids": [
+        "doc_2e2d0ddaca206cfc"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0013"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "yes",
+      "notes": "Opposed by Māori health sector, iwi, and Te Tiriti advocates. Government framed as reducing bureaucracy. Critics argued it dismantled the most significant equity-focused structural reform in NZ health history. Equivalent functions retained but without independent authority."
+    },
+    {
+      "id": "evt_nz-health-policy-0019",
+      "legacy_id": "nz-health-policy-0019",
+      "date": "2024-08-28",
+      "date_precision": "day",
+      "title": "Lester Levy appointed Commissioner of Health New Zealand under statutory management; given powers to override Board.",
+      "actor": "Minister of Health Shane Reti | Crown",
+      "category": "other",
+      "status": "happened",
+      "jurisdiction": "national",
+      "impact": "Unprecedented intervention: first time a major Crown entity placed under statutory management. Commissioner given authority to restructure operations, reduce headcount, and renegotiate contracts. Framed as response to $1.4B deficit.",
+      "source_document_ids": [
+        "doc_af40b25dd5d26cf2"
+      ],
+      "related_event_ids": [
+        "evt_nz-health-policy-0016"
+      ],
+      "tags": [
+        "turning_point"
+      ],
+      "themes": [],
+      "geographies": [],
+      "confidence_label": "high",
+      "confidence_score": 0.9,
+      "treaty_relevance": "no",
+      "notes": "Significant restructuring followed: hundreds of roles disestablished, public health and equity teams reduced, regional offices consolidated. Health NZ staff described sustained uncertainty. Equity and Māori health functions particularly affected."
+    }
+  ],
+  "mentions": [],
+  "edges": [
+    {
+      "id": "edge_f4d6274d2c360056",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0001",
+      "to_kind": "document",
+      "to_id": "doc_ed7591a7cbbafa53",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_55f79f5617fd1004",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0002",
+      "to_kind": "document",
+      "to_id": "doc_8c841fef4448dd0e",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_fd3d2ae0f3e671c1",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0003",
+      "to_kind": "document",
+      "to_id": "doc_60d5643fb7ca9b3b",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_d15fe8e8ea2c71e7",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0004",
+      "to_kind": "document",
+      "to_id": "doc_65e80eca3afca7d0",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_ec29253cd2486d5f",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0005",
+      "to_kind": "document",
+      "to_id": "doc_91b1e739b3d4867d",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_efee66bc56a4b369",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0006",
+      "to_kind": "document",
+      "to_id": "doc_9ec121359c3ffe1b",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_d29cee3ead9d27a7",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0007",
+      "to_kind": "document",
+      "to_id": "doc_75faf87907ecda6a",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_133620a4dc8ac309",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0008",
+      "to_kind": "document",
+      "to_id": "doc_2a3d35603e644dbc",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_fa55a6cf1fcd5382",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0009",
+      "to_kind": "document",
+      "to_id": "doc_eb357d3102448bd9",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_089c4814318058a3",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0023",
+      "to_kind": "document",
+      "to_id": "doc_9f8be87d237547fa",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_e7618af9ba686f0e",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0023",
+      "to_kind": "document",
+      "to_id": "doc_9e1c632e1f6e513e",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_c86b53987e55d50a",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0012",
+      "to_kind": "document",
+      "to_id": "doc_1d823819d535f925",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_179e73d8d2ee2cc8",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0012",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0013",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_0af9d8f4c2d783bf",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0010",
+      "to_kind": "document",
+      "to_id": "doc_6a9e3ef193c1d4fa",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_f30b625a1612c6e7",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0010",
+      "to_kind": "document",
+      "to_id": "doc_3e855c39187941cb",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_78b084335d7897fe",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0010",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0011",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_8a30d27885f59834",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0010",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0012",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_1e96f2c53da1014d",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0011",
+      "to_kind": "document",
+      "to_id": "doc_759a781b0981ac71",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_690cb48a45dee1bc",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0024",
+      "to_kind": "document",
+      "to_id": "doc_1c2c06372de295da",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_65980efd6d42dc39",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0013",
+      "to_kind": "document",
+      "to_id": "doc_4213b73790ff9115",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_e7822fa7d2fa3b35",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0013",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0014",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_5171cee3e7e569ae",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0013",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0017",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_28835f0e77b9097a",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0015",
+      "to_kind": "document",
+      "to_id": "doc_995e2345533349b6",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_23cbc966a9c20896",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0014",
+      "to_kind": "document",
+      "to_id": "doc_610d687817243b73",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_bfc18f69a6e38c7d",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0014",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0018",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_f02d02af841ca905",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0025",
+      "to_kind": "document",
+      "to_id": "doc_4c71674a1e73d579",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_67bbfa567ece54a9",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0016",
+      "to_kind": "document",
+      "to_id": "doc_738905d08af47680",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_8456519cabcb3172",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0018",
+      "to_kind": "document",
+      "to_id": "doc_210a05d68de9d499",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_9207bbef9bd5e9df",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0018",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0014",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_2b02d86e97ce792c",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0020",
+      "to_kind": "document",
+      "to_id": "doc_cefd36cda6bdc3c1",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_5ac858cf5828aeaf",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0022",
+      "to_kind": "document",
+      "to_id": "doc_e4763ff78b4e296d",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_d1a3c2a9193f5557",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0021",
+      "to_kind": "document",
+      "to_id": "doc_4fb996c24779d6c8",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_d714f642a3f9a4ad",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0017",
+      "to_kind": "document",
+      "to_id": "doc_2e2d0ddaca206cfc",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_09f97b0635794431",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0017",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0013",
+      "confidence": 0.8
+    },
+    {
+      "id": "edge_cc80e877fda60e12",
+      "edge_type": "cites_document",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0019",
+      "to_kind": "document",
+      "to_id": "doc_af40b25dd5d26cf2",
+      "confidence": 0.95
+    },
+    {
+      "id": "edge_d0cd421a970bdf8a",
+      "edge_type": "related_event",
+      "from_kind": "event",
+      "from_id": "evt_nz-health-policy-0019",
+      "to_kind": "event",
+      "to_id": "evt_nz-health-policy-0016",
+      "confidence": 0.8
+    }
+  ],
+  "outcomes": []
+}

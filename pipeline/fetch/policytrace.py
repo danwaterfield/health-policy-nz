@@ -17,7 +17,7 @@ from pathlib import Path
 
 import requests
 
-from pipeline.config import RAW_DIR, STALENESS_DAYS
+from pipeline.config import RAW_DIR, LOOKUP_DIR, STALENESS_DAYS
 from pipeline.fetch.base import BaseFetcher
 
 BUNDLE_FILENAME = "nz-health-policy.interop.v1.json"
@@ -67,6 +67,11 @@ class PolicyTraceFetcher(BaseFetcher):
         if dest.exists():
             self.log("Using existing cached bundle")
             return dest
+
+        seed = LOOKUP_DIR / BUNDLE_FILENAME
+        if seed.exists():
+            self.log(f"Falling back to committed seed bundle: {seed}")
+            return seed
 
         self.log(
             "WARNING: PolicyTrace bundle unavailable — policy event annotations will be skipped. "
