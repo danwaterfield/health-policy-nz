@@ -393,7 +393,7 @@ if (trendGaps.length === 0) {
 
 ```js
 if (regionalGaps.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No regional equity gap data available for this indicator.</p>`);
+  display(html`<p style="color: #888; font-style: italic;">No regional equity gap data for this indicator. The NZ Health Survey reports ethnicity breakdowns and regional breakdowns separately — cross-tabulations (Māori in Northern region) are not published, so regional equity gaps cannot be computed from this source.</p>`);
 } else {
   const sorted = [...regionalGaps].sort((a, b) => a.absolute_gap - b.absolute_gap);
   display(Plot.plot({
