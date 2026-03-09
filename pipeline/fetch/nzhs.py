@@ -1,12 +1,19 @@
 """
 NZ Health Survey fetcher.
 
-Attempts to download the prevalence CSV from the NZHS Shiny app using Playwright.
-Falls back to checking for a local file if Playwright fails or is unavailable.
+The NZHS prevalence CSV is available as a static file directly from the Shiny app
+server — no Playwright required. Falls back to Playwright if the direct URL fails,
+then to any existing local file, then raises.
 """
+import requests
 from pathlib import Path
-from pipeline.config import RAW_DIR, SOURCES
+from pipeline.config import RAW_DIR, SOURCES, LOOKUP_DIR
 from pipeline.fetch.base import BaseFetcher
+
+DIRECT_CSV_URL = (
+    "https://minhealthnz.shinyapps.io/nz-health-survey-2024-25-annual-data-explorer"
+    "/data/nz-health-survey-2024-25-prevalences.csv"
+)
 
 
 class NZHSFetcher(BaseFetcher):
@@ -24,22 +31,49 @@ class NZHSFetcher(BaseFetcher):
             self.log(f"DRY RUN: would download NZHS prevalence CSV to {dest}")
             return dest
 
-        self.log("Attempting Playwright download from NZHS Shiny app...")
-        success = self._playwright_download(dest)
+        # 1. Try direct HTTP download (fast, no browser required)
+        if self._http_download(dest):
+            self.strip_bom(dest)
+            self.log(f"Downloaded via HTTP to {dest}")
+            return dest
 
-        if not success:
-            if dest.exists():
-                self.log("Playwright failed; using existing local file")
-                return dest
-            raise RuntimeError(
-                "Playwright download failed and no local file found. "
-                "Please manually download the NZHS prevalence CSV from "
-                f"{SOURCES[self.source_key]['url']} and save it to {dest}"
-            )
+        # 2. Try Playwright as fallback
+        self.log("HTTP download failed; attempting Playwright fallback...")
+        if self._playwright_download(dest):
+            self.strip_bom(dest)
+            self.log(f"Downloaded via Playwright to {dest}")
+            return dest
 
-        self.strip_bom(dest)
-        self.log(f"Downloaded to {dest}")
-        return dest
+        # 3. Use existing local file if present
+        if dest.exists():
+            self.log("Using existing local file")
+            return dest
+
+        # 4. Use committed seed file if present
+        seed = LOOKUP_DIR / "nzhs_prevalence_seed.csv"
+        if seed.exists():
+            self.log(f"Using seed file: {seed}")
+            import shutil
+            shutil.copy(seed, dest)
+            return dest
+
+        raise RuntimeError(
+            "NZHS download failed. Manually download the prevalence CSV from "
+            f"{DIRECT_CSV_URL} and save to {dest}"
+        )
+
+    def _http_download(self, dest: Path) -> bool:
+        try:
+            self.log(f"Downloading {DIRECT_CSV_URL}")
+            r = requests.get(DIRECT_CSV_URL, timeout=120, stream=True)
+            r.raise_for_status()
+            with open(dest, "wb") as f:
+                for chunk in r.iter_content(chunk_size=1 << 20):
+                    f.write(chunk)
+            return True
+        except Exception as e:
+            self.log(f"HTTP download failed: {e}")
+            return False
 
     def _playwright_download(self, dest: Path) -> bool:
         try:

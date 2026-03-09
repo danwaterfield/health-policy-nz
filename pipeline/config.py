@@ -18,7 +18,8 @@ SOURCES = {
     "nzhs_prevalence": {
         "url": os.getenv(
             "NZHS_CSV_URL",
-            "https://minhealthnz.shinyapps.io/nz-health-survey-2024-25-annual-data-explorer/",
+            "https://minhealthnz.shinyapps.io/nz-health-survey-2024-25-annual-data-explorer"
+            "/data/nz-health-survey-2024-25-prevalences.csv",
         ),
         "filename": "nzhs_prevalence.csv",
         "description": "NZ Health Survey prevalence/mean by subgroup",
