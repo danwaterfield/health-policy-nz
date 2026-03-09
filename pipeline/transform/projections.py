@@ -19,7 +19,7 @@ class ProjectionsTransformer(BaseTransformer):
         # Check whether we have the data needed
         access_count = conn.execute("SELECT COUNT(*) FROM fact_service_access").fetchone()[0]
         proj_count = conn.execute(
-            "SELECT COUNT(*) FROM fact_demand_projection WHERE scenario IN ('low','medium','high')"
+            "SELECT COUNT(*) FROM fact_demand_projection WHERE scenario IN ('low','baseline','high')"
         ).fetchone()[0]
 
         self.log(f"fact_service_access: {access_count} rows")
@@ -61,7 +61,7 @@ class ProjectionsTransformer(BaseTransformer):
                 FROM fact_demand_projection fdp
                 JOIN dim_time dt ON fdp.time_id = dt.id
                 WHERE dt.period_type = 'projection'
-                  AND fdp.scenario = 'medium'
+                  AND fdp.scenario = 'baseline'
                   AND dt.year = (SELECT MIN(year) FROM dim_time WHERE period_type = 'projection')
                 GROUP BY fdp.geography_id
             )
@@ -110,9 +110,8 @@ class ProjectionsTransformer(BaseTransformer):
                         current_seen = demand_row[0] or 0
                         current_overdue = demand_row[1] or 0
 
-                        # Get population growth ratio
-                        # Map scenario names
-                        pop_scenario = "medium" if scenario == "baseline" else scenario
+                        # Get population growth ratio (schema stores 'baseline', not 'medium')
+                        pop_scenario = scenario
                         pop_ratio_row = conn.execute("""
                             SELECT fdp.projected_volume /
                                    NULLIF((

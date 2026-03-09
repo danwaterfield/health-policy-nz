@@ -23,6 +23,7 @@ const db = await DuckDBClient.of({
   fact_bias_estimates: FileAttachment("data/fact_bias_estimates.parquet"),
   fact_life_tables: FileAttachment("data/fact_life_tables.parquet"),
   fact_corrections: FileAttachment("data/fact_corrections.parquet"),
+  fact_policy_events: FileAttachment("data/fact_policy_events.parquet"),
 });
 ```
 
@@ -72,7 +73,7 @@ const summaryGaps = Array.from(await db.query(`
     FROM fact_health_indicator fhi
     JOIN dim_time t ON fhi.time_id = t.id
     WHERE fhi.indicator_id = ${indicatorId}
-      AND fhi.ethnicity_id IN (${selectedEthnicities.join(",") || "0"})
+      AND fhi.ethnicity_id IN (${selectedEthnicities.length ? selectedEthnicities.join(",") : "NULL"})
       AND t.year = ${latestYear}
     GROUP BY fhi.geography_id, fhi.ethnicity_id
   ),
@@ -154,8 +155,22 @@ const trendGaps = Array.from(await db.query(`
   ORDER BY t.year, e.name
 `));
 
+const noEthnicitySelected = selectedEthnicities.length === 0;
 const nationalGaps = summaryGaps.filter(d => d.level === "national");
 const regionalGaps = summaryGaps.filter(d => d.level === "health_region");
+
+// Policy events — turning points for chart annotation
+const policyEvents = Array.from(await db.query(`
+  SELECT
+    YEAR(date::DATE) AS year,
+    title,
+    category,
+    treaty_relevance
+  FROM fact_policy_events
+  WHERE tags LIKE '%turning_point%'
+    AND YEAR(date::DATE) BETWEEN 2010 AND 2026
+  ORDER BY date
+`));
 ```
 
 ```js
@@ -198,7 +213,9 @@ display(html`
 ## National Summary (${latestYear})
 
 ```js
-if (nationalGaps.length === 0) {
+if (noEthnicitySelected) {
+  display(html`<p style="color: #888; font-style: italic;">Select at least one ethnicity above to see gap data.</p>`);
+} else if (nationalGaps.length === 0) {
   display(html`<p style="color: #888; font-style: italic;">No equity gap data for this indicator yet.</p>`);
 } else {
   const hasCI = nationalGaps.some(d => d.gap_lower_ci != null);
@@ -325,6 +342,14 @@ if (trendGaps.length === 0) {
         fontSize: 10,
         fill: "#888",
         fontStyle: "italic",
+      }),
+      // Policy turning points
+      Plot.ruleX(policyEvents, {
+        x: "year",
+        stroke: d => d.category === "repeal" ? "#e74c3c" : "#9b59b6",
+        strokeWidth: 1,
+        strokeDasharray: "2,4",
+        title: d => d.title,
       }),
     ],
   }));

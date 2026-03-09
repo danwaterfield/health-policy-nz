@@ -37,6 +37,8 @@ class WorkforceTransformer(BaseTransformer):
             ).fetchall()
         }
 
+        conn.execute("DELETE FROM fact_workforce")
+
         data_source_id = 4  # Workforce
         inserted = 0
         skipped = 0

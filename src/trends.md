@@ -13,6 +13,7 @@ const db = await DuckDBClient.of({
   dim_ethnicity:       FileAttachment("data/dim_ethnicity.parquet"),
   dim_geography:       FileAttachment("data/dim_geography.parquet"),
   dim_time:            FileAttachment("data/dim_time.parquet"),
+  fact_policy_events:  FileAttachment("data/fact_policy_events.parquet"),
 });
 ```
 
@@ -38,6 +39,18 @@ const allYears = Array.from(await db.query(`
   WHERE g.level = 'national'
     AND e.name IN ('Maori', 'Pacific')
   ORDER BY i.name, e.name, t.year
+`));
+
+// Policy turning points for annotation
+const policyEvents = Array.from(await db.query(`
+  SELECT
+    YEAR(date::DATE) AS year,
+    title,
+    category
+  FROM fact_policy_events
+  WHERE tags LIKE '%turning_point%'
+    AND YEAR(date::DATE) BETWEEN 2010 AND 2026
+  ORDER BY date
 `));
 ```
 
@@ -269,6 +282,18 @@ Indicators where the trajectory changed most, showing all years including the CO
             x: "year", y: yMax + yPad * 0.5,
             text: "label", fontSize: 9, fill: "#bbb", textAnchor: "middle",
           }),
+
+          // Policy turning points
+          Plot.ruleX(
+            policyEvents.filter(e => e.year >= xMin && e.year <= xMax),
+            {
+              x: "year",
+              stroke: d => d.category === "repeal" ? "#e74c3c" : "#9b59b6",
+              strokeWidth: 1,
+              strokeDasharray: "2,4",
+              title: d => d.title,
+            }
+          ),
 
           // Zero line
           Plot.ruleY([0], { stroke: "#ddd" }),
