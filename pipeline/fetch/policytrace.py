@@ -68,8 +68,8 @@ class PolicyTraceFetcher(BaseFetcher):
             self.log("Using existing cached bundle")
             return dest
 
-        raise RuntimeError(
-            f"PolicyTrace bundle unavailable. Set POLICYTRACE_LOCAL_PATH to your "
-            f"local policytrace checkout's site/data/ directory, or ensure "
-            f"{DEFAULT_BUNDLE_URL} is reachable."
+        self.log(
+            "WARNING: PolicyTrace bundle unavailable — policy event annotations will be skipped. "
+            f"Set POLICYTRACE_LOCAL_PATH or ensure {DEFAULT_BUNDLE_URL} is reachable."
         )
+        return None

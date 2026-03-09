@@ -42,7 +42,11 @@ class NZDepFetcher(BaseFetcher):
             if dest.exists():
                 self.log("Using existing cached file despite staleness")
                 return dest
+            seed = LOOKUP_DIR / "nzdep_seed.csv"
+            if seed.exists():
+                self.log(f"Falling back to pre-aggregated seed CSV: {seed}")
+                return seed
             raise RuntimeError(
-                f"Could not download NZDep2018 data. "
+                f"Could not download NZDep2018 data and no seed fallback found. "
                 f"Download manually from: {url}\nError: {e}"
             )
