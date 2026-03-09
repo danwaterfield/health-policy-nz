@@ -18,22 +18,23 @@ const db = await DuckDBClient.of({
 const workforce = Array.from(await db.query(`
   SELECT
     fw.role_type,
-    fw.fte_filled,
-    fw.fte_vacant,
-    fw.vacancy_rate,
-    fw.international_pct,
+    AVG(fw.fte_filled)       AS fte_filled,
+    AVG(fw.fte_vacant)       AS fte_vacant,
+    AVG(fw.vacancy_rate)     AS vacancy_rate,
+    AVG(fw.international_pct) AS international_pct,
     g.name AS region,
     g.level,
     t.year
   FROM fact_workforce fw
   JOIN dim_geography g ON fw.geography_id = g.id
   JOIN dim_time t ON fw.time_id = t.id
+  GROUP BY fw.role_type, g.name, g.level, t.year
   ORDER BY t.year DESC, g.name
 `));
 
 const gps = workforce.filter(d => d.role_type === "gp");
 const nurses = workforce.filter(d => d.role_type === "nurse");
-const latestYear = Math.max(...workforce.map(d => d.year).filter(Boolean));
+const latestYear = workforce.length ? Math.max(...workforce.map(d => d.year).filter(Boolean)) : null;
 const latestGps = gps.filter(d => d.year === latestYear);
 const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "district");
 ```

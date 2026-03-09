@@ -96,6 +96,8 @@ class DemographicsTransformer(BaseTransformer):
 
     def _insert_projections(self, df, conn, dry_run=False):
         """Insert from seed CSV with columns: year, scenario, geography, population."""
+        conn.execute("DELETE FROM fact_demand_projection")
+
         geo_map = {
             (label, stype): gid
             for label, stype, gid in conn.execute(

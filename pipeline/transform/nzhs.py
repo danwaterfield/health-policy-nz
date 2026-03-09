@@ -93,6 +93,8 @@ class NZHSTransformer(BaseTransformer):
         # Ensure all years present in dim_time
         time_map = self._ensure_time_entries(conn, df["year"].dropna().unique())
 
+        conn.execute("DELETE FROM fact_health_indicator")
+
         data_source_id = 1  # NZHS
         inserted = 0
         suppressed_count = 0

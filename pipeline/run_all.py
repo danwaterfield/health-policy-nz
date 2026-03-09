@@ -17,7 +17,9 @@ from pipeline.fetch.electoral import ElectoralFetcher
 from pipeline.fetch.corrections import CorrectionsFetcher
 from pipeline.fetch.census_age import CensusAgeFetcher
 from pipeline.fetch.boundaries import BoundariesFetcher
+from pipeline.fetch.policytrace import PolicyTraceFetcher
 from pipeline.transform.boundaries import BoundariesTransformer
+from pipeline.transform.policytrace import PolicyTraceTransformer
 from pipeline.transform.normalise import load_lookups
 from pipeline.transform.nzhs import NZHSTransformer
 from pipeline.transform.health_targets import HealthTargetsTransformer
@@ -56,6 +58,7 @@ def run(dry_run=False):
         CorrectionsFetcher(),
         CensusAgeFetcher(),
         BoundariesFetcher(),
+        PolicyTraceFetcher(),
     ]
 
     raw_paths = {}
@@ -78,6 +81,7 @@ def run(dry_run=False):
         (CorrectionsTransformer(), "corrections"),
         (CensusAgeTransformer(), "census_age"),
         (BoundariesTransformer(), "boundaries"),
+        (PolicyTraceTransformer(), "policytrace"),
     ]
 
     for transformer, key in transformers:

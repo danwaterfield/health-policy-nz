@@ -20,6 +20,7 @@ TABLES_TO_EXPORT = [
     "fact_corrections",
     "fact_age_distribution",
     "fact_bias_estimates",
+    "fact_policy_events",
 ]
 
 

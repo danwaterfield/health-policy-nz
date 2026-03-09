@@ -72,6 +72,14 @@ SOURCES = {
         "filename": "corrections_seed.csv",
         "description": "Corrections NZ prison population by ethnicity (Dec 2023)",
     },
+    "policytrace": {
+        "url": os.getenv(
+            "POLICYTRACE_BUNDLE_URL",
+            "https://danwaterfield.github.io/policytrace/data/nz-health-policy.interop.v1.json",
+        ),
+        "filename": "nz-health-policy.interop.v1.json",
+        "description": "PolicyTrace nz-health-policy i4i interop bundle",
+    },
     "boundaries": {
         "url": (
             "https://opendata.arcgis.com/api/v3/datasets/"

@@ -256,6 +256,22 @@ CREATE TABLE IF NOT EXISTS mrp_estimates (
     source VARCHAR
 );
 
+-- PolicyTrace policy events (annotation overlay for charts)
+CREATE TABLE IF NOT EXISTS fact_policy_events (
+    id VARCHAR PRIMARY KEY,          -- legacy_id from PolicyTrace (e.g. nz-health-policy-0001)
+    date DATE,
+    date_precision VARCHAR,          -- day, month, year, unknown
+    title TEXT,
+    actor VARCHAR,
+    category VARCHAR,                -- legislation, proposal, cabinet, etc.
+    status VARCHAR,                  -- happened, proposed, reversed, contested
+    tags VARCHAR,                    -- pipe-separated tag strings (e.g. turning_point)
+    treaty_relevance VARCHAR,        -- yes, no, contested
+    confidence_score DOUBLE,
+    timeline_slug VARCHAR,
+    source_url VARCHAR
+);
+
 -- Blind spots registry
 CREATE TABLE IF NOT EXISTS blind_spots (
     id INTEGER PRIMARY KEY,

@@ -41,7 +41,9 @@ class HealthTargetsTransformer(BaseTransformer):
             ).fetchall()
         }
 
-        # Ensure time entries
+        conn.execute("DELETE FROM fact_service_access")
+
+        # Ensure time entries (guard against duplicates on re-run)
         time_map = {}
         for _, row in df.iterrows():
             year = row.get("year")
@@ -55,15 +57,22 @@ class HealthTargetsTransformer(BaseTransformer):
             if key not in time_map:
                 period_label = f"Q{quarter_int} {year_int}" if quarter_int else str(year_int)
                 period_type = "quarterly" if quarter_int else "annual"
-                conn.execute("""
-                    INSERT INTO dim_time (id, year, quarter, period_label, period_type)
-                    VALUES (nextval('dim_time_id_seq'), ?, ?, ?, ?)
-                """, (year_int, quarter_int, period_label, period_type))
-                result = conn.execute(
+                existing = conn.execute(
                     "SELECT id FROM dim_time WHERE year = ? AND quarter IS NOT DISTINCT FROM ? AND period_type = ?",
                     (year_int, quarter_int, period_type)
                 ).fetchone()
-                time_map[key] = result[0] if result else None
+                if existing:
+                    time_map[key] = existing[0]
+                else:
+                    conn.execute("""
+                        INSERT INTO dim_time (id, year, quarter, period_label, period_type)
+                        VALUES (nextval('dim_time_id_seq'), ?, ?, ?, ?)
+                    """, (year_int, quarter_int, period_label, period_type))
+                    result = conn.execute(
+                        "SELECT id FROM dim_time WHERE year = ? AND quarter IS NOT DISTINCT FROM ? AND period_type = ?",
+                        (year_int, quarter_int, period_type)
+                    ).fetchone()
+                    time_map[key] = result[0] if result else None
 
         data_source_id = 2  # Health Targets
         inserted = 0
