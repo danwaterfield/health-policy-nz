@@ -61,6 +61,8 @@ class NZDepTransformer(BaseTransformer):
         suffix = path.suffix.lower()
         if suffix in (".xlsx", ".xls"):
             df = self._load_excel(path)
+        elif suffix == ".csv":
+            return self._load_seed_csv(path, conn)
         else:
             self.log(f"Unknown file type {suffix}, skipping")
             return
@@ -127,6 +129,50 @@ class NZDepTransformer(BaseTransformer):
             inserted += 1
 
         self.log(f"Done: {inserted} NZDep rows inserted")
+
+    def _load_seed_csv(self, path: Path, conn) -> None:
+        """Load pre-aggregated seed CSV (geography, year, nzdep_mean_score, pct_q1-5, sa1_count, source)."""
+        self.log(f"Loading pre-aggregated NZDep seed CSV: {path}")
+        df = pd.read_csv(path)
+        df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+
+        geo_rows = conn.execute(
+            "SELECT id, name FROM dim_geography WHERE level IN ('national','health_region')"
+        ).fetchall()
+        geo_map = {name: gid for gid, name in geo_rows}
+
+        inserted = 0
+        for _, row in df.iterrows():
+            geo_name = str(row.get("geography", "")).strip()
+            # Accept "National" or "New Zealand" for national row
+            if geo_name.lower() in ("national", "new zealand"):
+                geo_id = geo_map.get("National") or geo_map.get("New Zealand")
+            else:
+                geo_id = geo_map.get(geo_name)
+            if geo_id is None:
+                self.log(f"WARNING: unknown geography '{geo_name}', skipping")
+                continue
+
+            year = int(row.get("year", 2018))
+            conn.execute("""
+                INSERT INTO fact_nzdep
+                    (id, geography_id, year, nzdep_mean_score,
+                     pct_q1, pct_q2, pct_q3, pct_q4, pct_q5, sa1_count, source)
+                VALUES (nextval('fact_nzdep_id_seq'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                geo_id, year,
+                float(row.get("nzdep_mean_score", 0)),
+                float(row.get("pct_q1", 0)),
+                float(row.get("pct_q2", 0)),
+                float(row.get("pct_q3", 0)),
+                float(row.get("pct_q4", 0)),
+                float(row.get("pct_q5", 0)),
+                int(row.get("sa1_count", 0)),
+                str(row.get("source", "NZDep2018 SA1 index — University of Otago")),
+            ))
+            inserted += 1
+
+        self.log(f"Done: {inserted} NZDep rows inserted from seed CSV")
 
     def _load_excel(self, path: Path) -> pd.DataFrame | None:
         self.log(f"Loading NZDep2018 Excel: {path} ...")
