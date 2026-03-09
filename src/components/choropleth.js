@@ -28,12 +28,13 @@ export function choropleth(topo, gapData, {
   title = "",
   ethnicity = "",
 } = {}) {
-  if (!topo || !gapData?.length) {
+  if (!topo) {
     const div = document.createElement("div");
     div.style = "padding:1rem; background:#f5f5f5; border-radius:6px; color:#666; font-size:0.9em; border:1px dashed #ccc;";
-    div.textContent = "Map unavailable — no regional gap data for this selection.";
+    div.textContent = "Map unavailable — TopoJSON not loaded.";
     return div;
   }
+  const hasGapData = gapData?.length > 0;
 
   // Decode TopoJSON → GeoJSON feature collection
   const objectKey = Object.keys(topo.objects)[0];
@@ -49,12 +50,13 @@ export function choropleth(topo, gapData, {
   }
 
   // Colour by gap direction + magnitude
-  const adverseMax = d3.max(gapData, d => d.gap_direction === "adverse" ? Math.abs(d.absolute_gap) : 0) || 20;
+  const adverseMax = d3.max(gapData ?? [], d => d.gap_direction === "adverse" ? Math.abs(d.absolute_gap) : 0) || 20;
   const colorScale = d3.scaleSequential()
     .domain([0, adverseMax])
     .interpolator(t => d3.interpolateReds(t * 0.85 + 0.1)); // avoid pure white at 0
 
   const fillColor = (feature) => {
+    if (!hasGapData) return "#e0e0e0";
     const region = feature.properties?.health_region;
     const rec = lookup.get(region);
     if (!rec) return "#e0e0e0";
@@ -77,7 +79,9 @@ export function choropleth(topo, gapData, {
     height: Math.round(width * 1.55),
     projection: { type: "mercator", domain: geojson },
     title: title || `Regional equity gap${ethnicity ? ` — ${ethnicity}` : ""}`,
-    subtitle: "Each DHB coloured by its health region's equity gap. Red = adverse, blue = favourable.",
+    subtitle: hasGapData
+      ? "Each DHB coloured by its health region's equity gap. Red = adverse, blue = favourable."
+      : "No regional breakdown available — NZHS provides national-level ethnicity data only.",
     style: { fontSize: "12px" },
     marks: [
       Plot.geo(geojson, {
