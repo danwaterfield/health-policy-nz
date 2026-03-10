@@ -7,6 +7,10 @@ title: Workforce
 GP density, nursing vacancy rates, and workforce shortfalls by region.
 
 ```js
+import {exportButtons} from "./components/chart-export.js";
+```
+
+```js
 const db = await DuckDBClient.of({
   fact_workforce: FileAttachment("data/fact_workforce.parquet"),
   dim_geography: FileAttachment("data/dim_geography.parquet"),
@@ -49,17 +53,18 @@ if (latestGps.length === 0) {
   display(Plot.plot({
     title: "GP vacancy rate by region",
     marginLeft: 200,
-    width: 700,
+    width,
     height: Math.max(300, sorted.length * 22),
     x: { label: "Vacancy rate (%)", domain: [0, Math.max(...sorted.map(d => d.vacancy_rate ?? 0)) * 1.1] },
     y: { domain: sorted.map(d => d.region) },
     color: { legend: false },
     marks: [
-      Plot.ruleX([0.08], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "8% threshold" }),
+      Plot.ruleX([8], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "8% threshold" }),
       Plot.barX(sorted, {
         x: d => (d.vacancy_rate ?? 0) * 100,
         y: "region",
         fill: d => d.vacancy_rate > 0.15 ? "#c0392b" : d.vacancy_rate > 0.08 ? "#e5850b" : "#2d8a4e",
+        tip: true,
         title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy rate\nFTE filled: ${d.fte_filled ?? "—"}`,
       }),
     ],
@@ -76,7 +81,7 @@ if (latestGps.length > 0) {
     display(Plot.plot({
       title: "GP workforce: international recruitment % by region",
       marginLeft: 200,
-      width: 700,
+      width,
       height: Math.max(200, withIntl.length * 18),
       x: { label: "International GPs (%)" },
       marks: [
@@ -84,6 +89,7 @@ if (latestGps.length > 0) {
           x: d => (d.international_pct ?? 0) * 100,
           y: "region",
           fill: "#7b6db8",
+          tip: true,
           title: d => `${d.region}: ${((d.international_pct ?? 0) * 100).toFixed(1)}% internationally trained`,
         }),
       ],
@@ -99,15 +105,16 @@ if (latestNurses.length > 0) {
   display(Plot.plot({
     title: "Nursing vacancy rate by district",
     marginLeft: 200,
-    width: 700,
+    width,
     height: Math.max(200, latestNurses.length * 18),
     x: { label: "Vacancy rate (%)" },
     marks: [
-      Plot.ruleX([0.12], { stroke: "#e5850b", strokeDasharray: "4,4" }),
+      Plot.ruleX([12], { stroke: "#e5850b", strokeDasharray: "4,4" }),
       Plot.barX(latestNurses.sort((a, b) => b.vacancy_rate - a.vacancy_rate), {
         x: d => (d.vacancy_rate ?? 0) * 100,
         y: "region",
         fill: d => d.vacancy_rate > 0.20 ? "#c0392b" : "#e5850b",
+        tip: true,
         title: d => `${d.region}: ${((d.vacancy_rate ?? 0) * 100).toFixed(1)}% vacancy`,
       }),
     ],
@@ -135,6 +142,7 @@ display(Inputs.table(workforce.filter(d => d.year === latestYear), {
     fte_vacant: d => d?.toFixed(0) ?? "—",
   },
 }));
+display(exportButtons(null, workforce.filter(d => d.year === latestYear), { filename: "workforce-data" }));
 ```
 
 ---

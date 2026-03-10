@@ -8,6 +8,8 @@ Comparing health indicator values for Māori and Pacific peoples against the Eur
 
 ```js
 import {choropleth} from "./components/choropleth.js";
+import {exportButtons} from "./components/chart-export.js";
+import {formatOrSuppress} from "./components/suppressed-cell.js";
 const nzTopo = await FileAttachment("data/nz-health-regions.json").json();
 ```
 
@@ -219,12 +221,12 @@ if (noEthnicitySelected) {
   display(html`<p style="color: #888; font-style: italic;">No equity gap data for this indicator yet.</p>`);
 } else {
   const hasCI = nationalGaps.some(d => d.gap_lower_ci != null);
-  display(Plot.plot({
+  const nationalPlot = Plot.plot({
     title: `Gap vs. European/Other — national (${latestYear})`,
     subtitle: hasCI ? "Error bars show 95% CI · ~ = not statistically significant (CI crosses zero)" : "",
     marginLeft: 100,
     marginRight: 20,
-    width: 700,
+    width,
     x: { label: "Gap (percentage points)" },
     y: { label: null },
     color: { legend: true, domain: ["adverse", "neutral", "favourable"], range: ["#d73027", "#ffffbf", "#4575b4"] },
@@ -236,6 +238,7 @@ if (noEthnicitySelected) {
         y: "ethnicity",
         fill: "gap_direction",
         fillOpacity: d => d.significant ? 1.0 : 0.35,
+        tip: true,
         title: d => [
           `${d.ethnicity}: ${d.absolute_gap?.toFixed(1)} pp (${d.gap_direction})`,
           `95% CI: [${d.gap_lower_ci?.toFixed(1)}, ${d.gap_upper_ci?.toFixed(1)}] pp`,
@@ -273,7 +276,9 @@ if (noEthnicitySelected) {
         fill: d => d.significant ? "white" : "#555",
       }),
     ],
-  }));
+  });
+  display(nationalPlot);
+  display(exportButtons(nationalPlot, nationalGaps, { filename: "equity-gap-national" }));
 
   // Non-significant gaps note
   const nonSig = nationalGaps.filter(d => !d.significant);
@@ -300,11 +305,11 @@ if (trendGaps.length === 0) {
   display(html`<p style="color: #888; font-style: italic;">No trend data available.</p>`);
 } else {
   const ethnicityColors = { "Maori": "#d73027", "Pacific": "#e5850b", "Asian": "#4575b4" };
-  display(Plot.plot({
+  const trendPlot = Plot.plot({
     title: "Equity gap trend — national (vs. European/Other)",
     marginLeft: 60,
     marginRight: 80,
-    width: 700,
+    width,
     y: { label: "Gap (pp)", zero: true },
     x: { label: "Year", tickFormat: d => String(d) },
     color: { legend: true },
@@ -315,12 +320,14 @@ if (trendGaps.length === 0) {
         y: "absolute_gap",
         stroke: "ethnicity",
         strokeWidth: 2,
+        tip: true,
       }),
       Plot.dot(trendGaps, {
         x: "year",
         y: "absolute_gap",
         fill: "ethnicity",
         r: 3,
+        tip: true,
         title: d => `${d.ethnicity} (${d.year}): ${d.absolute_gap >= 0 ? "+" : ""}${d.absolute_gap?.toFixed(1)} pp (${d.gap_direction})`,
       }),
       Plot.text(trendGaps.filter(d => d.year === latestYear), {
@@ -352,7 +359,9 @@ if (trendGaps.length === 0) {
         title: d => d.title,
       }),
     ],
-  }));
+  });
+  display(trendPlot);
+  display(exportButtons(trendPlot, trendGaps, { filename: "equity-gap-trend" }));
 
   display(html`<p style="font-size: 0.85em; color: #666; margin-top: 0.25rem;">
     <strong>Note</strong>: the dashed vertical line marks 2020. Data from 2020–2022 reflects pandemic
@@ -400,7 +409,7 @@ if (regionalGaps.length === 0) {
     title: `Equity gap by region (${latestYear})`,
     marginLeft: 200,
     marginRight: 60,
-    width: 700,
+    width,
     height: Math.max(300, sorted.length * 22),
     x: { label: "Gap (percentage points)" },
     y: { domain: sorted.map(d => `${d.geography} — ${d.ethnicity}`) },
@@ -411,6 +420,7 @@ if (regionalGaps.length === 0) {
         x: "absolute_gap",
         y: d => `${d.geography} — ${d.ethnicity}`,
         fill: "gap_direction",
+        tip: true,
         title: d => `${d.geography} — ${d.ethnicity}: ${d.absolute_gap?.toFixed(1)} pp (${d.gap_direction})`,
       }),
     ],
@@ -468,7 +478,7 @@ if (regionalNzdep.length === 0) {
     title: "Deprivation quintile distribution by health region (NZDep2018)",
     subtitle: "Q5 = most deprived 20% of areas. Regions with more Q5 areas have structurally worse social determinants.",
     marginLeft: 220,
-    width: 700,
+    width,
     height: 200,
     x: { label: "Share of areas (%)", domain: [0, 100] },
     y: { domain: regionalNzdep.map(d => d.geography) },
@@ -492,6 +502,7 @@ if (regionalNzdep.length === 0) {
           x2: d => [d.pct_q1, d.pct_q1+d.pct_q2, d.pct_q1+d.pct_q2+d.pct_q3, d.pct_q1+d.pct_q2+d.pct_q3+d.pct_q4, 100][idx],
           y: "geography",
           fill: label,
+          tip: true,
           title: d => `${d.geography} ${label}: ${d[field]?.toFixed(1)}%`,
         })
       ),
@@ -524,7 +535,7 @@ if (lifeTables.length === 0) {
     title: "Life expectancy at birth — Māori vs non-Māori (2017–19)",
     subtitle: "Source: Stats NZ National and Subnational Period Life Tables 2017–19",
     marginLeft: 120,
-    width: 500,
+    width: Math.min(width, 500),
     height: 200,
     x: { label: "Life expectancy (years)", domain: [60, 90] },
     y: { label: null },
@@ -539,6 +550,7 @@ if (lifeTables.length === 0) {
         x2: "ex",
         y: d => `${d.ethnicity_group} (${d.sex})`,
         fill: "ethnicity_group",
+        tip: true,
         title: d => `${d.ethnicity_group} ${d.sex}: ${d.ex?.toFixed(1)} years`,
       }),
       Plot.text(lifeAtBirth.filter(d => d.sex !== "total"), {

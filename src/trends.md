@@ -148,7 +148,7 @@ if (slopeData.length === 0) {
     subtitle: "Positive = gap worsening faster after COVID · Negative = gap narrowing faster after COVID",
     marginLeft: 240,
     marginRight: 80,
-    width: 750,
+    width,
     height: Math.max(300, sorted.length * 26),
     x: {
       label: "Annual slope change (pp/year)",

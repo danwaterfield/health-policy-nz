@@ -42,8 +42,14 @@ const selectedGeo = view(Inputs.select(
 ```
 
 ```js
+// Validate inputs against known values before interpolating into SQL
+const knownServiceTypes = serviceTypes.map(d => d.service_type);
+const knownGeoIds = geographies.map(d => d.id);
+const safeService = knownServiceTypes.includes(selectedService) ? selectedService : null;
+const safeGeoId = knownGeoIds.includes(selectedGeo) ? selectedGeo : null;
+
 // Query projection data for all scenarios — aggregate sub-projections per year
-const projections = Array.from(await db.query(`
+const projections = (safeService && safeGeoId != null) ? Array.from(await db.query(`
   SELECT
     fdp.scenario,
     SUM(fdp.projected_volume) AS projected_volume,
@@ -51,11 +57,11 @@ const projections = Array.from(await db.query(`
     t.year
   FROM fact_demand_projection fdp
   JOIN dim_time t ON fdp.time_id = t.id
-  WHERE fdp.service_type = '${selectedService}'
-    AND fdp.geography_id = ${selectedGeo}
+  WHERE fdp.service_type = '${safeService}'
+    AND fdp.geography_id = ${safeGeoId}
   GROUP BY fdp.scenario, t.year
   ORDER BY t.year, fdp.scenario
-`));
+`)) : [];
 
 const hasData = projections.length > 0;
 ```
@@ -79,7 +85,7 @@ if (!hasData) {
   display(Plot.plot({
     title: `Projected demand — ${selectedService} service`,
     marginLeft: 80,
-    width: 700,
+    width,
     y: { label: "Projected volume" },
     x: { label: "Year" },
     marks: [
@@ -88,30 +94,34 @@ if (!hasData) {
         projections.filter(d => d.scenario !== "baseline"),
         Plot.groupX(
           { y1: "min", y2: "max" },
-          { x: "year", y: "projected_volume", fill: "#1f77b4", fillOpacity: 0.15 }
+          { x: "year", y: "projected_volume", fill: "#1f77b4", fillOpacity: 0.15, tip: true }
         )
       ),
       // Scenario lines
       Plot.lineY(low, {
         x: "year", y: "projected_volume",
         stroke: "#aec7e8", strokeWidth: 1.5, strokeDasharray: "4,4",
+        tip: true,
         title: d => `Low scenario: ${d.projected_volume?.toFixed(0)}`,
       }),
       Plot.lineY(high, {
         x: "year", y: "projected_volume",
         stroke: "#aec7e8", strokeWidth: 1.5, strokeDasharray: "4,4",
+        tip: true,
         title: d => `High scenario: ${d.projected_volume?.toFixed(0)}`,
       }),
       // Baseline
       Plot.lineY(baseline, {
         x: "year", y: "projected_volume",
         stroke: "#1f77b4", strokeWidth: 2.5,
+        tip: true,
         title: d => `Baseline: ${d.projected_volume?.toFixed(0)}`,
       }),
       Plot.dot(baseline, {
         x: "year", y: "projected_volume",
         fill: "#1f77b4",
         symbol: "circle",
+        tip: true,
         title: d => `${d.year}: ${d.projected_volume?.toFixed(0)} (baseline)`,
       }),
     ],
