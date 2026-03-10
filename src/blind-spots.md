@@ -9,8 +9,13 @@ Known gaps in NZ public health data that limit what this dashboard can show.
 These are not analytical limitations — they are structural absences in the data itself.
 
 ```js
+import {dataFreshness} from "./components/data-freshness.js";
+```
+
+```js
 const db = await DuckDBClient.of({
   blind_spots: FileAttachment("data/blind_spots.parquet"),
+  dim_data_source: FileAttachment("data/dim_data_source.parquet"),
 });
 ```
 
@@ -131,6 +136,11 @@ Every metric on this dashboard has a denominator — a population that was measu
 2. Note sample suppression — small-n cells are hidden, often in rural and minority communities
 3. Treat Māori/Pacific subgroup analyses as underestimates of true disparity
 4. Do not use projections to justify reducing services in areas that appear to have low demand — low measured demand in deprived areas frequently reflects access barriers, not low need
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
+```
 
 ---
 

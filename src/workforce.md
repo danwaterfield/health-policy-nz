@@ -8,6 +8,7 @@ GP density, nursing vacancy rates, and workforce shortfalls by region.
 
 ```js
 import {exportButtons} from "./components/chart-export.js";
+import {dataFreshness} from "./components/data-freshness.js";
 ```
 
 ```js
@@ -15,6 +16,7 @@ const db = await DuckDBClient.of({
   fact_workforce: FileAttachment("data/fact_workforce.parquet"),
   dim_geography: FileAttachment("data/dim_geography.parquet"),
   dim_time: FileAttachment("data/dim_time.parquet"),
+  dim_data_source: FileAttachment("data/dim_data_source.parquet"),
 });
 ```
 
@@ -143,6 +145,11 @@ display(Inputs.table(workforce.filter(d => d.year === latestYear), {
   },
 }));
 display(exportButtons(null, workforce.filter(d => d.year === latestYear), { filename: "workforce-data" }));
+```
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
 ```
 
 ---

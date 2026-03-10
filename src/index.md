@@ -7,6 +7,10 @@ title: NZ Health System Dashboard
 A synthesis of public New Zealand health data — equity gaps, service access, workforce, and demand projections.
 
 ```js
+import {dataFreshness} from "./components/data-freshness.js";
+```
+
+```js
 const db = await DuckDBClient.of({
   dim_indicator: FileAttachment("data/dim_indicator.parquet"),
   dim_data_source: FileAttachment("data/dim_data_source.parquet"),
@@ -147,6 +151,11 @@ This dashboard synthesises public NZ health data to surface:
 | [Demand Forecast](/forecast) | Projected demand under demographic scenarios |
 | [Blind Spots](/blind-spots) | Known gaps in NZ health data |
 
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
+```
+
 ---
 
-*Data: Ministry of Health NZ, Health New Zealand, Stats NZ. Updated weekly. [Source code on GitHub](https://github.com).*
+*Data: Ministry of Health NZ, Health New Zealand, Stats NZ. Updated weekly. [Source code on GitHub](https://github.com/danwaterfield/health-policy-nz).*

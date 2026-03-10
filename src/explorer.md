@@ -10,6 +10,7 @@ Multi-year trends for each health indicator, broken down by ethnicity.
 import {ciBar} from "./components/ci-bar.js";
 import {exportButtons} from "./components/chart-export.js";
 import {formatOrSuppress} from "./components/suppressed-cell.js";
+import {dataFreshness} from "./components/data-freshness.js";
 ```
 
 ```js
@@ -52,7 +53,7 @@ const selectedIndicator = view(Inputs.select(
 
 const selectedEthnicities = view(Inputs.checkbox(
   new Map(ethnicities.map(d => [d.name, d.id])),
-  { label: "Ethnicity", value: ethnicities.filter(d => d.name !== "Total").map(d => d.id) }
+  { label: "Ethnicity", value: ethnicities.filter(d => ["Maori", "Pacific", "European/Other"].includes(d.name)).map(d => d.id) }
 ));
 
 const selectedRegion = view(Inputs.select(
@@ -241,6 +242,11 @@ if (regionData.length > 1) {
 } else {
   display(html`<p style="color: #888; font-style: italic;">Only one region has data for this indicator.</p>`);
 }
+```
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
 ```
 
 ---

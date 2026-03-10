@@ -7,10 +7,15 @@ title: Demand Forecast
 Projected health service demand under Stats NZ demographic scenarios.
 
 ```js
+import {dataFreshness} from "./components/data-freshness.js";
+```
+
+```js
 const db = await DuckDBClient.of({
   fact_demand_projection: FileAttachment("data/fact_demand_projection.parquet"),
   dim_geography: FileAttachment("data/dim_geography.parquet"),
   dim_time: FileAttachment("data/dim_time.parquet"),
+  dim_data_source: FileAttachment("data/dim_data_source.parquet"),
 });
 ```
 
@@ -163,6 +168,11 @@ The following relationships are established in NZ health literature. These are q
 | Workforce vacancy rate | Median wait time growth | ~6 months |
 | Age 85+ population share | Aged residential care demand | ~2 years |
 | Amenable mortality | GP density (rural) | Long-term |
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
+```
 
 ---
 

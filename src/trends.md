@@ -7,6 +7,10 @@ title: Pandemic Break Analysis
 Comparing the *rate of change* of equity gaps before and after the pandemic — not just levels, but whether the gap was widening or narrowing and at what speed.
 
 ```js
+import {dataFreshness} from "./components/data-freshness.js";
+```
+
+```js
 const db = await DuckDBClient.of({
   equity_gap:          FileAttachment("data/equity_gap.parquet"),
   dim_indicator:       FileAttachment("data/dim_indicator.parquet"),
@@ -14,6 +18,7 @@ const db = await DuckDBClient.of({
   dim_geography:       FileAttachment("data/dim_geography.parquet"),
   dim_time:            FileAttachment("data/dim_time.parquet"),
   fact_policy_events:  FileAttachment("data/fact_policy_events.parquet"),
+  dim_data_source:     FileAttachment("data/dim_data_source.parquet"),
 });
 ```
 
@@ -395,6 +400,11 @@ if (slopeData.length > 0) {
     }
   ));
 }
+```
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
 ```
 
 ---

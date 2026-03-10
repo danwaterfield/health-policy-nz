@@ -8,6 +8,7 @@ New Zealand Government Policy Statement on Health 2024–27 priority areas.
 
 ```js
 import {exportButtons} from "./components/chart-export.js";
+import {dataFreshness} from "./components/data-freshness.js";
 ```
 
 ```js
@@ -301,21 +302,7 @@ if (fsaTrend.length > 0) {
 ## Data Freshness
 
 ```js
-display(html`
-  <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: #f8f8f8; border-radius: 6px; font-size: 0.85em;">
-    <strong>Data sources:</strong>
-    ${sourceFreshness.map(s => {
-      const age = s.last_ingested_at
-        ? Math.floor((Date.now() - new Date(s.last_ingested_at).getTime()) / 86400000)
-        : null;
-      const color = age === null ? "#999" : age < 14 ? "#2d8a4e" : age < 90 ? "#e5850b" : "#c0392b";
-      const label = age === null ? "never" : age === 0 ? "today" : `${age}d ago`;
-      return html`<span style="margin-right: 1.5rem; white-space: nowrap;">
-        <span style="color: ${color}; font-weight: 600;">${label}</span> ${s.name}
-      </span>`;
-    })}
-  </div>
-`);
+display(dataFreshness(sourceFreshness));
 ```
 
 ---

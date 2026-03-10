@@ -10,6 +10,7 @@ Comparing health indicator values for Māori and Pacific peoples against the Eur
 import {choropleth} from "./components/choropleth.js";
 import {exportButtons} from "./components/chart-export.js";
 import {formatOrSuppress} from "./components/suppressed-cell.js";
+import {dataFreshness} from "./components/data-freshness.js";
 const nzTopo = await FileAttachment("data/nz-health-regions.json").json();
 ```
 
@@ -26,6 +27,7 @@ const db = await DuckDBClient.of({
   fact_life_tables: FileAttachment("data/fact_life_tables.parquet"),
   fact_corrections: FileAttachment("data/fact_corrections.parquet"),
   fact_policy_events: FileAttachment("data/fact_policy_events.parquet"),
+  dim_data_source: FileAttachment("data/dim_data_source.parquet"),
 });
 ```
 
@@ -680,6 +682,11 @@ if (correctionsData.length > 0) {
     </p>
   `);
 }
+```
+
+```js
+const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
+display(dataFreshness(sourceFreshness));
 ```
 
 ---
