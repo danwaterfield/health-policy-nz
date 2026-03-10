@@ -1,0 +1,47 @@
+@media print {
+  /* Hide navigation and interactive controls */
+  nav,
+  [style*="sidebar"],
+  .observablehq--sidebar,
+  .observablehq-header,
+  .observablehq-footer,
+  button,
+  input[type="checkbox"],
+  select,
+  label:has(input) {
+    display: none !important;
+  }
+
+  /* Full-width content */
+  main, .observablehq {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 1rem !important;
+  }
+
+  /* Chart sizing */
+  svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Subtle border around chart containers */
+  .card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+
+  /* Page breaks */
+  h2 {
+    page-break-after: avoid;
+  }
+  svg, table, .card {
+    page-break-inside: avoid;
+  }
+
+  /* Clean backgrounds */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

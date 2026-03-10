@@ -2,8 +2,10 @@ export default {
   root: "src",
   base: "/health-policy-nz/",
   title: "NZ Health System Dashboard",
+  style: "style.css",
   pages: [
     { name: "Overview", path: "/" },
+    { name: "Indicator Explorer", path: "/explorer" },
     { name: "Equity", path: "/equity" },
     { name: "GPS Scorecard", path: "/scorecard" },
     { name: "Workforce", path: "/workforce" },

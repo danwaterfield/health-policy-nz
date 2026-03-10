@@ -221,6 +221,21 @@ if (noEthnicitySelected) {
   display(html`<p style="color: #888; font-style: italic;">No equity gap data for this indicator yet.</p>`);
 } else {
   const hasCI = nationalGaps.some(d => d.gap_lower_ci != null);
+
+  // Narrative interpretation
+  const worst = nationalGaps.reduce((a, b) => Math.abs(a.absolute_gap) > Math.abs(b.absolute_gap) ? a : b);
+  const ind = indicators.find(d => d.id === indicatorId);
+  const dirLabel = worst.direction === "lower_better" ? "higher" : "lower";
+  const ratioText = worst.reference_value > 0
+    ? `(${(worst.target_value / worst.reference_value).toFixed(1)}x the rate for European/Other)`
+    : "";
+  display(html`<p style="font-size: 1.05em; font-weight: 500; color: #333; margin: 0.5rem 0 1rem; line-height: 1.5;">
+    <strong style="color: #c0392b;">${worst.ethnicity}</strong> have a
+    <strong>${Math.abs(worst.absolute_gap).toFixed(1)} percentage point</strong> ${dirLabel} rate
+    for ${ind?.name?.toLowerCase() ?? "this indicator"} compared to European/Other
+    ${ratioText}${worst.significant ? "" : " — though this difference is not statistically significant"}.
+  </p>`);
+
   const nationalPlot = Plot.plot({
     title: `Gap vs. European/Other — national (${latestYear})`,
     subtitle: hasCI ? "Error bars show 95% CI · ~ = not statistically significant (CI crosses zero)" : "",

@@ -125,7 +125,7 @@ const GPS_PRIORITIES = [
 ];
 
 // Populate values from data
-const scorecardRows = GPS_PRIORITIES.map(p => {
+const scorecardCards = GPS_PRIORITIES.map(p => {
   let value = null;
   let displayValue = "—";
   let source = "";
@@ -141,12 +141,12 @@ const scorecardRows = GPS_PRIORITIES.map(p => {
     const edRow = latestAccess.find(d => d.service_type === "ed");
     if (edRow?.pct_within_target != null) {
       value = edRow.pct_within_target;
-      displayValue = `${value.toFixed(1)}% within 6hrs`;
+      displayValue = `${value.toFixed(1)}%`;
       source = edRow.quarter ? `Q${edRow.quarter} ${edRow.year}` : `${edRow.year}`;
     }
   } else if (p.priority === "Quality") {
-    displayValue = "No data source";
-    source = "Immunisation/cancer data not yet ingested";
+    displayValue = "No data";
+    source = "Not yet ingested";
   } else if (p.priority === "Workforce") {
     const row = nurseVacancy[0];
     if (row?.vacancy_rate != null) {
@@ -155,41 +155,58 @@ const scorecardRows = GPS_PRIORITIES.map(p => {
       source = `${row.year}`;
     }
   } else if (p.priority === "Value") {
-    displayValue = "No data source";
-    source = "Cost data not publicly available";
+    displayValue = "No data";
+    source = "Not publicly available";
   }
 
   const tl = trafficLight(value, p.greenThreshold, p.direction);
 
-  return html`<tr style="border-bottom: 1px solid #eee;">
-    <td><strong>${p.priority}</strong></td>
-    <td>${p.metric}</td>
-    <td style="font-family: monospace;">${p.target}</td>
-    <td style="font-weight: 600;">${displayValue}</td>
-    <td style="color: ${tl.color}; font-size: 1.3em; text-align: center; font-weight: bold;"
-        title="${tl.label}">${tl.symbol}</td>
-    <td style="color: ${tl.color}; font-weight: 500;">${tl.label}</td>
-    <td style="color: #888; font-size: 0.85em;">${source}</td>
-  </tr>`;
+  return html`
+    <div style="
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      border-left: 5px solid ${tl.color};
+      padding: 1.25rem 1.5rem;
+      background: white;
+    ">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888;">${p.priority}</div>
+          <div style="font-size: 0.95em; font-weight: 500; margin-top: 0.15rem;">${p.metric}</div>
+        </div>
+        <div style="
+          font-size: 1.8em;
+          font-weight: bold;
+          color: ${tl.color};
+          line-height: 1;
+        ">${tl.symbol}</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div>
+          <div style="font-size: 1.6em; font-weight: 700; color: ${tl.color};">${displayValue}</div>
+          <div style="font-size: 0.8em; color: #888; margin-top: 0.15rem;">Target: ${p.target}</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: ${tl.color}18;
+            color: ${tl.color};
+          ">${tl.label}</div>
+          <div style="font-size: 0.75em; color: #999; margin-top: 0.25rem;">${source}</div>
+        </div>
+      </div>
+    </div>
+  `;
 });
 
 display(html`
-  <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-    <thead>
-      <tr style="border-bottom: 2px solid #ccc; font-size: 0.9em;">
-        <th style="text-align: left; padding: 0.5rem;">Priority</th>
-        <th style="text-align: left; padding: 0.5rem;">Key Metric</th>
-        <th style="text-align: left; padding: 0.5rem;">Target</th>
-        <th style="text-align: left; padding: 0.5rem;">Latest</th>
-        <th style="text-align: center; padding: 0.5rem;">Status</th>
-        <th style="text-align: left; padding: 0.5rem;">Assessment</th>
-        <th style="text-align: left; padding: 0.5rem;">Source</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${scorecardRows}
-    </tbody>
-  </table>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+    ${scorecardCards}
+  </div>
 `);
 ```
 
