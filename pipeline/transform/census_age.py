@@ -27,8 +27,8 @@ class CensusAgeTransformer(BaseTransformer):
             "SELECT id, name FROM dim_ethnicity WHERE response_type = 'total_response'"
         ).fetchall()
         eth_map = {name: eid for eid, name in eth_rows}
-        # Add Total as None (population-level, not a specific ethnicity)
-        eth_map["Total"] = None
+        # Total maps to dim_ethnicity id=1 (the "Total" row)
+        eth_map["Total"] = 1
 
         inserted = 0
         for _, row in df.iterrows():

@@ -74,7 +74,10 @@ class HealthTargetsTransformer(BaseTransformer):
                     ).fetchone()
                     time_map[key] = result[0] if result else None
 
-        data_source_id = 2  # Health Targets
+        data_source_id_row = conn.execute(
+            "SELECT id FROM dim_data_source WHERE slug = 'health_targets' LIMIT 1"
+        ).fetchone()
+        data_source_id = data_source_id_row[0] if data_source_id_row else 2
         inserted = 0
         skipped = 0
 

@@ -40,6 +40,10 @@ class CorrectionsTransformer(BaseTransformer):
                         eth_id = v
                         break
 
+            if eth_id is None:
+                self.log(f"WARNING: no ethnicity match for '{eth_name}' — skipping")
+                continue
+
             conn.execute("""
                 INSERT INTO fact_corrections
                     (id, ethnicity_id, year, sentenced_count, remand_count,

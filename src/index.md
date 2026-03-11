@@ -35,7 +35,7 @@ const sourceCount = Number(Array.from(await db.query("SELECT COUNT(*) AS n FROM 
     <h2>${indicatorCount}</h2>
     <p>Health indicators tracked</p>
   </div>
-  <div class="card" style="--card-color: var(--theme-red);">
+  <div class="card" style="--card-color: #c0392b;">
     <h2>${adverseGapCount}</h2>
     <p>Indicator–ethnicity combinations with adverse gaps</p>
   </div>
@@ -86,21 +86,21 @@ const topGaps = Array.from(await db.query(`
 
 ```js
 const severityColor = (gap) => Math.abs(gap) >= 20 ? "#c0392b" : Math.abs(gap) >= 10 ? "#e5850b" : "#2d7d46";
+const displayEthnicity = (name) => ({ "Maori": "Māori", "Pacific": "Pacific", "Asian": "Asian", "European/Other": "European/Other", "Total": "Total", "MELAA": "MELAA", "Other": "Other" })[name] ?? name;
 
 display(html`
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
     ${topGaps.map(d => {
       const gap = d.absolute_gap;
       const color = severityColor(gap);
-      const direction = gap > 0 ? "higher than" : "lower than";
       const abs = Math.abs(gap).toFixed(1);
       return html`
         <div style="border-left: 4px solid ${color}; background: #fafafa; padding: 1rem 1.25rem; border-radius: 0 6px 6px 0;">
-          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 0.25rem;">
-            ${d.ethnicity} · ${d.year}
+          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #555; margin-bottom: 0.25rem;">
+            ${displayEthnicity(d.ethnicity)} · ${d.year}
           </div>
           <div style="font-size: 1.5em; font-weight: 700; color: ${color}; line-height: 1.1;">
-            +${abs} pp
+            ${gap >= 0 ? "+" : "−"}${abs} pp
           </div>
           <div style="font-size: 0.95em; font-weight: 600; margin: 0.25rem 0 0.5rem;">${d.indicator}</div>
           <div style="font-size: 0.85em; color: #555;">
@@ -117,7 +117,7 @@ display(html`
 display(html`
   <p style="
     font-size: 0.88em;
-    color: #666;
+    color: #555;
     border-top: 1px solid #e0e0e0;
     padding-top: 0.75rem;
     margin-top: 0.25rem;
@@ -145,10 +145,12 @@ This dashboard synthesises public NZ health data to surface:
 
 | Page | What you'll find |
 |---|---|
+| [Indicator Explorer](/explorer) | Multi-year trends by indicator and ethnicity |
 | [Equity](/equity) | Equity gap explorer by indicator and ethnicity |
 | [GPS Scorecard](/scorecard) | Government Policy Statement 2024–27 accountability |
 | [Workforce](/workforce) | GP density and workforce pressure by region |
 | [Demand Forecast](/forecast) | Projected demand under demographic scenarios |
+| [COVID Impact](/trends) | Pre- vs post-COVID trajectory shift analysis |
 | [Blind Spots](/blind-spots) | Known gaps in NZ health data |
 
 ```js

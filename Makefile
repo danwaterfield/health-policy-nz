@@ -1,13 +1,15 @@
 .PHONY: pipeline site build deploy test copy-data clean
 
+PYTHON ?= python3.12
+
 pipeline:
-	python pipeline/run_all.py
+	$(PYTHON) -m pipeline.run_all
 
 site:
 	npm run dev
 
 build:
-	python pipeline/run_all.py
+	$(PYTHON) -m pipeline.run_all
 	$(MAKE) copy-data
 	npm run build
 
@@ -16,7 +18,7 @@ copy-data:
 	cp data/dist/*.parquet src/data/ 2>/dev/null || true
 
 test:
-	pytest tests/ -v
+	$(PYTHON) -m pytest tests/ -v
 
 deploy: build
 	npm run deploy

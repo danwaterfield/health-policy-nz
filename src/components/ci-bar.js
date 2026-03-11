@@ -75,7 +75,7 @@ export function ciBar(data, {
     const wrapper = document.createElement("div");
     wrapper.appendChild(plot);
     const footer = document.createElement("p");
-    footer.style.cssText = "font-size: 0.8em; color: #666; margin-top: 0.25rem;";
+    footer.style.cssText = "font-size: 0.8em; color: #636363; margin-top: 0.25rem;";
     footer.textContent = sourceNote;
     wrapper.appendChild(footer);
     return wrapper;
@@ -112,7 +112,7 @@ export function ciBarWithSuppression(data, opts = {}) {
         x: () => 0.5,  // placeholder width
         y: rest.x,
         fill: "none",
-        stroke: "#999",
+        stroke: "#636363",
         strokeDasharray: "3,3",
         title: () => "Value suppressed: sample too small to report reliably. This area may have unmet need not visible in this data.",
       })

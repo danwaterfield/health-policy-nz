@@ -26,7 +26,7 @@ const db = await DuckDBClient.of({
 
 ```js
 function trafficLight(value, threshold, direction) {
-  if (value === null || threshold === null) return { color: "#999", label: "No data", symbol: "—" };
+  if (value === null || threshold === null) return { color: "#636363", label: "No data", symbol: "—" };
   const better = direction === "higher_better" ? value >= threshold : value <= threshold;
   const borderline = direction === "higher_better"
     ? (value >= threshold * 0.85 && value < threshold)
@@ -172,7 +172,7 @@ const scorecardCards = GPS_PRIORITIES.map(p => {
     ">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
         <div>
-          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #888;">${p.priority}</div>
+          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #636363;">${p.priority}</div>
           <div style="font-size: 0.95em; font-weight: 500; margin-top: 0.15rem;">${p.metric}</div>
         </div>
         <div style="
@@ -185,7 +185,7 @@ const scorecardCards = GPS_PRIORITIES.map(p => {
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
         <div>
           <div style="font-size: 1.6em; font-weight: 700; color: ${tl.color};">${displayValue}</div>
-          <div style="font-size: 0.8em; color: #888; margin-top: 0.15rem;">Target: ${p.target}</div>
+          <div style="font-size: 0.8em; color: #636363; margin-top: 0.15rem;">Target: ${p.target}</div>
         </div>
         <div style="text-align: right;">
           <div style="
@@ -197,7 +197,7 @@ const scorecardCards = GPS_PRIORITIES.map(p => {
             background: ${tl.color}18;
             color: ${tl.color};
           ">${tl.label}</div>
-          <div style="font-size: 0.75em; color: #999; margin-top: 0.25rem;">${source}</div>
+          <div style="font-size: 0.75em; color: #636363; margin-top: 0.25rem;">${source}</div>
         </div>
       </div>
     </div>
@@ -237,7 +237,14 @@ if (edTrend.length > 0) {
       domain: [75, 100],
     },
     marks: [
-      Plot.ruleY([95], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "Target: 95%" }),
+      Plot.ruleY([95], { stroke: "#2d8a4e", strokeDasharray: "4,4" }),
+      Plot.text([{ label: "Target: 95%" }], {
+        frameAnchor: "right",
+        dy: -10,
+        text: "label",
+        fontSize: 10,
+        fill: "#2d8a4e",
+      }),
       Plot.lineY(edTrend, {
         x: d => `${d.year} Q${d.quarter}`,
         y: "pct_within_target",
@@ -254,8 +261,13 @@ if (edTrend.length > 0) {
       }),
     ],
   }));
+  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    <span style="color: #2d8a4e;">●</span> Meeting target (≥95%)
+    <span style="color: #c0392b; margin-left: 1rem;">●</span> Below target (&lt;95%)
+    <span style="color: #2d8a4e; margin-left: 1rem;">- -</span> 95% target line
+  </p>`);
 } else {
-  display(html`<p style="color: #888; font-style: italic;">No ED time series data yet. Run the pipeline.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No ED time series data available yet.</p>`);
 }
 ```
 
@@ -280,7 +292,14 @@ if (fsaTrend.length > 0) {
     width,
     y: { label: "Median wait (days)" },
     marks: [
-      Plot.ruleY([42], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "Target: 42 days" }),
+      Plot.ruleY([42], { stroke: "#2d8a4e", strokeDasharray: "4,4" }),
+      Plot.text([{ label: "Target: 42 days" }], {
+        frameAnchor: "right",
+        dy: -10,
+        text: "label",
+        fontSize: 10,
+        fill: "#2d8a4e",
+      }),
       Plot.lineY(fsaTrend, {
         x: d => `${d.year} Q${d.quarter}`,
         y: "median_wait_days",
@@ -293,9 +312,15 @@ if (fsaTrend.length > 0) {
         y: "median_wait_days",
         fill: d => d.median_wait_days <= 42 ? "#2d8a4e" : "#c0392b",
         tip: true,
+        title: d => `Q${d.quarter} ${d.year}: ${d.median_wait_days?.toFixed(0)} days`,
       }),
     ],
   }));
+  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    <span style="color: #2d8a4e;">●</span> Meeting target (≤42 days)
+    <span style="color: #c0392b; margin-left: 1rem;">●</span> Exceeds target (&gt;42 days)
+    <span style="color: #2d8a4e; margin-left: 1rem;">- -</span> 42-day target line
+  </p>`);
 }
 ```
 

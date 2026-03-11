@@ -88,11 +88,14 @@ class DemographicsTransformer(BaseTransformer):
         return None
 
     def _parse_stats_nz_sheet(self, df, scenario, geo_map, conn):
-        """Parse a Stats NZ projection sheet. Returns list of row tuples."""
-        rows = []
-        # Simple approach: look for rows with year patterns (e.g. 2023, 2028, ...)
-        # This is heuristic — exact parsing depends on the workbook structure
-        return rows
+        """Parse a Stats NZ projection sheet. Returns list of row tuples.
+
+        NOTE: Excel parsing not implemented — returns empty list.
+        The pipeline falls back to demographics_seed.csv automatically.
+        To implement, inspect the workbook structure and parse year/region rows.
+        """
+        self.log("WARNING: Excel parsing not implemented — using seed CSV fallback")
+        return []
 
     def _insert_projections(self, df, conn, dry_run=False):
         """Insert from seed CSV with columns: year, scenario, geography, population."""

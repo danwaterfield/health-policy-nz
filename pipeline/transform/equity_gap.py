@@ -42,6 +42,7 @@ WHERE target.ethnicity_id IS NOT NULL
   AND target.value IS NOT NULL
   AND ref.value IS NOT NULL
   AND (target.sample_size IS NULL OR target.sample_size >= 30)
+  AND (ref.sample_size IS NULL OR ref.sample_size >= 30)
 """
 
 

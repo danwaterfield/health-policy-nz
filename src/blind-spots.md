@@ -40,12 +40,29 @@ const severityConfig = {
 ```js
 if (spots.length === 0) {
   display(html`
-    <div style="padding: 2rem; background: #f5f5f5; border-radius: 8px; color: #666;">
-      <p>Blind spots not yet populated. Run the pipeline:</p>
-      <pre>make pipeline && make copy-data</pre>
+    <div style="padding: 2rem; background: #f5f5f5; border-radius: 8px; color: #555;">
+      <p>Blind spots not yet populated.</p>
     </div>
   `);
 } else {
+  // Summary at top — gives context before reading individual cards
+  const highCount = spots.filter(d => d.severity === "high").length;
+  const medCount = spots.filter(d => d.severity === "medium").length;
+  const lowCount = spots.filter(d => d.severity === "low").length;
+  display(html`
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0 1.5rem;">
+      <div style="padding: 0.5rem 1rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222; font-size: 0.9em;">
+        <strong style="color: #c0392b;">▲ ${highCount}</strong> high severity
+      </div>
+      <div style="padding: 0.5rem 1rem; background: #fef9ec; border: 1px solid #f0d090; border-radius: 6px; color: #222; font-size: 0.9em;">
+        <strong style="color: #e5850b;">◆ ${medCount}</strong> medium severity
+      </div>
+      ${lowCount > 0 ? html`
+      <div style="padding: 0.5rem 1rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222; font-size: 0.9em;">
+        <strong style="color: #2d8a4e;">● ${lowCount}</strong> low severity
+      </div>` : ""}
+    </div>
+  `);
   const cards = spots.map(spot => {
     const s = severityConfig[spot.severity] ?? severityConfig.medium;
     return html`
@@ -73,6 +90,16 @@ if (spots.length === 0) {
               color: ${s.color};
               font-weight: 600;
             ">${s.label}</span>
+            ${spot.domain ? html`<span style="
+              font-size: 0.72em;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              color: #555;
+              margin-left: 0.75rem;
+              padding: 1px 6px;
+              border: 1px solid #ccc;
+              border-radius: 3px;
+            ">${spot.domain}</span>` : ""}
           </div>
         </div>
 
@@ -95,7 +122,7 @@ if (spots.length === 0) {
         ${spot.further_reading_url ? html`
           <div style="margin-top: 0.75rem;">
             <a href="${spot.further_reading_url}" target="_blank" rel="noopener"
-               style="font-size: 0.85em; color: #444;">
+               style="font-size: 0.85em; color: #2563eb; text-decoration: underline;">
               Further reading →
             </a>
           </div>

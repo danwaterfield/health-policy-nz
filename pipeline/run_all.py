@@ -5,6 +5,7 @@ Runs: init schema → load lookups → fetch → transform → derived → expor
 """
 import argparse
 import sys
+from datetime import datetime, timezone
 from pipeline.db import get_conn, init_schema
 from pipeline.config import DIST_DIR
 from pipeline.fetch.nzhs import NZHSFetcher
@@ -84,17 +85,32 @@ def run(dry_run=False):
         (PolicyTraceTransformer(), "policytrace"),
     ]
 
+    # Track which transforms fail so we can warn about derived tables
+    failed_transforms = []
+    now = datetime.now(timezone.utc).isoformat()
     for transformer, key in transformers:
         path = raw_paths.get(key)
         if path is None:
             print(f"[{transformer.__class__.__name__}] Skipping — no raw file")
+            failed_transforms.append(key)
             continue
         try:
             transformer.transform(path, conn, dry_run=dry_run)
+            if not dry_run:
+                conn.execute(
+                    "UPDATE dim_data_source SET last_ingested_at = ? WHERE slug = ?",
+                    [now, key]
+                )
         except Exception as e:
             print(f"[{transformer.__class__.__name__}] ERROR: {e}")
+            failed_transforms.append(key)
 
     # Derived tables (order matters: equity_gap before bias_estimates)
+    # Warn if upstream fact tables failed
+    if failed_transforms:
+        print(f"[pipeline] WARNING: {len(failed_transforms)} transform(s) failed: {failed_transforms}")
+        print("[pipeline] Derived tables may be incomplete")
+
     for DerivedClass in [EquityGapTransformer, ProjectionsTransformer,
                          BlindSpotsTransformer, BiasEstimatesTransformer]:
         try:

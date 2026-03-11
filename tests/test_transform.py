@@ -48,11 +48,12 @@ def test_suppressed_values_are_null(conn, nzhs_fixture):
 
 
 def test_unknown_geography_skipped(conn, tmp_path):
-    """Rows with an unrecognised geography should be skipped (no orphan geography)."""
-    import io
+    """Rows with an unrecognised health region should be skipped."""
+    # Uses the actual NZHS CSV column format
     csv_content = (
-        "indicator,ethnic_group,health_region,year,estimate,lower_ci,upper_ci,sample_size\n"
-        "Current smoker,Total,UnknownRegionXYZ,2023,13.5,12.8,14.2,1000\n"
+        "population,short.description,year,group,total,flag_for_publishing,"
+        "total.low.CI,total.high.CI\n"
+        "adults,Current smokers,2024,UnknownRegionXYZ,13.5,,12.8,14.2\n"
     )
     f = tmp_path / "test.csv"
     f.write_text(csv_content)
@@ -65,10 +66,12 @@ def test_unknown_geography_skipped(conn, tmp_path):
 
 
 def test_unknown_ethnicity_skipped(conn, tmp_path):
-    """Rows with an unrecognised ethnicity should be skipped."""
+    """Rows with an unrecognised ethnicity group should be skipped."""
+    # Uses the actual NZHS CSV column format
     csv_content = (
-        "indicator,ethnic_group,health_region,year,estimate,lower_ci,upper_ci,sample_size\n"
-        "Current smoker,UnknownEthnicityXYZ,New Zealand,2023,13.5,12.8,14.2,1000\n"
+        "population,short.description,year,group,total,flag_for_publishing,"
+        "total.low.CI,total.high.CI\n"
+        "adults,Current smokers,2024,UnknownEthnicityXYZ,13.5,,12.8,14.2\n"
     )
     f = tmp_path / "test.csv"
     f.write_text(csv_content)

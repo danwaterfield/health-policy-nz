@@ -71,15 +71,27 @@ const projections = (safeService && safeGeoId != null) ? Array.from(await db.que
 const hasData = projections.length > 0;
 ```
 
-## Demand Projections — ${selectedService?.toUpperCase()} Service
+```js
+const serviceDisplayName = (s) => {
+  const map = {
+    "ed": "Emergency Department",
+    "fsa": "First Specialist Assessment",
+    "primary_care_gp_visits": "Primary Care (GP Visits)",
+    "aged_residential_care": "Aged Residential Care",
+    "mental_health": "Mental Health",
+  };
+  return map[s] ?? s.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+};
+```
+
+## Demand Projections — ${serviceDisplayName(selectedService)}
 
 ```js
 if (!hasData) {
   display(html`
     <div style="padding: 2rem; background: #f5f5f5; border-radius: 8px; color: #333;">
       <p><strong>No projection data available</strong></p>
-      <p>This will populate once you run the full pipeline with health targets seed data.</p>
-      <pre>make pipeline && make copy-data</pre>
+      <p>Projection data has not yet been ingested for this selection.</p>
     </div>
   `);
 } else {
@@ -88,12 +100,26 @@ if (!hasData) {
   const low = projections.filter(d => d.scenario === "low");
 
   display(Plot.plot({
-    title: `Projected demand — ${selectedService} service`,
+    title: `Projected demand — ${serviceDisplayName(selectedService)}`,
     marginLeft: 80,
+    marginRight: 70,
     width,
     y: { label: "Projected volume" },
     x: { label: "Year" },
     marks: [
+      // Projection start marker
+      Plot.ruleX([2023], { stroke: "#666", strokeDasharray: "6,3", strokeWidth: 1 }),
+      Plot.text([{ year: 2023 }], {
+        x: "year",
+        frameAnchor: "top",
+        dy: 6,
+        dx: 4,
+        text: () => "Projections start →",
+        fontSize: 9,
+        fill: "#555",
+        textAnchor: "start",
+        fontStyle: "italic",
+      }),
       // Uncertainty band (low to high)
       Plot.areaY(
         projections.filter(d => d.scenario !== "baseline"),
@@ -129,7 +155,23 @@ if (!hasData) {
         tip: true,
         title: d => `${d.year}: ${d.projected_volume?.toFixed(0)} (baseline)`,
       }),
-    ],
+      // Direct line labels at endpoints (reduce legend lookup)
+      baseline.length > 0 ? Plot.text([baseline[baseline.length - 1]], {
+        x: "year", y: "projected_volume",
+        text: () => "Baseline",
+        dx: 6, textAnchor: "start", fontSize: 10, fill: "#1f77b4", fontWeight: "600",
+      }) : null,
+      high.length > 0 ? Plot.text([high[high.length - 1]], {
+        x: "year", y: "projected_volume",
+        text: () => "High",
+        dx: 6, textAnchor: "start", fontSize: 9, fill: "#aec7e8",
+      }) : null,
+      low.length > 0 ? Plot.text([low[low.length - 1]], {
+        x: "year", y: "projected_volume",
+        text: () => "Low",
+        dx: 6, textAnchor: "start", fontSize: 9, fill: "#aec7e8",
+      }) : null,
+    ].filter(Boolean),
   }));
 
   // Legend
@@ -137,7 +179,7 @@ if (!hasData) {
     <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; margin: 0.5rem 0 1rem;">
       <span><span style="color: #1f77b4; font-weight: bold;">—</span> Baseline</span>
       <span><span style="color: #aec7e8;">- -</span> Low / High scenarios</span>
-      <span style="color: #999; font-style: italic;">Dashed = projected</span>
+      <span style="color: #636363; font-style: italic;">Dashed = projected</span>
     </div>
   `);
 }

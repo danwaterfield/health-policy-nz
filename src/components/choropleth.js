@@ -9,7 +9,7 @@
  * parent region's equity gap value.
  *
  * Colour: RdYlBu reversed (red = adverse, blue = favourable).
- * Shape is used as a secondary accessibility channel via stroke patterns.
+ * Accessibility: colour + tooltip text provide the primary encoding.
  */
 import * as topojson from "npm:topojson-client";
 import * as d3 from "npm:d3";
@@ -96,10 +96,10 @@ export function choropleth(topo, gapData, {
           const region = d.properties?.health_region ?? "";
           // Abbreviate for legibility
           return region
-            .replace("Northern | Te Tai Tokerau", "Northern")
-            .replace("Midland | Te Manawa Taki", "Midland")
-            .replace("Central | Te Ikaroa", "Central")
-            .replace("South Island | Te Waipounamu", "South Island");
+            .replace("Northern | Te Tai Tokerau", "Northern\nTe Tai Tokerau")
+            .replace("Midland | Te Manawa Taki", "Midland\nTe Manawa Taki")
+            .replace("Central | Te Ikaroa", "Central\nTe Ikaroa")
+            .replace("South Island | Te Waipounamu", "South Island\nTe Waipounamu");
         },
         fontSize: 9,
         fill: "#222",

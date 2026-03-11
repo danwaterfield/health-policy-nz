@@ -49,7 +49,7 @@ const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "di
 
 ```js
 if (latestGps.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No workforce data yet. Run the pipeline.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No workforce data available yet.</p>`);
 } else {
   const sorted = [...latestGps].sort((a, b) => b.vacancy_rate - a.vacancy_rate);
   display(Plot.plot({
@@ -57,11 +57,11 @@ if (latestGps.length === 0) {
     marginLeft: 200,
     width,
     height: Math.max(300, sorted.length * 22),
-    x: { label: "Vacancy rate (%)", domain: [0, Math.max(...sorted.map(d => d.vacancy_rate ?? 0)) * 1.1] },
+    x: { label: "Vacancy rate (%)", domain: [0, Math.max(...sorted.map(d => (d.vacancy_rate ?? 0) * 100)) * 1.1] },
     y: { domain: sorted.map(d => d.region) },
     color: { legend: false },
     marks: [
-      Plot.ruleX([8], { stroke: "#2d8a4e", strokeDasharray: "4,4", title: "8% threshold" }),
+      Plot.ruleX([8], { stroke: "#2d8a4e", strokeDasharray: "4,4" }),
       Plot.barX(sorted, {
         x: d => (d.vacancy_rate ?? 0) * 100,
         y: "region",
@@ -71,6 +71,12 @@ if (latestGps.length === 0) {
       }),
     ],
   }));
+  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    <span style="color: #2d8a4e;">■</span> &lt;8% (meeting GPS target)
+    <span style="color: #e5850b; margin-left: 1rem;">■</span> 8–15% (at risk)
+    <span style="color: #c0392b; margin-left: 1rem;">■</span> &gt;15% (critical shortage)
+    <span style="color: #2d8a4e; margin-left: 1rem;">- -</span> 8% GPS target threshold
+  </p>`);
 }
 ```
 
@@ -96,7 +102,11 @@ if (latestGps.length > 0) {
         }),
       ],
     }));
+  } else {
+    display(html`<p style="color: #636363; font-style: italic;">No international recruitment data available.</p>`);
   }
+} else {
+  display(html`<p style="color: #636363; font-style: italic;">No GP workforce data available yet.</p>`);
 }
 ```
 
@@ -121,6 +131,13 @@ if (latestNurses.length > 0) {
       }),
     ],
   }));
+  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    <span style="color: #e5850b;">■</span> &lt;20% vacancy
+    <span style="color: #c0392b; margin-left: 1rem;">■</span> &gt;20% vacancy (critical)
+    <span style="color: #e5850b; margin-left: 1rem;">- -</span> 12% reference threshold
+  </p>`);
+} else {
+  display(html`<p style="color: #636363; font-style: italic;">No nursing vacancy data available yet.</p>`);
 }
 ```
 

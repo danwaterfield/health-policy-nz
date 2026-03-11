@@ -39,6 +39,6 @@ export function suppressedCell(reason = "Value suppressed: sample too small to r
  */
 export function formatOrSuppress(value, suppressed, formatter = d => d?.toFixed(1) ?? "—") {
   if (suppressed) return suppressedCell();
-  if (value == null) return html`<span style="color: #999;">—</span>`;
+  if (value == null) return html`<span style="color: #636363;">—</span>`;
   return formatter(value);
 }

@@ -39,7 +39,10 @@ class WorkforceTransformer(BaseTransformer):
 
         conn.execute("DELETE FROM fact_workforce")
 
-        data_source_id = 4  # Workforce
+        data_source_id_row = conn.execute(
+            "SELECT id FROM dim_data_source WHERE slug = 'workforce' LIMIT 1"
+        ).fetchone()
+        data_source_id = data_source_id_row[0] if data_source_id_row else 4
         inserted = 0
         skipped = 0
 

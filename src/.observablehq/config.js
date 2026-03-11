@@ -7,10 +7,10 @@ export default {
     { name: "Overview", path: "/" },
     { name: "Indicator Explorer", path: "/explorer" },
     { name: "Equity", path: "/equity" },
-    { name: "GPS Scorecard", path: "/scorecard" },
+    { name: "GPS Scorecard (2024–27)", path: "/scorecard" },
     { name: "Workforce", path: "/workforce" },
     { name: "Demand Forecast", path: "/forecast" },
-    { name: "Pandemic Break", path: "/trends" },
+    { name: "COVID Impact", path: "/trends" },
     { name: "Blind Spots", path: "/blind-spots" },
   ],
   footer: "Data sources: Ministry of Health NZ, Health New Zealand, Stats NZ, HQSC. " +

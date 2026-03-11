@@ -52,7 +52,7 @@ const indicatorId = view(Inputs.select(
 ));
 
 const selectedEthnicities = view(Inputs.checkbox(
-  new Map(ethnicities.map(d => [d.name, d.id])),
+  new Map(ethnicities.map(d => [d.name === "Maori" ? "Māori" : d.name, d.id])),
   { label: "Ethnicity", value: ethnicities.map(d => d.id) }
 ));
 ```
@@ -183,7 +183,9 @@ const gapColor = (direction) => ({
   "adverse": "#d73027",
   "neutral": "#ffffbf",
   "favourable": "#4575b4",
-})[direction] ?? "#999";
+})[direction] ?? "#636363";
+
+const displayEthnicity = (name) => ({ "Maori": "Māori", "non-Maori": "non-Māori", "Pacific": "Pacific", "Asian": "Asian", "European/Other": "European/Other", "Total": "Total", "MELAA": "MELAA", "Other": "Other" })[name] ?? name;
 ```
 
 ```js
@@ -218,9 +220,9 @@ display(html`
 
 ```js
 if (noEthnicitySelected) {
-  display(html`<p style="color: #888; font-style: italic;">Select at least one ethnicity above to see gap data.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">Select at least one ethnicity above to see gap data.</p>`);
 } else if (nationalGaps.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No equity gap data for this indicator yet.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No equity gap data for this indicator yet.</p>`);
 } else {
   const hasCI = nationalGaps.some(d => d.gap_lower_ci != null);
 
@@ -232,7 +234,7 @@ if (noEthnicitySelected) {
     ? `(${(worst.target_value / worst.reference_value).toFixed(1)}x the rate for European/Other)`
     : "";
   display(html`<p style="font-size: 1.05em; font-weight: 500; color: #333; margin: 0.5rem 0 1rem; line-height: 1.5;">
-    <strong style="color: #c0392b;">${worst.ethnicity}</strong> have a
+    <strong style="color: #c0392b;">${displayEthnicity(worst.ethnicity)}</strong> have a
     <strong>${Math.abs(worst.absolute_gap).toFixed(1)} percentage point</strong> ${dirLabel} rate
     for ${ind?.name?.toLowerCase() ?? "this indicator"} compared to European/Other
     ${ratioText}${worst.significant ? "" : " — though this difference is not statistically significant"}.
@@ -319,9 +321,13 @@ if (noEthnicitySelected) {
 
 ```js
 if (trendGaps.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No trend data available.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No trend data available.</p>`);
 } else {
-  const ethnicityColors = { "Maori": "#d73027", "Pacific": "#e5850b", "Asian": "#4575b4" };
+  // Wong colorblind-safe palette (Nat Methods 2011)
+  const ethnicityColors = { "Māori": "#e69f00", "Pacific": "#56b4e9", "Asian": "#009e73" };
+  // Map ethnicity display names for chart rendering
+  const trendDisplay = trendGaps.map(d => ({ ...d, ethLabel: displayEthnicity(d.ethnicity) }));
+
   const trendPlot = Plot.plot({
     title: "Equity gap trend — national (vs. European/Other)",
     marginLeft: 60,
@@ -332,31 +338,31 @@ if (trendGaps.length === 0) {
     color: { legend: true },
     marks: [
       Plot.ruleY([0], { stroke: "#ccc" }),
-      Plot.lineY(trendGaps, {
+      Plot.lineY(trendDisplay, {
         x: "year",
         y: "absolute_gap",
-        stroke: "ethnicity",
+        stroke: "ethLabel",
         strokeWidth: 2,
         tip: true,
       }),
-      Plot.dot(trendGaps, {
+      Plot.dot(trendDisplay, {
         x: "year",
         y: "absolute_gap",
-        fill: "ethnicity",
+        fill: "ethLabel",
         r: 3,
         tip: true,
-        title: d => `${d.ethnicity} (${d.year}): ${d.absolute_gap >= 0 ? "+" : ""}${d.absolute_gap?.toFixed(1)} pp (${d.gap_direction})`,
+        title: d => `${d.ethLabel} (${d.year}): ${d.absolute_gap >= 0 ? "+" : ""}${d.absolute_gap?.toFixed(1)} pp (${d.gap_direction})`,
       }),
-      Plot.text(trendGaps.filter(d => d.year === latestYear), {
+      Plot.text(trendDisplay.filter(d => d.year === latestYear), {
         x: "year",
         y: "absolute_gap",
-        text: "ethnicity",
+        text: "ethLabel",
         dx: 6,
         textAnchor: "start",
         fontSize: 11,
       }),
       // COVID structural break
-      Plot.ruleX([2020], { stroke: "#888", strokeDasharray: "6,3", strokeWidth: 1.5 }),
+      Plot.ruleX([2020], { stroke: "#636363", strokeDasharray: "6,3", strokeWidth: 1.5 }),
       Plot.text([{ year: 2020, label: "COVID-19" }], {
         x: "year",
         y: () => Math.max(...trendGaps.map(d => d.absolute_gap ?? 0)),
@@ -364,7 +370,7 @@ if (trendGaps.length === 0) {
         dx: 4,
         textAnchor: "start",
         fontSize: 10,
-        fill: "#888",
+        fill: "#636363",
         fontStyle: "italic",
       }),
       // Policy turning points
@@ -375,12 +381,23 @@ if (trendGaps.length === 0) {
         strokeDasharray: "2,4",
         title: d => d.title,
       }),
+      // Policy event labels at top of chart
+      Plot.text(policyEvents, {
+        x: "year",
+        frameAnchor: "top",
+        dy: 6,
+        text: d => d.title.length > 20 ? d.title.slice(0, 18) + "…" : d.title,
+        fontSize: 8,
+        fill: d => d.category === "repeal" ? "#e74c3c" : "#9b59b6",
+        rotate: -45,
+        textAnchor: "start",
+      }),
     ],
   });
   display(trendPlot);
   display(exportButtons(trendPlot, trendGaps, { filename: "equity-gap-trend" }));
 
-  display(html`<p style="font-size: 0.85em; color: #666; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
     <strong>Note</strong>: the dashed vertical line marks 2020. Data from 2020–2022 reflects pandemic
     disruption — reduced survey participation, deferred care, and changed service use patterns — and
     is <em>not directly comparable</em> to other years. Treat trend direction across this break with caution.
@@ -392,26 +409,47 @@ if (trendGaps.length === 0) {
 
 ```js
 {
-  const ethnicityLabel = ethnicities.find(e => selectedEthnicities.includes(e.id))?.name ?? "selected groups";
-  display(html`<div style="display:flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">`);
-  display(choropleth(nzTopo, regionalGaps, {
-    width: 380,
-    ethnicity: ethnicityLabel,
-    title: `Equity gap by health region (${latestYear})`,
-  }));
-  display(html`
-    <div style="flex:1; min-width:220px; font-size:0.85em; color:#555; padding-top: 2rem;">
-      <p><strong>How to read:</strong> Each DHB is coloured by its health region's equity gap for the selected indicator and ethnicity.</p>
-      <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.75rem;">
-        <span><span style="display:inline-block; width:14px; height:14px; background:#c0392b; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Adverse gap (Māori/Pacific worse)</span>
-        <span><span style="display:inline-block; width:14px; height:14px; background:#4575b4; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Favourable gap</span>
-        <span><span style="display:inline-block; width:14px; height:14px; background:#ffffbf; border:1px solid #ccc; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Neutral / no gap</span>
-        <span><span style="display:inline-block; width:14px; height:14px; background:#e0e0e0; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> No data</span>
+  if (regionalGaps.length === 0) {
+    display(html`
+      <div style="
+        padding: 2rem;
+        background: #f9f9f9;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        text-align: center;
+        color: #636363;
+      ">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.4;">🗺</div>
+        <p style="font-weight: 600; margin: 0 0 0.5rem;">No regional map for this selection</p>
+        <p style="font-size: 0.85em; margin: 0;">
+          The NZ Health Survey reports ethnicity breakdowns and regional breakdowns separately.
+          Cross-tabulations (e.g. Māori in Northern region) are not published, so regional equity
+          gaps cannot be computed from this source.
+        </p>
       </div>
-      <p style="margin-top:0.75rem;">Geography: 20 legacy DHBs coloured by their parent health region. Data is only available at the 4-region level from NZHS.</p>
-    </div>
-  `);
-  display(html`</div>`);
+    `);
+  } else {
+    const ethnicityLabel = ethnicities.find(e => selectedEthnicities.includes(e.id))?.name ?? "selected groups";
+    display(html`<div style="display:flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">`);
+    display(choropleth(nzTopo, regionalGaps, {
+      width: 380,
+      ethnicity: ethnicityLabel,
+      title: `Equity gap by health region (${latestYear})`,
+    }));
+    display(html`
+      <div style="flex:1; min-width:220px; font-size:0.85em; color:#555; padding-top: 2rem;">
+        <p><strong>How to read:</strong> Each DHB is coloured by its health region's equity gap for the selected indicator and ethnicity.</p>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.75rem;">
+          <span><span style="display:inline-block; width:14px; height:14px; background:#c0392b; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Adverse gap (Māori/Pacific worse)</span>
+          <span><span style="display:inline-block; width:14px; height:14px; background:#4575b4; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Favourable gap</span>
+          <span><span style="display:inline-block; width:14px; height:14px; background:#ffffbf; border:1px solid #ccc; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Neutral / no gap</span>
+          <span><span style="display:inline-block; width:14px; height:14px; background:#e0e0e0; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> No data</span>
+        </div>
+        <p style="margin-top:0.75rem;">Geography: 20 legacy DHBs coloured by their parent health region. Data is only available at the 4-region level from NZHS.</p>
+      </div>
+    `);
+    display(html`</div>`);
+  }
 }
 ```
 
@@ -419,7 +457,7 @@ if (trendGaps.length === 0) {
 
 ```js
 if (regionalGaps.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No regional equity gap data for this indicator. The NZ Health Survey reports ethnicity breakdowns and regional breakdowns separately — cross-tabulations (Māori in Northern region) are not published, so regional equity gaps cannot be computed from this source.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No regional equity gap data for this indicator. The NZ Health Survey reports ethnicity breakdowns and regional breakdowns separately — cross-tabulations (Māori in Northern region) are not published, so regional equity gaps cannot be computed from this source.</p>`);
 } else {
   const sorted = [...regionalGaps].sort((a, b) => a.absolute_gap - b.absolute_gap);
   display(Plot.plot({
@@ -489,7 +527,7 @@ const regionalNzdep = nzdep.filter(d => d.level === "health_region");
 
 ```js
 if (regionalNzdep.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">NZDep data not yet loaded. Run <code>make pipeline</code>.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">NZDep data not yet available.</p>`);
 } else {
   display(Plot.plot({
     title: "Deprivation quintile distribution by health region (NZDep2018)",
@@ -525,7 +563,7 @@ if (regionalNzdep.length === 0) {
       ),
     ],
   }));
-  display(html`<p style="font-size: 0.85em; color: #666; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
     Source: NZDep2018 — University of Otago Department of Public Health. Aggregated from SA1 level to health region via legacy DHB assignments.
     Higher Q5 share correlates with higher Māori/Pacific population proportion and worse health outcomes across most indicators.
   </p>`);
@@ -545,7 +583,7 @@ const lifeTables = Array.from(await db.query(`
 
 ```js
 if (lifeTables.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">Life tables not yet loaded. Run <code>make pipeline</code>.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">Life tables not yet available.</p>`);
 } else {
   const lifeAtBirth = lifeTables.filter(d => d.age_from === 0);
   display(Plot.plot({
@@ -557,22 +595,22 @@ if (lifeTables.length === 0) {
     x: { label: "Life expectancy (years)", domain: [60, 90] },
     y: { label: null },
     color: {
-      domain: ["Maori", "non-Maori", "total"],
-      range: ["#d73027", "#4575b4", "#888"],
+      domain: ["Māori", "non-Māori", "total"],
+      range: ["#e69f00", "#0072b2", "#636363"],
     },
     marks: [
       Plot.ruleX([0]),
       Plot.barX(lifeAtBirth.filter(d => d.sex !== "total"), {
         x1: 60,
         x2: "ex",
-        y: d => `${d.ethnicity_group} (${d.sex})`,
-        fill: "ethnicity_group",
+        y: d => `${displayEthnicity(d.ethnicity_group)} (${d.sex})`,
+        fill: d => displayEthnicity(d.ethnicity_group),
         tip: true,
-        title: d => `${d.ethnicity_group} ${d.sex}: ${d.ex?.toFixed(1)} years`,
+        title: d => `${displayEthnicity(d.ethnicity_group)} ${d.sex}: ${d.ex?.toFixed(1)} years`,
       }),
       Plot.text(lifeAtBirth.filter(d => d.sex !== "total"), {
         x: "ex",
-        y: d => `${d.ethnicity_group} (${d.sex})`,
+        y: d => `${displayEthnicity(d.ethnicity_group)} (${d.sex})`,
         text: d => `${d.ex?.toFixed(1)} yrs`,
         dx: 4,
         textAnchor: "start",
@@ -580,7 +618,7 @@ if (lifeTables.length === 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.85em; color: #666; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
     The life expectancy gap (~7–8 years for males, ~7 years for females) is one of the
     most robust measures of health disparity and is <em>not</em> subject to the same
     measurement biases as survey-based rates — it derives from death registrations,
@@ -602,7 +640,7 @@ const biasEstimates = Array.from(await db.query(`
 
 ```js
 if (biasEstimates.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">Bias estimates not yet computed. Run <code>make pipeline</code>.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">Bias estimates not yet available.</p>`);
 } else {
   const biasTypeLabel = {
     ethnic_miscoding: "Ethnic miscoding",

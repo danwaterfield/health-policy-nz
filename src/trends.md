@@ -144,8 +144,9 @@ Each row is an indicator × ethnicity pair. The pre-COVID annual change rate is 
 
 ```js
 if (slopeData.length === 0) {
-  display(html`<p style="color: #888; font-style: italic;">No slope data available — need at least 3 pre-COVID and 2 post-COVID data points per indicator.</p>`);
+  display(html`<p style="color: #636363; font-style: italic;">No slope data available — need at least 3 pre-COVID and 2 post-COVID data points per indicator.</p>`);
 } else {
+  const displayEthnicity = (name) => ({ "Maori": "Māori", "Pacific": "Pacific" })[name] ?? name;
   const sorted = [...slopeData].sort((a, b) => b.slope_change - a.slope_change);
 
   display(Plot.plot({
@@ -160,18 +161,18 @@ if (slopeData.length === 0) {
       zero: true,
     },
     y: {
-      domain: sorted.map(d => `${d.indicator} — ${d.ethnicity}`),
+      domain: sorted.map(d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`),
       label: null,
     },
     marks: [
-      Plot.ruleX([0], { stroke: "#999" }),
+      Plot.ruleX([0], { stroke: "#636363" }),
 
       // Connecting line between pre and post slope
       Plot.link(sorted, {
         x1: "pre_slope",
         x2: "post_slope",
-        y1: d => `${d.indicator} — ${d.ethnicity}`,
-        y2: d => `${d.indicator} — ${d.ethnicity}`,
+        y1: d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`,
+        y2: d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`,
         stroke: d => worsened(d) ? "#c0392b" : "#4575b4",
         strokeWidth: 1.5,
         strokeOpacity: 0.6,
@@ -180,27 +181,27 @@ if (slopeData.length === 0) {
       // Pre-COVID dot (open circle)
       Plot.dot(sorted, {
         x: "pre_slope",
-        y: d => `${d.indicator} — ${d.ethnicity}`,
+        y: d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`,
         fill: "white",
         stroke: "#555",
         strokeWidth: 1.5,
         r: 5,
-        title: d => `${d.indicator} — ${d.ethnicity}\nPre-COVID slope: ${d.pre_slope >= 0 ? "+" : ""}${d.pre_slope?.toFixed(3)} pp/yr`,
+        title: d => `${d.indicator} — ${d.ethnicity}\nPre-COVID slope: ${d.pre_slope >= 0 ? "+" : ""}${d.pre_slope?.toFixed(2)} pp/yr`,
       }),
 
       // Post-COVID dot (filled)
       Plot.dot(sorted, {
         x: "post_slope",
-        y: d => `${d.indicator} — ${d.ethnicity}`,
+        y: d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`,
         fill: d => worsened(d) ? "#c0392b" : "#4575b4",
         r: 5,
-        title: d => `${d.indicator} — ${d.ethnicity}\nPost-COVID slope: ${d.post_slope >= 0 ? "+" : ""}${d.post_slope?.toFixed(3)} pp/yr\nChange: ${d.slope_change >= 0 ? "+" : ""}${d.slope_change?.toFixed(3)} pp/yr`,
+        title: d => `${d.indicator} — ${d.ethnicity}\nPost-COVID slope: ${d.post_slope >= 0 ? "+" : ""}${d.post_slope?.toFixed(2)} pp/yr\nChange: ${d.slope_change >= 0 ? "+" : ""}${d.slope_change?.toFixed(2)} pp/yr`,
       }),
 
       // Slope change label on right
       Plot.text(sorted, {
         x: d => Math.max(d.pre_slope, d.post_slope),
-        y: d => `${d.indicator} — ${d.ethnicity}`,
+        y: d => `${d.indicator} — ${displayEthnicity(d.ethnicity)}`,
         text: d => `${d.slope_change >= 0 ? "+" : ""}${d.slope_change?.toFixed(2)}`,
         dx: 8,
         textAnchor: "start",
@@ -233,7 +234,7 @@ Indicators where the trajectory changed most, showing all years including the CO
   )];
 
   if (topIndicators.length === 0) {
-    display(html`<p style="color: #888; font-style: italic;">Insufficient data for time series.</p>`);
+    display(html`<p style="color: #636363; font-style: italic;">Insufficient data for time series.</p>`);
   } else {
     const plots = topIndicators.map(key => {
       const [indicator, ethnicity] = key.split("||");
@@ -241,7 +242,7 @@ Indicators where the trajectory changed most, showing all years including the CO
       if (rows.length < 3) return null;
 
       // Compute trend lines
-      const prePts  = rows.filter(d => d.year <= 2019).map(d => ({ x: d.year, y: d.severity }));
+      const prePts  = rows.filter(d => d.year >= 2011 && d.year <= 2019).map(d => ({ x: d.year, y: d.severity }));
       const postPts = rows.filter(d => d.year >= 2023).map(d => ({ x: d.year, y: d.severity }));
       const preFit  = linFit(prePts);
       const postFit = linFit(postPts);
@@ -265,14 +266,17 @@ Indicators where the trajectory changed most, showing all years including the CO
 
       const meta = slopeData.find(d => d.indicator === indicator && d.ethnicity === ethnicity);
       const dir  = meta ? (worsened(meta) ? "worsened" : "improved") : "";
-      const col  = meta ? (worsened(meta) ? "#c0392b" : "#4575b4") : "#888";
+      const col  = meta ? (worsened(meta) ? "#c0392b" : "#4575b4") : "#636363";
+
+      const displayEthnicity = (name) => ({ "Maori": "Māori", "Pacific": "Pacific" })[name] ?? name;
+      const plotWidth = Math.min(Math.floor((width - 40) / 2), 380);
 
       return Plot.plot({
-        title: `${indicator} — ${ethnicity}`,
+        title: `${indicator} — ${displayEthnicity(ethnicity)}`,
         subtitle: meta
-          ? `Slope: pre ${meta.pre_slope >= 0 ? "+" : ""}${meta.pre_slope?.toFixed(3)} → post ${meta.post_slope >= 0 ? "+" : ""}${meta.post_slope?.toFixed(3)} pp/yr (${dir})`
+          ? `Slope: pre ${meta.pre_slope >= 0 ? "+" : ""}${meta.pre_slope?.toFixed(2)} → post ${meta.post_slope >= 0 ? "+" : ""}${meta.post_slope?.toFixed(2)} pp/yr (${dir})`
           : "",
-        width: 340,
+        width: plotWidth,
         height: 220,
         marginRight: 10,
         x: { label: "Year", tickFormat: d => String(d) },
@@ -306,7 +310,7 @@ Indicators where the trajectory changed most, showing all years including the CO
           // Actual data points
           Plot.lineY(rows, {
             x: "year", y: "severity",
-            stroke: "#999", strokeWidth: 1,
+            stroke: "#636363", strokeWidth: 1,
           }),
           Plot.dot(rows, {
             x: "year", y: "severity",
@@ -365,12 +369,12 @@ if (slopeData.length > 0) {
       <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
         <strong style="color: #c0392b;">${worsenedCount}</strong> indicator–ethnicity pairs
         worsened trajectory post-COVID
-        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(3)} pp/yr</small>` : ""}
+        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(2)} pp/yr</small>` : ""}
       </div>
       <div style="padding: 0.75rem 1.25rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222;">
         <strong style="color: #2d8a4e;">${improvedCount}</strong> indicator–ethnicity pairs
         improved trajectory post-COVID
-        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(3)} pp/yr</small>` : ""}
+        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(2)} pp/yr</small>` : ""}
       </div>
     </div>
   `);
@@ -390,9 +394,9 @@ if (slopeData.length > 0) {
         level_change: "Level change (pp)",
       },
       format: {
-        pre_slope:    d => (d >= 0 ? "+" : "") + d?.toFixed(3),
-        post_slope:   d => (d >= 0 ? "+" : "") + d?.toFixed(3),
-        slope_change: d => (d >= 0 ? "+" : "") + d?.toFixed(3),
+        pre_slope:    d => (d >= 0 ? "+" : "") + d?.toFixed(2),
+        post_slope:   d => (d >= 0 ? "+" : "") + d?.toFixed(2),
+        slope_change: d => (d >= 0 ? "+" : "") + d?.toFixed(2),
         pre_mean:     d => d?.toFixed(1),
         post_mean:    d => d?.toFixed(1),
         level_change: d => (d >= 0 ? "+" : "") + d?.toFixed(1),

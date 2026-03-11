@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
 
       - name: Cache raw data
         uses: actions/cache@v4
@@ -38,6 +39,9 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Run tests
+        run: python -m pytest tests/ -v
+
       - name: Run data pipeline
         run: python -m pipeline.run_all
         env:
@@ -46,6 +50,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
 
       - name: Install Node dependencies
         run: npm ci

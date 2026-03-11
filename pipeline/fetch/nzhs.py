@@ -10,11 +10,6 @@ from pathlib import Path
 from pipeline.config import RAW_DIR, SOURCES, LOOKUP_DIR
 from pipeline.fetch.base import BaseFetcher
 
-DIRECT_CSV_URL = (
-    "https://minhealthnz.shinyapps.io/nz-health-survey-2024-25-annual-data-explorer"
-    "/data/nz-health-survey-2024-25-prevalences.csv"
-)
-
 
 class NZHSFetcher(BaseFetcher):
     source_key = "nzhs_prevalence"
@@ -57,15 +52,17 @@ class NZHSFetcher(BaseFetcher):
             shutil.copy(seed, dest)
             return dest
 
+        url = SOURCES[self.source_key]["url"]
         raise RuntimeError(
             "NZHS download failed. Manually download the prevalence CSV from "
-            f"{DIRECT_CSV_URL} and save to {dest}"
+            f"{url} and save to {dest}"
         )
 
     def _http_download(self, dest: Path) -> bool:
+        url = SOURCES[self.source_key]["url"]
         try:
-            self.log(f"Downloading {DIRECT_CSV_URL}")
-            r = requests.get(DIRECT_CSV_URL, timeout=120, stream=True)
+            self.log(f"Downloading {url}")
+            r = requests.get(url, timeout=120, stream=True)
             r.raise_for_status()
             with open(dest, "wb") as f:
                 for chunk in r.iter_content(chunk_size=1 << 20):

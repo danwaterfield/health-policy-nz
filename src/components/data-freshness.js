@@ -19,8 +19,8 @@ export function dataFreshness(sources) {
     const age = s.last_ingested_at
       ? Math.floor((Date.now() - new Date(s.last_ingested_at).getTime()) / 86400000)
       : null;
-    const color = age === null ? "#999" : age < 14 ? "#2d8a4e" : age < 90 ? "#e5850b" : "#c0392b";
-    const ageLabel = age === null ? "never" : age === 0 ? "today" : `${age}d ago`;
+    const color = age === null ? "#636363" : age < 14 ? "#2d8a4e" : age < 90 ? "#e5850b" : "#c0392b";
+    const ageLabel = age === null ? "not yet ingested" : age === 0 ? "today" : `${age}d ago`;
 
     const span = document.createElement("span");
     span.style.cssText = "margin-right: 1.5rem; white-space: nowrap;";

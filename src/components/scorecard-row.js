@@ -12,7 +12,7 @@ export function trafficLight(status) {
     green: { color: "#2d8a4e", label: "On track", symbol: "●" },
     amber: { color: "#e5850b", label: "At risk", symbol: "●" },
     red: { color: "#c0392b", label: "Off track", symbol: "●" },
-    unknown: { color: "#999", label: "No data", symbol: "●" },
+    unknown: { color: "#636363", label: "No data", symbol: "●" },
   };
   const c = config[status] ?? config.unknown;
   return html`<span
@@ -29,14 +29,14 @@ export function trafficLight(status) {
  */
 export function trendArrow(delta, direction) {
   if (delta == null || isNaN(delta)) {
-    return html`<span style="color: #999;" aria-label="No trend data">→</span>`;
+    return html`<span style="color: #636363;" aria-label="No trend data">→</span>`;
   }
 
   const improving = direction === "higher_better" ? delta > 0 : delta < 0;
   const stable = Math.abs(delta) < 0.5;
 
   if (stable) {
-    return html`<span style="color: #888;" aria-label="Stable">→</span>`;
+    return html`<span style="color: #636363;" aria-label="Stable">→</span>`;
   }
   if (improving) {
     return html`<span style="color: #2d8a4e;" aria-label="Improving">↑</span>`;
