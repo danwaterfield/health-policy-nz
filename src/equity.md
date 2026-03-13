@@ -55,20 +55,28 @@ const selectedEthnicities = view(Inputs.checkbox(
   new Map(ethnicities.map(d => [d.name === "Maori" ? "Māori" : d.name, d.id])),
   { label: "Ethnicity", value: ethnicities.map(d => d.id) }
 ));
+
+// Validate inputs against known values before SQL interpolation
+const knownIndicatorIds = new Set(indicators.map(d => d.id));
+const knownEthnicityIds = new Set(ethnicities.map(d => d.id));
 ```
 
 ```js
+// Validate indicator — must come from known set
+const safeIndicatorId = knownIndicatorIds.has(indicatorId) ? indicatorId : null;
+const safeEthnicities = selectedEthnicities.filter(id => knownEthnicityIds.has(id));
+
 // Latest year for the selected indicator
-const latestYear = Array.from(await db.query(`
+const latestYear = safeIndicatorId != null ? (Array.from(await db.query(`
   SELECT MAX(t.year) AS yr
   FROM equity_gap eg
   JOIN dim_time t ON eg.time_id = t.id
-  WHERE eg.indicator_id = ${indicatorId}
-`))[0]?.yr ?? 2024;
+  WHERE eg.indicator_id = ${safeIndicatorId}
+`))[0]?.yr ?? 2024) : 2024;
 
 // Summary: compute gap + propagated CI directly from source estimates
 // gap_SE = sqrt(target_SE² + ref_SE²), where SE = (upper_ci - lower_ci) / 3.92
-const summaryGaps = Array.from(await db.query(`
+const summaryGaps = safeIndicatorId != null ? Array.from(await db.query(`
   WITH target AS (
     SELECT fhi.geography_id, fhi.ethnicity_id,
       AVG(fhi.value)          AS value,
@@ -76,8 +84,8 @@ const summaryGaps = Array.from(await db.query(`
       AVG(fhi.value_upper_ci) AS upper_ci
     FROM fact_health_indicator fhi
     JOIN dim_time t ON fhi.time_id = t.id
-    WHERE fhi.indicator_id = ${indicatorId}
-      AND fhi.ethnicity_id IN (${selectedEthnicities.length ? selectedEthnicities.join(",") : "NULL"})
+    WHERE fhi.indicator_id = ${safeIndicatorId}
+      AND fhi.ethnicity_id IN (${safeEthnicities.length ? safeEthnicities.join(",") : "NULL"})
       AND t.year = ${latestYear}
     GROUP BY fhi.geography_id, fhi.ethnicity_id
   ),
@@ -89,7 +97,7 @@ const summaryGaps = Array.from(await db.query(`
     FROM fact_health_indicator fhi
     JOIN dim_time t ON fhi.time_id = t.id
     JOIN dim_ethnicity e ON fhi.ethnicity_id = e.id
-    WHERE fhi.indicator_id = ${indicatorId}
+    WHERE fhi.indicator_id = ${safeIndicatorId}
       AND e.name = 'European/Other' AND e.response_type = 'total_response'
       AND t.year = ${latestYear}
     GROUP BY fhi.geography_id
@@ -137,12 +145,12 @@ const summaryGaps = Array.from(await db.query(`
   JOIN ref r ON tgt.geography_id = r.geography_id
   JOIN dim_ethnicity e ON tgt.ethnicity_id = e.id
   JOIN dim_geography g ON tgt.geography_id = g.id
-  JOIN dim_indicator i ON i.id = ${indicatorId}
+  JOIN dim_indicator i ON i.id = ${safeIndicatorId}
   ORDER BY ABS(tgt.value - r.value) DESC
-`));
+`)) : [];
 
 // Trend: avg absolute gap by year × ethnicity, national only
-const trendGaps = Array.from(await db.query(`
+const trendGaps = safeIndicatorId != null ? Array.from(await db.query(`
   SELECT
     t.year,
     e.name AS ethnicity,
@@ -152,12 +160,12 @@ const trendGaps = Array.from(await db.query(`
   JOIN dim_geography g ON eg.geography_id = g.id
   JOIN dim_ethnicity e ON eg.target_ethnicity_id = e.id
   JOIN dim_time t ON eg.time_id = t.id
-  WHERE eg.indicator_id = ${indicatorId}
-    AND eg.target_ethnicity_id IN (${selectedEthnicities.join(",") || "0"})
+  WHERE eg.indicator_id = ${safeIndicatorId}
+    AND eg.target_ethnicity_id IN (${safeEthnicities.join(",") || "0"})
     AND g.level = 'national'
   GROUP BY t.year, e.name
   ORDER BY t.year, e.name
-`));
+`)) : [];
 
 const noEthnicitySelected = selectedEthnicities.length === 0;
 const nationalGaps = summaryGaps.filter(d => d.level === "national");

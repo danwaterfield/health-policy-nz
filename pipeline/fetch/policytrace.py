@@ -43,9 +43,9 @@ class PolicyTraceFetcher(BaseFetcher):
             self.log(f"DRY RUN: would fetch PolicyTrace bundle to {dest}")
             return dest
 
-        # 1. Try local path (dev mode)
-        if LOCAL_PATH:
-            local_file = Path(LOCAL_PATH) / BUNDLE_FILENAME
+        # 1. Try local path (dev mode) — must be an existing directory
+        if LOCAL_PATH and Path(LOCAL_PATH).is_dir():
+            local_file = Path(LOCAL_PATH).resolve() / BUNDLE_FILENAME
             if local_file.exists():
                 shutil.copy(local_file, dest)
                 self.log(f"Copied from local path: {local_file}")

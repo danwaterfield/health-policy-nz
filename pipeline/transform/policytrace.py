@@ -7,6 +7,7 @@ trends and equity pages (e.g. vertical lines for key policy changes).
 """
 import json
 from pathlib import Path
+from urllib.parse import urlparse
 from pipeline.transform.base import BaseTransformer
 
 
@@ -34,9 +35,14 @@ class PolicyTraceTransformer(BaseTransformer):
 
         inserted = 0
         for evt in events:
-            # Resolve first source URL
+            # Resolve first source URL (only allow http/https schemes)
             src_ids = evt.get("source_document_ids", [])
-            source_url = doc_urls.get(src_ids[0], "") if src_ids else ""
+            raw_url = doc_urls.get(src_ids[0], "") if src_ids else ""
+            try:
+                scheme = urlparse(raw_url).scheme
+                source_url = raw_url if scheme in ("http", "https", "") else ""
+            except Exception:
+                source_url = ""
 
             # Flatten tags to pipe-separated string
             tags = "|".join(evt.get("tags", []))

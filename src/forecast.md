@@ -48,9 +48,9 @@ const selectedGeo = view(Inputs.select(
 
 ```js
 // Validate inputs against known values before interpolating into SQL
-const knownServiceTypes = serviceTypes.map(d => d.service_type);
+const serviceMap = new Map(serviceTypes.map(d => [d.service_type, d.service_type]));
 const knownGeoIds = geographies.map(d => d.id);
-const safeService = knownServiceTypes.includes(selectedService) ? selectedService : null;
+const safeService = serviceMap.get(selectedService) ?? null;
 const safeGeoId = knownGeoIds.includes(selectedGeo) ? selectedGeo : null;
 
 // Query projection data for all scenarios — aggregate sub-projections per year

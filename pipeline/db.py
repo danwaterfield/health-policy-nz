@@ -297,7 +297,19 @@ def init_schema(conn):
     conn.execute(SCHEMA_SQL)
 
 
+ALLOWED_TABLES = {
+    "dim_geography", "dim_ethnicity", "dim_time", "dim_indicator",
+    "dim_data_source", "fact_health_indicator", "fact_service_access",
+    "fact_workforce", "equity_gap", "fact_demand_projection",
+    "blind_spots", "fact_life_tables", "fact_nzdep", "fact_electoral_roll",
+    "fact_corrections", "fact_age_distribution", "fact_bias_estimates",
+    "fact_policy_events",
+}
+
+
 def export_parquet(conn, table: str, dest_dir):
-    dest = Path(dest_dir) / f"{table}.parquet"
-    conn.execute(f"COPY {table} TO '{dest}' (FORMAT PARQUET)")
+    if table not in ALLOWED_TABLES:
+        raise ValueError(f"Table '{table}' is not in the export allowlist")
+    dest = str(Path(dest_dir) / f"{table}.parquet")
+    conn.execute(f"COPY {table} TO ? (FORMAT PARQUET)", [dest])
     print(f"Exported {table} -> {dest}")

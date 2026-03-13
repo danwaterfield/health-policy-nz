@@ -119,14 +119,18 @@ if (spots.length === 0) {
           <p style="margin: 0.5rem 0 0; font-size: 0.9em; color: #333;">${spot.proxy_limitation}</p>
         </details>
 
-        ${spot.further_reading_url ? html`
-          <div style="margin-top: 0.75rem;">
-            <a href="${spot.further_reading_url}" target="_blank" rel="noopener"
-               style="font-size: 0.85em; color: #2563eb; text-decoration: underline;">
-              Further reading →
-            </a>
-          </div>
-        ` : ""}
+        ${(() => {
+          try {
+            const u = spot.further_reading_url ? new URL(spot.further_reading_url) : null;
+            return u && (u.protocol === "https:" || u.protocol === "http:") ? html`
+              <div style="margin-top: 0.75rem;">
+                <a href="${spot.further_reading_url}" target="_blank" rel="noopener noreferrer"
+                   style="font-size: 0.85em; color: #2563eb; text-decoration: underline;">
+                  Further reading →
+                </a>
+              </div>` : "";
+          } catch { return ""; }
+        })()}
       </div>
     `;
   });

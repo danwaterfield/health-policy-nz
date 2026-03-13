@@ -28,7 +28,7 @@ TABLES_TO_EXPORT = [
 def run(conn):
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     for table in TABLES_TO_EXPORT:
-        count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        count = conn.execute(f"SELECT COUNT(*) FROM \"{table}\"").fetchone()[0]
         if count == 0:
             print(f"WARNING: {table} has 0 rows — exporting empty Parquet")
         export_parquet(conn, table, DIST_DIR)
