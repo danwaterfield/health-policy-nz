@@ -188,7 +188,7 @@ if (!hasData) {
 ```js
 // Computed forecast narrative headline
 {
-  if (hasData) {
+  if (projections && projections.length > 0) {
     const baseline = projections.filter(d => d.scenario === "baseline");
     if (baseline.length >= 2) {
       const sorted = [...baseline].sort((a, b) => a.year - b.year);
@@ -208,7 +208,7 @@ if (!hasData) {
 ## Methodology Note
 
 ```js
-if (hasData) {
+if (projections && projections.length > 0) {
   display(html`
     <blockquote style="border-left: 3px solid #ccc; padding: 0.5rem 1rem; color: #333; font-size: 0.9rem;">
       Utilisation-based projection: current service volume scaled by Stats NZ subnational
