@@ -95,6 +95,41 @@ const filtered = data.filter(d => selectedEthnicities.includes(d.ethnicity_id));
 const hasCI = filtered.some(d => d.value_lower_ci != null && d.value_upper_ci != null);
 ```
 
+```js
+// Computed narrative headline
+{
+  const valid = filtered.filter(d => !d.suppressed && d.value != null);
+  if (valid.length > 1) {
+    const years = [...new Set(valid.map(d => d.year))].sort();
+    const earliest = years[0];
+    const latest = years[years.length - 1];
+    const eths = [...new Set(valid.map(d => d.ethnicity))];
+    let bestEth = null, bestChange = 0, bestStart = 0, bestEnd = 0;
+    for (const eth of eths) {
+      const ethRows = valid.filter(d => d.ethnicity === eth);
+      const startRow = ethRows.find(d => d.year === earliest);
+      const endRow = ethRows.find(d => d.year === latest);
+      if (startRow && endRow) {
+        const change = endRow.value - startRow.value;
+        if (Math.abs(change) > Math.abs(bestChange)) {
+          bestEth = eth;
+          bestChange = change;
+          bestStart = startRow.value;
+          bestEnd = endRow.value;
+        }
+      }
+    }
+    if (bestEth) {
+      const displayName = ({"Maori": "Māori"})[bestEth] ?? bestEth;
+      const dir = bestChange > 0 ? "increased" : "decreased";
+      display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+        <strong>${ind?.name ?? "Indicator"}</strong> for <strong>${displayName}</strong> has ${dir} by <strong>${Math.abs(bestChange).toFixed(1)}</strong> percentage points since ${earliest}, from ${bestStart.toFixed(1)}% to ${bestEnd.toFixed(1)}%.
+      </div>`);
+    }
+  }
+}
+```
+
 ## ${ind?.name ?? "—"} — Time Series
 
 ```js

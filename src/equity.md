@@ -224,6 +224,8 @@ display(html`
 `);
 ```
 
+<h2 style="border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem;">Current Equity Gaps</h2>
+
 ## National Summary (${latestYear})
 
 ```js
@@ -325,7 +327,7 @@ if (noEthnicitySelected) {
 }
 ```
 
-## Trend Over Time
+<h2 style="border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem;">Trend Over Time</h2>
 
 ```js
 if (trendGaps.length === 0) {
@@ -517,6 +519,12 @@ display(Inputs.table(summaryGaps, {
   },
 }));
 ```
+
+<details style="margin-top: 2rem; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.25rem;">
+<summary style="cursor: pointer; padding: 1rem; font-size: 1.1em; font-weight: 600; color: #1e293b;">
+Why these gaps are underestimates — deprivation, life expectancy, and measurement bias
+</summary>
+<div style="padding: 0 1rem 1rem;">
 
 ## Deprivation Context (NZDep2018)
 
@@ -729,6 +737,13 @@ if (correctionsData.length > 0) {
   `);
 }
 ```
+
+</div>
+</details>
+
+<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Related:</strong> Equity gaps interact with workforce shortages — regions with the highest vacancy rates often have the worst outcomes. See <a href="./workforce">Workforce</a>. For how demand will grow in these regions, see <a href="./forecast">Demand Forecast</a>. For what the data cannot tell us, see <a href="./blind-spots">Blind Spots</a>.
+</div>
 
 ```js
 const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));

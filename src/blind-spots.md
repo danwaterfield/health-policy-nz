@@ -8,6 +8,16 @@ Known gaps in NZ public health data that limit what this dashboard can show.
 
 These are not analytical limitations — they are structural absences in the data itself.
 
+<div style="background: #fef3cd; border-left: 4px solid #d97706; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Before citing this dashboard:</strong>
+<ol style="margin: 0.5rem 0 0; padding-left: 1.25rem;">
+<li>Check whether the indicator covers the population you care about</li>
+<li>Note sample suppression — small-n cells are hidden, often in rural and minority communities</li>
+<li>Treat Māori/Pacific subgroup analyses as underestimates of true disparity</li>
+<li>Do not use projections to justify reducing services in areas with low measured demand — low demand often reflects access barriers, not low need</li>
+</ol>
+</div>
+
 ```js
 import {dataFreshness} from "./components/data-freshness.js";
 ```

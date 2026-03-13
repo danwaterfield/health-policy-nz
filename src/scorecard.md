@@ -211,6 +211,47 @@ display(html`
 `);
 ```
 
+```js
+// Computed scorecard narrative headline
+{
+  const statuses = GPS_PRIORITIES.map(p => {
+    let value = null;
+    if (p.priority === "Access") {
+      const row = unmetNeed[0];
+      if (row?.value != null) value = row.value;
+    } else if (p.priority === "Timeliness") {
+      const edRow = latestAccess.find(d => d.service_type === "ed");
+      if (edRow?.pct_within_target != null) value = edRow.pct_within_target;
+    } else if (p.priority === "Workforce") {
+      const row = nurseVacancy[0];
+      if (row?.vacancy_rate != null) value = row.vacancy_rate * 100;
+    }
+    const tl = trafficLight(value, p.greenThreshold, p.direction);
+    return { priority: p.priority, metric: p.metric, status: tl.label, value };
+  });
+
+  const total = statuses.length;
+  const onTrack = statuses.filter(d => d.status === "On track").length;
+  const atRisk = statuses.filter(d => d.status === "At risk").length;
+  const offTrack = statuses.filter(d => d.status === "Off track").length;
+  const noData = statuses.filter(d => d.status === "No data").length;
+
+  // Find the worst performing metric (off track first, then at risk)
+  const worst = statuses.find(d => d.status === "Off track") ?? statuses.find(d => d.status === "At risk");
+  const summaryStatus = offTrack > 0 ? "off track" : atRisk > 0 ? "at risk" : "on track";
+
+  const parts = [];
+  if (onTrack > 0) parts.push(`${onTrack} on track`);
+  if (atRisk > 0) parts.push(`${atRisk} at risk`);
+  if (offTrack > 0) parts.push(`${offTrack} off track`);
+  if (noData > 0) parts.push(`${noData} with no data`);
+
+  display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+    <strong>${parts.join(", ")}</strong> of ${total} GPS targets.${worst ? html` <strong>${worst.metric}</strong> is the furthest from target.` : ""}
+  </div>`);
+}
+```
+
 ## ED Wait Times — Quarterly Trend
 
 ```js
@@ -323,6 +364,10 @@ if (fsaTrend.length > 0) {
   </p>`);
 }
 ```
+
+<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Related:</strong> National targets can mask regional disparities. See <a href="./equity">Equity Gap Explorer</a> for how outcomes vary by ethnicity, and <a href="./workforce">Workforce</a> for the supply constraints behind these numbers.
+</div>
 
 ## Data Freshness
 

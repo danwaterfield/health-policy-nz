@@ -45,6 +45,27 @@ const latestGps = gps.filter(d => d.year === latestYear);
 const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "district");
 ```
 
+```js
+// Computed workforce narrative headline
+{
+  const gpRegional = latestGps.filter(d => d.level !== "national");
+  if (gpRegional.length > 0) {
+    const exceed = gpRegional.filter(d => (d.vacancy_rate ?? 0) > 0.08);
+    const worst = [...gpRegional].sort((a, b) => (b.vacancy_rate ?? 0) - (a.vacancy_rate ?? 0))[0];
+    const worstPct = ((worst.vacancy_rate ?? 0) * 100).toFixed(1);
+    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+      <strong>${exceed.length}</strong> of ${gpRegional.length} regions exceed the 8% GP vacancy threshold. The most acute shortage is in <strong>${worst.region}</strong> at <strong>${worstPct}%</strong> vacancy.
+    </div>`);
+  } else if (latestGps.length === 0) {
+    // No data — show nothing
+  } else {
+    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+      GP workforce data available for national level only.
+    </div>`);
+  }
+}
+```
+
 ## GP Vacancy Rate by Region (${latestYear})
 
 ```js
@@ -163,6 +184,10 @@ display(Inputs.table(workforce.filter(d => d.year === latestYear), {
 }));
 display(exportButtons(null, workforce.filter(d => d.year === latestYear), { filename: "workforce-data" }));
 ```
+
+<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Related:</strong> These workforce gaps interact with projected demand growth. See <a href="./forecast">Demand Forecast</a> for how demographic change will compound pressure on understaffed regions. For the equity implications, see <a href="./equity">Equity Gap Explorer</a>.
+</div>
 
 ```js
 const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));

@@ -138,6 +138,20 @@ display(html`
 `);
 ```
 
+```js
+// Computed trends narrative headline
+{
+  if (slopeData.length > 0) {
+    const total = slopeData.length;
+    const worsenedCount = slopeData.filter(worsened).length;
+    const improvedCount = slopeData.filter(d => !worsened(d)).length;
+    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+      Of <strong>${total}</strong> indicator-ethnicity trajectories analysed, <strong style="color: #c0392b;">${worsenedCount} worsened</strong> and <strong style="color: #4575b4;">${improvedCount} improved</strong> after the pandemic.
+    </div>`);
+  }
+}
+```
+
 ## Slope Change — Which Indicators Shifted Most?
 
 Each row is an indicator × ethnicity pair. The pre-COVID annual change rate is compared to the post-COVID annual change rate. **Positive slope change = the gap is now worsening faster (or improving more slowly) than before the pandemic.**
@@ -405,6 +419,10 @@ if (slopeData.length > 0) {
   ));
 }
 ```
+
+<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Related:</strong> These trajectory shifts compound existing equity gaps. See <a href="./equity">Equity Gap Explorer</a> for current disparity levels, and <a href="./blind-spots">Blind Spots</a> for limitations of the underlying data.
+</div>
 
 ```js
 const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));

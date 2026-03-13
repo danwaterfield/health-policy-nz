@@ -185,6 +185,26 @@ if (!hasData) {
 }
 ```
 
+```js
+// Computed forecast narrative headline
+{
+  if (hasData) {
+    const baseline = projections.filter(d => d.scenario === "baseline");
+    if (baseline.length >= 2) {
+      const sorted = [...baseline].sort((a, b) => a.year - b.year);
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const pctChange = ((last.projected_volume - first.projected_volume) / first.projected_volume) * 100;
+      const dir = pctChange >= 0 ? "increase" : "decrease";
+      const regionName = geographies.find(d => d.id === selectedGeo)?.name ?? "the selected region";
+      display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+        Under the baseline scenario, <strong>${serviceDisplayName(selectedService)}</strong> demand in <strong>${regionName}</strong> is projected to ${dir} by <strong>${Math.abs(pctChange).toFixed(1)}%</strong> between ${first.year} and ${last.year}.
+      </div>`);
+    }
+  }
+}
+```
+
 ## Methodology Note
 
 ```js
@@ -210,6 +230,10 @@ The following relationships are established in NZ health literature. These are q
 | Workforce vacancy rate | Median wait time growth | ~6 months |
 | Age 85+ population share | Aged residential care demand | ~2 years |
 | Amenable mortality | GP density (rural) | Long-term |
+
+<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<strong>Related:</strong> Current workforce capacity may not meet projected demand. See <a href="./workforce">Workforce</a> for regional vacancy rates. These projections do not account for equity — see <a href="./equity">Equity Gap Explorer</a> for who is most affected.
+</div>
 
 ```js
 const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));
