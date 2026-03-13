@@ -84,6 +84,26 @@ const serviceDisplayName = (s) => {
 };
 ```
 
+```js
+// Computed forecast narrative headline
+{
+  if (projections && projections.length > 0) {
+    const baseline = projections.filter(d => d.scenario === "baseline");
+    if (baseline.length >= 2) {
+      const sorted = [...baseline].sort((a, b) => a.year - b.year);
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const pctChange = ((last.projected_volume - first.projected_volume) / first.projected_volume) * 100;
+      const dir = pctChange >= 0 ? "increase" : "decrease";
+      const regionName = geographies.find(d => d.id === selectedGeo)?.name ?? "the selected region";
+      display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+        Under the baseline scenario, <strong>${serviceDisplayName(selectedService)}</strong> demand in <strong>${regionName}</strong> is projected to ${dir} by <strong>${Math.abs(pctChange).toFixed(1)}%</strong> between ${first.year} and ${last.year}.
+      </div>`);
+    }
+  }
+}
+```
+
 ## Demand Projections — ${serviceDisplayName(selectedService)}
 
 ```js
@@ -182,26 +202,6 @@ if (!hasData) {
       <span style="color: #636363; font-style: italic;">Dashed = projected</span>
     </div>
   `);
-}
-```
-
-```js
-// Computed forecast narrative headline
-{
-  if (projections && projections.length > 0) {
-    const baseline = projections.filter(d => d.scenario === "baseline");
-    if (baseline.length >= 2) {
-      const sorted = [...baseline].sort((a, b) => a.year - b.year);
-      const first = sorted[0];
-      const last = sorted[sorted.length - 1];
-      const pctChange = ((last.projected_volume - first.projected_volume) / first.projected_volume) * 100;
-      const dir = pctChange >= 0 ? "increase" : "decrease";
-      const regionName = geographies.find(d => d.id === selectedGeo)?.name ?? "the selected region";
-      display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
-        Under the baseline scenario, <strong>${serviceDisplayName(selectedService)}</strong> demand in <strong>${regionName}</strong> is projected to ${dir} by <strong>${Math.abs(pctChange).toFixed(1)}%</strong> between ${first.year} and ${last.year}.
-      </div>`);
-    }
-  }
 }
 ```
 

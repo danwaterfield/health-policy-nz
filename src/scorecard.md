@@ -273,6 +273,10 @@ if (edTrend.length > 0) {
     title: "ED 6-hour target — national",
     marginLeft: 60,
     width,
+    x: {
+      label: "Quarter",
+      tickFormat: d => `${Math.floor(d)} Q${Math.round((d % 1) * 4) + 1}`,
+    },
     y: {
       label: "% seen within 6 hours",
       domain: [75, 100],
@@ -287,18 +291,18 @@ if (edTrend.length > 0) {
         fill: "#2d8a4e",
       }),
       Plot.lineY(edTrend, {
-        x: d => `${d.year} Q${d.quarter}`,
+        x: d => d.year + (d.quarter - 1) * 0.25,
         y: "pct_within_target",
         stroke: "#1f77b4",
         strokeWidth: 2,
         tip: true,
       }),
       Plot.dot(edTrend, {
-        x: d => `${d.year} Q${d.quarter}`,
+        x: d => d.year + (d.quarter - 1) * 0.25,
         y: "pct_within_target",
         fill: d => d.pct_within_target >= 95 ? "#2d8a4e" : "#c0392b",
         tip: true,
-        title: d => `Q${d.quarter} ${d.year}: ${d.pct_within_target?.toFixed(1)}%`,
+        title: d => `${d.year} Q${d.quarter}: ${d.pct_within_target?.toFixed(1)}%`,
       }),
     ],
   }));
@@ -331,6 +335,10 @@ if (fsaTrend.length > 0) {
     title: "First Specialist Assessment — median wait days (national)",
     marginLeft: 60,
     width,
+    x: {
+      label: "Quarter",
+      tickFormat: d => `${Math.floor(d)} Q${Math.round((d % 1) * 4) + 1}`,
+    },
     y: { label: "Median wait (days)" },
     marks: [
       Plot.ruleY([42], { stroke: "#2d8a4e", strokeDasharray: "4,4" }),
@@ -342,18 +350,18 @@ if (fsaTrend.length > 0) {
         fill: "#2d8a4e",
       }),
       Plot.lineY(fsaTrend, {
-        x: d => `${d.year} Q${d.quarter}`,
+        x: d => d.year + (d.quarter - 1) * 0.25,
         y: "median_wait_days",
         stroke: "#e5850b",
         strokeWidth: 2,
         tip: true,
       }),
       Plot.dot(fsaTrend, {
-        x: d => `${d.year} Q${d.quarter}`,
+        x: d => d.year + (d.quarter - 1) * 0.25,
         y: "median_wait_days",
         fill: d => d.median_wait_days <= 42 ? "#2d8a4e" : "#c0392b",
         tip: true,
-        title: d => `Q${d.quarter} ${d.year}: ${d.median_wait_days?.toFixed(0)} days`,
+        title: d => `${d.year} Q${d.quarter}: ${d.median_wait_days?.toFixed(0)} days`,
       }),
     ],
   }));

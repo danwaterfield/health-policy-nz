@@ -252,7 +252,7 @@ if (noEthnicitySelected) {
 
   const nationalPlot = Plot.plot({
     title: `Gap vs. European/Other — national (${latestYear})`,
-    subtitle: hasCI ? "Error bars show 95% CI · ~ = not statistically significant (CI crosses zero)" : "",
+    subtitle: `${nationalGaps.filter(d => d.gap_direction === "adverse" && d.significant).length} of ${nationalGaps.length} gaps are statistically significant and adverse${hasCI ? " · Error bars show 95% CI · ~ = not significant" : ""}`,
     marginLeft: 100,
     marginRight: 20,
     width,
@@ -472,6 +472,7 @@ if (regionalGaps.length === 0) {
   const sorted = [...regionalGaps].sort((a, b) => a.absolute_gap - b.absolute_gap);
   display(Plot.plot({
     title: `Equity gap by region (${latestYear})`,
+    subtitle: `${sorted.filter(d => d.gap_direction === "adverse").length} of ${sorted.length} region–ethnicity combinations show adverse gaps`,
     marginLeft: 200,
     marginRight: 60,
     width,

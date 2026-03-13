@@ -75,6 +75,7 @@ if (latestGps.length === 0) {
   const sorted = [...latestGps].sort((a, b) => b.vacancy_rate - a.vacancy_rate);
   display(Plot.plot({
     title: "GP vacancy rate by region",
+    subtitle: `${sorted.filter(d => (d.vacancy_rate ?? 0) > 0.08).length} of ${sorted.length} regions exceed the 8% GPS target`,
     marginLeft: 200,
     width,
     height: Math.max(300, sorted.length * 22),
@@ -107,14 +108,16 @@ if (latestGps.length === 0) {
 if (latestGps.length > 0) {
   const withIntl = latestGps.filter(d => d.international_pct !== null);
   if (withIntl.length > 0) {
+    const sorted = [...withIntl].sort((a, b) => b.international_pct - a.international_pct);
     display(Plot.plot({
       title: "GP workforce: international recruitment % by region",
+      subtitle: `Range: ${(Math.min(...sorted.map(d => (d.international_pct ?? 0) * 100))).toFixed(0)}%–${(Math.max(...sorted.map(d => (d.international_pct ?? 0) * 100))).toFixed(0)}% across regions`,
       marginLeft: 200,
       width,
       height: Math.max(200, withIntl.length * 18),
       x: { label: "International GPs (%)" },
       marks: [
-        Plot.barX(withIntl.sort((a, b) => b.international_pct - a.international_pct), {
+        Plot.barX(sorted, {
           x: d => (d.international_pct ?? 0) * 100,
           y: "region",
           fill: "#7b6db8",
@@ -135,15 +138,17 @@ if (latestGps.length > 0) {
 
 ```js
 if (latestNurses.length > 0) {
+  const sorted = [...latestNurses].sort((a, b) => b.vacancy_rate - a.vacancy_rate);
   display(Plot.plot({
     title: "Nursing vacancy rate by district",
+    subtitle: `${sorted.filter(d => (d.vacancy_rate ?? 0) > 0.20).length} districts above 20% critical threshold`,
     marginLeft: 200,
     width,
-    height: Math.max(200, latestNurses.length * 18),
+    height: Math.max(200, sorted.length * 18),
     x: { label: "Vacancy rate (%)" },
     marks: [
       Plot.ruleX([12], { stroke: "#e5850b", strokeDasharray: "4,4" }),
-      Plot.barX(latestNurses.sort((a, b) => b.vacancy_rate - a.vacancy_rate), {
+      Plot.barX(sorted, {
         x: d => (d.vacancy_rate ?? 0) * 100,
         y: "region",
         fill: d => d.vacancy_rate > 0.20 ? "#c0392b" : "#e5850b",

@@ -165,7 +165,7 @@ if (slopeData.length === 0) {
 
   display(Plot.plot({
     title: "Annual rate of change in equity gap: pre-COVID (2011–19) vs post-COVID (2023–24)",
-    subtitle: "Positive = gap worsening faster after COVID · Negative = gap narrowing faster after COVID",
+    subtitle: `${sorted.filter(d => d.slope_change > 0).length} worsened, ${sorted.filter(d => d.slope_change <= 0).length} improved or stable · Positive = worsening faster · Negative = narrowing faster`,
     marginLeft: 240,
     marginRight: 80,
     width,
@@ -230,6 +230,30 @@ if (slopeData.length === 0) {
     Open circle = pre-COVID slope (2011–19) · Filled circle = post-COVID slope (2023–24) ·
     Line colour = direction of change. Units: percentage points per year.
   </p>`);
+}
+```
+
+```js
+if (slopeData.length > 0) {
+  const worsenedCount  = slopeData.filter(worsened).length;
+  const improvedCount  = slopeData.filter(d => !worsened(d)).length;
+  const biggestWorsen  = [...slopeData].filter(worsened).sort((a, b) => b.slope_change - a.slope_change)[0];
+  const biggestImprove = [...slopeData].filter(d => !worsened(d)).sort((a, b) => a.slope_change - b.slope_change)[0];
+
+  display(html`
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
+      <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
+        <strong style="color: #c0392b;">${worsenedCount}</strong> indicator–ethnicity pairs
+        worsened trajectory post-COVID
+        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(2)} pp/yr</small>` : ""}
+      </div>
+      <div style="padding: 0.75rem 1.25rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222;">
+        <strong style="color: #2d8a4e;">${improvedCount}</strong> indicator–ethnicity pairs
+        improved trajectory post-COVID
+        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(2)} pp/yr</small>` : ""}
+      </div>
+    </div>
+  `);
 }
 ```
 
@@ -373,26 +397,6 @@ Indicators where the trajectory changed most, showing all years including the CO
 
 ```js
 if (slopeData.length > 0) {
-  const worsenedCount  = slopeData.filter(worsened).length;
-  const improvedCount  = slopeData.filter(d => !worsened(d)).length;
-  const biggestWorsen  = [...slopeData].filter(worsened).sort((a, b) => b.slope_change - a.slope_change)[0];
-  const biggestImprove = [...slopeData].filter(d => !worsened(d)).sort((a, b) => a.slope_change - b.slope_change)[0];
-
-  display(html`
-    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
-      <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
-        <strong style="color: #c0392b;">${worsenedCount}</strong> indicator–ethnicity pairs
-        worsened trajectory post-COVID
-        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(2)} pp/yr</small>` : ""}
-      </div>
-      <div style="padding: 0.75rem 1.25rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222;">
-        <strong style="color: #2d8a4e;">${improvedCount}</strong> indicator–ethnicity pairs
-        improved trajectory post-COVID
-        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(2)} pp/yr</small>` : ""}
-      </div>
-    </div>
-  `);
-
   display(Inputs.table(
     [...slopeData].sort((a, b) => b.slope_change - a.slope_change),
     {

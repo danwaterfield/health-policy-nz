@@ -219,34 +219,6 @@ if (filtered.length === 0) {
 }
 ```
 
-## Data Table
-
-```js
-if (filtered.length > 0) {
-  display(Inputs.table(
-    filtered.map(d => ({
-      Year: String(d.year),
-      Ethnicity: displayEthnicity(d.ethnicity),
-      Value: d.suppressed ? "S*" : d.value?.toFixed(1) ?? "—",
-      "Lower CI": d.suppressed ? "S" : d.value_lower_ci?.toFixed(1) ?? "—",
-      "Upper CI": d.suppressed ? "S" : d.value_upper_ci?.toFixed(1) ?? "—",
-      Suppressed: d.suppressed ? "Yes" : "",
-    })),
-    { sort: "Year", reverse: true }
-  ));
-  if (filtered.some(d => d.suppressed)) {
-    display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
-      <strong>S*</strong> = Suppressed: sample size too small (n &lt; 30) to report reliably. Value withheld to protect confidentiality.
-    </p>`);
-  }
-  display(exportButtons(null, filtered.map(d => ({
-    year: d.year, ethnicity: d.ethnicity, value: d.value,
-    lower_ci: d.value_lower_ci, upper_ci: d.value_upper_ci,
-    suppressed: d.suppressed, region: d.region,
-  })), { filename: `${ind?.slug ?? "indicator"}-data` }));
-}
-```
-
 ## Regional Comparison — ${ind?.name ?? ""}
 
 ```js
@@ -285,6 +257,7 @@ if (regionData.length > 1) {
 
   display(Plot.plot({
     title: `${ind.name} by region (${regionData[0]?.year}, Total population)`,
+    subtitle: regionData.length > 1 ? `Range: ${Math.min(...regionData.map(d => d.value)).toFixed(1)}–${Math.max(...regionData.map(d => d.value)).toFixed(1)}${ind.unit ?? "%"}` : "",
     marginLeft: 220,
     width,
     height: Math.max(200, regionData.length * 28),
@@ -318,6 +291,37 @@ if (regionData.length > 1) {
   display(html`<p style="color: #636363; font-style: italic;">Only one region has data for this indicator.</p>`);
 }
 ```
+
+<details style="margin-top: 1.5rem;">
+<summary style="cursor: pointer; font-weight: 600; color: #1e293b; font-size: 1em;">View data table</summary>
+
+```js
+if (filtered.length > 0) {
+  display(Inputs.table(
+    filtered.map(d => ({
+      Year: String(d.year),
+      Ethnicity: displayEthnicity(d.ethnicity),
+      Value: d.suppressed ? "S*" : d.value?.toFixed(1) ?? "—",
+      "Lower CI": d.suppressed ? "S" : d.value_lower_ci?.toFixed(1) ?? "—",
+      "Upper CI": d.suppressed ? "S" : d.value_upper_ci?.toFixed(1) ?? "—",
+      Suppressed: d.suppressed ? "Yes" : "",
+    })),
+    { sort: "Year", reverse: true }
+  ));
+  if (filtered.some(d => d.suppressed)) {
+    display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+      <strong>S*</strong> = Suppressed: sample size too small (n &lt; 30) to report reliably. Value withheld to protect confidentiality.
+    </p>`);
+  }
+  display(exportButtons(null, filtered.map(d => ({
+    year: d.year, ethnicity: d.ethnicity, value: d.value,
+    lower_ci: d.value_lower_ci, upper_ci: d.value_upper_ci,
+    suppressed: d.suppressed, region: d.region,
+  })), { filename: `${ind?.slug ?? "indicator"}-data` }));
+}
+```
+
+</details>
 
 ```js
 const sourceFreshness = Array.from(await db.query(`SELECT slug, name, last_ingested_at FROM dim_data_source`));

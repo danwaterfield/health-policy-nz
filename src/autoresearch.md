@@ -186,7 +186,7 @@ display(exportButtons(trajChart, indexed, {filename: `trajectory-${selectedAgent
 
 ---
 
-## Causal Links
+## Causal Links — Ranked by Evidence Strength
 
 Which configuration changes reliably improve outcomes?
 
@@ -195,24 +195,35 @@ const robustLinks = causal.filter(d => d.type === "robust");
 const nonEffects = causal.filter(d => d.type === "non_effect");
 
 const strengthColor = {strong: "#2a9d8f", moderate: "#e9c46a", weak: "#e76f51", none: "#ccc"};
+const strengthValue = {strong: 4, moderate: 3, weak: 2, none: 1};
+
+const causalRanked = causal
+  .map(d => ({...d, label: `${d.change} → ${d.effect}`, numStrength: strengthValue[d.strength] ?? 0}))
+  .sort((a, b) => b.numStrength - a.numStrength || a.label.localeCompare(b.label));
 
 const causalChart = Plot.plot({
-  marginLeft: 200,
-  height: 220,
-  x: {label: "Evidence strength", domain: ["none", "weak", "moderate", "strong"]},
-  y: {label: null},
-  color: {
-    domain: ["strong", "moderate", "weak", "none"],
-    range: ["#2a9d8f", "#e9c46a", "#e76f51", "#ccc"],
-  },
+  marginLeft: 280,
+  marginRight: 60,
+  height: Math.max(200, causalRanked.length * 22),
+  x: {label: "Evidence strength", domain: [0, 4], ticks: 4, tickFormat: d => ["", "none", "weak", "moderate", "strong"][d]},
+  y: {label: null, domain: causalRanked.map(d => d.label)},
+  subtitle: "Hover for evidence details",
   marks: [
-    Plot.dot(causal, {
-      y: d => `${d.change} → ${d.effect}`,
-      x: "strength",
-      fill: "strength",
-      r: 8,
+    Plot.barX(causalRanked, {
+      y: "label",
+      x: "numStrength",
+      fill: d => strengthColor[d.strength],
       tip: true,
       title: d => d.evidence,
+    }),
+    Plot.text(causalRanked, {
+      y: "label",
+      x: "numStrength",
+      text: "strength",
+      dx: 4,
+      textAnchor: "start",
+      fontSize: 10,
+      fill: "#666",
     }),
   ],
 });
