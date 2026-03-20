@@ -12,3 +12,4 @@ __pycache__/
 
 .playwright-mcp/
 pipeline/src/
+project-docs/.observablehq/

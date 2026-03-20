@@ -17,17 +17,10 @@ import {removeFacilitiesByPercent, applyFuelMultiplier, applyTelehealthCap, scen
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
 ```
 
-```js
-// Load Leaflet CSS
-const leafletCss = document.createElement("link");
-leafletCss.rel = "stylesheet";
-leafletCss.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-document.head.appendChild(leafletCss);
-```
-
 ```html
+<link rel="stylesheet" href="npm:leaflet/dist/leaflet.css">
 <style>
-  .leaflet-container { background: #eaf2f8; }
+  .leaflet-container { background: #eaf2f8 !important; }
   #access-map { width: 100%; height: 700px; border-radius: 8px; border: 1px solid #ddd; }
 </style>
 ```
@@ -361,6 +354,7 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
   // Create map container
   const container = document.createElement("div");
   container.id = "access-map";
+  container.style.cssText = "width:100%; height:700px; border-radius:8px; border:1px solid #ddd;";
   display(container);
 
   // Wait a tick for DOM insertion
