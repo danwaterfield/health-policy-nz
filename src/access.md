@@ -235,26 +235,26 @@ if (hasAccess) {
   const q5Over30 = byQuintile[4]?.pctOver30;
 
   display(html`
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1rem 0;">
-      <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #4575b4;">
-        <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Least deprived (Q1)</div>
-        <div style="font-size: 2rem; font-weight: 700; color: #4575b4;">${q1Med != null ? q1Med.toFixed(0) + " min" : "—"}</div>
-        <div style="font-size: 0.85em; color: #666;">median drive time (pop-weighted)</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
+      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q1 (least deprived)</div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q1Med != null ? q1Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
+        <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
       </div>
-      <div style="background: #fdf2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #d73027;">
-        <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Most deprived (Q5)</div>
-        <div style="font-size: 2rem; font-weight: 700; color: #d73027;">${q5Med != null ? q5Med.toFixed(0) + " min" : "—"}</div>
-        <div style="font-size: 0.85em; color: #666;">median drive time (pop-weighted)</div>
+      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 (most deprived)</div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q5Med != null ? q5Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
+        <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
       </div>
-      <div style="background: #fff8f0; padding: 1rem; border-radius: 8px; border-left: 4px solid #e69f00;">
-        <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Q5 areas >30 min</div>
-        <div style="font-size: 2rem; font-weight: 700; color: #e69f00;">${q5Over30 != null ? q5Over30.toFixed(0) + "%" : "—"}</div>
-        <div style="font-size: 0.85em; color: #666;">of most deprived SA2s</div>
+      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 areas &gt;30 min</div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;">%</span></div>
+        <div style="font-size: 0.75em; color: #999;">of people in most deprived SA2s</div>
       </div>
-      <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #636363;">
-        <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Facilities mapped</div>
-        <div style="font-size: 2rem; font-weight: 700; color: #333;">${facilities.length.toLocaleString()}</div>
-        <div style="font-size: 0.85em; color: #666;">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
+      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Facilities</div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${facilities.length.toLocaleString()}</div>
+        <div style="font-size: 0.75em; color: #999;">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
       </div>
     </div>
   `);
