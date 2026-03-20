@@ -13,6 +13,7 @@ import L from "npm:leaflet";
 import {exportButtons} from "./components/chart-export.js";
 import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm, moranI, localMoranI, nearestNeighbourR} from "./components/access-stats.js";
 import {buildSA2Popup, buildFacilityPopup, findNearestFacility} from "./components/access-detail.js";
+import {removeFacilitiesByPercent, applyFuelMultiplier, applyTelehealthCap, scenarioDiff} from "./components/scenario-engine.js";
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
 ```
 
@@ -58,6 +59,9 @@ const sa2Nzdep = Array.from(await db.query(`
 
 const popLookup = new Map(sa2Nzdep.map(d => [d.sa2_code, d.population || 0]));
 
+// Load SA2 centroids early — used by scenario engine and map popups
+const centroids = await FileAttachment("data/sa2-centroids.json").json();
+
 const hasAccess = accessData.length > 0;
 ```
 
@@ -73,13 +77,103 @@ const facilityType = view(Inputs.select(
 const showLISA = view(Inputs.toggle({ label: "Show access hotspots (LISA)", value: false }));
 ```
 
+## What-if scenarios
+
+<details style="border: 1px solid #ddd; border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; background: #fafafa;">
+<summary style="cursor: pointer; font-weight: 600; padding: 0.25rem 0;">Explore scenario controls</summary>
+<p style="font-size: 0.85em; color: #555; margin: 0.5rem 0 1rem 0;">
+Adjust the controls below to model what-if scenarios. The map, charts, and statistics will update to reflect the modelled changes.
+</p>
+
+```js
+const fuelMultiplier = view(Inputs.range([1, 3], {step: 0.1, value: 1, label: "Fuel price multiplier"}));
+```
+
+```js
+const telehealthOn = view(Inputs.toggle({label: "Universal telehealth", value: false}));
+```
+
+```js
+const telehealthCap = telehealthOn
+  ? view(Inputs.select([10, 15, 20], {label: "Max effective travel time (min)", value: 15}))
+  : 15;
+```
+
+```js
+const pandemicPct = view(Inputs.range([0, 50], {step: 5, value: 0, label: "% facilities removed (pandemic mode)"}));
+```
+
+```js
+const scenarioResetBtn = view(Inputs.button("Reset all scenarios"));
+```
+
+```js
+// When reset is clicked, the button value increments — we use it to reset inputs.
+// Observable re-evaluates downstream cells automatically when inputs change.
+```
+
+</details>
+
+```js
+const scenarioActive = fuelMultiplier !== 1 || telehealthOn || pandemicPct > 0;
+let scenarioData = accessData;
+if (pandemicPct > 0) {
+  scenarioData = removeFacilitiesByPercent(facilities, scenarioData, centroids, pandemicPct);
+}
+if (fuelMultiplier !== 1) {
+  scenarioData = applyFuelMultiplier(scenarioData, fuelMultiplier, null);
+}
+if (telehealthOn) {
+  scenarioData = applyTelehealthCap(scenarioData, telehealthCap, null);
+}
+```
+
+```js
+if (scenarioActive && hasAccess) {
+  const diff = scenarioDiff(accessData, scenarioData, popLookup);
+  const scenarioGpRows = scenarioData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+  const baseGpRows = accessData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+  const scenarioMedian = scenarioGpRows.length > 0
+    ? [...scenarioGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(scenarioGpRows.length / 2)].nearest_minutes
+    : 0;
+  const baseMedian = baseGpRows.length > 0
+    ? [...baseGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(baseGpRows.length / 2)].nearest_minutes
+    : 0;
+  const medianDelta = scenarioMedian - baseMedian;
+
+  display(html`
+    <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 0.5rem 0 1rem 0;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem;">Scenario impact</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; font-size: 0.9em;">
+        <div>
+          <span style="font-size: 1.3em; font-weight: 700;">${diff.peopleAffected.toLocaleString()}</span><br>
+          <span style="color: #666;">people affected (&gt;0.5 min change)</span>
+        </div>
+        <div>
+          <span style="font-size: 1.3em; font-weight: 700;">${diff.sa2sCrossed}</span><br>
+          <span style="color: #666;">SA2s crossing 30-min threshold</span>
+        </div>
+        <div>
+          <span style="font-size: 1.3em; font-weight: 700; color: ${medianDelta > 0 ? "#d73027" : medianDelta < 0 ? "#4575b4" : "#333"};">${medianDelta > 0 ? "+" : ""}${medianDelta.toFixed(1)} min</span><br>
+          <span style="color: #666;">median GP drive time change</span>
+        </div>
+      </div>
+      <div style="font-size: 0.8em; color: #856404; margin-top: 0.5rem;">
+        Active: ${fuelMultiplier !== 1 ? `fuel x${fuelMultiplier}` : ""}${telehealthOn ? ` telehealth cap ${telehealthCap} min` : ""}${pandemicPct > 0 ? ` ${pandemicPct}% facilities removed` : ""}
+      </div>
+    </div>
+  `);
+}
+```
+
 ## Key statistics
 
 ```js
 // Compute summary stats
+const activeData = scenarioActive ? scenarioData : accessData;
 const filteredAccess = facilityType === "all"
-  ? accessData
-  : accessData.filter(d => d.facility_type === facilityType);
+  ? activeData
+  : activeData.filter(d => d.facility_type === facilityType);
 
 if (hasAccess) {
   const byQuintile = [1, 2, 3, 4, 5].map(q => {
@@ -178,9 +272,6 @@ for (const row of filteredAccess) {
     accessLookup.set(row.sa2_code, row);
   }
 }
-
-// Load SA2 centroids for popup distance calculations
-const centroids = await FileAttachment("data/sa2-centroids.json").json();
 
 // Compute national median GP drive time for relative comparison
 const gpAccess = filteredAccess.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
