@@ -37,6 +37,7 @@ const db = await DuckDBClient.of({
   fact_facilities: FileAttachment("data/fact_facilities.parquet"),
   fact_access: FileAttachment("data/fact_access.parquet"),
   fact_sa2_nzdep: FileAttachment("data/fact_sa2_nzdep.parquet"),
+  sim_agents: FileAttachment("data/sim_agents.parquet"),
 });
 ```
 
@@ -63,6 +64,12 @@ const popLookup = new Map(sa2Nzdep.map(d => [d.sa2_code, d.population || 0]));
 const centroids = await FileAttachment("data/sa2-centroids.json").json();
 
 const hasAccess = accessData.length > 0;
+
+// Load top autoresearch configuration for Counties Manukau
+const topAgentRows = Array.from(await db.query(`
+  SELECT * FROM sim_agents WHERE accepted = true ORDER BY overall_score DESC LIMIT 1
+`));
+const topAgent = topAgentRows[0] || null;
 ```
 
 ```js
@@ -75,6 +82,42 @@ const facilityType = view(Inputs.select(
 
 ```js
 const showLISA = view(Inputs.toggle({ label: "Show access hotspots (LISA)", value: false }));
+```
+
+```js
+const showAutoresearch = view(Inputs.toggle({label: "Show autoresearch focus area", value: false}));
+```
+
+```js
+if (showAutoresearch) {
+  if (topAgent) {
+    display(html`
+      <div style="background: #f3e8ff; border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
+        <strong style="color: #7b3294;">Autoresearch: Top Configuration (Counties Manukau)</strong>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85em;">
+          <div><strong>Strategy:</strong> ${topAgent.strategy}</div>
+          <div><strong>Score:</strong> ${topAgent.overall_score?.toFixed(2)}</div>
+          <div><strong>Coverage:</strong> ${(topAgent.coverage * 100)?.toFixed(0)}%</div>
+          <div><strong>Wait time:</strong> ${topAgent.wait_time?.toFixed(1)} days</div>
+        </div>
+        <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
+          Based on 887 simulated configurations for Counties Manukau.
+          <a href="./autoresearch">View full analysis →</a>
+        </p>
+      </div>
+    `);
+  } else {
+    display(html`
+      <div style="background: #f3e8ff; border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
+        <strong style="color: #7b3294;">Autoresearch: No accepted configurations found</strong>
+        <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
+          Run the autoresearch simulation to populate results.
+          <a href="./autoresearch">View autoresearch page →</a>
+        </p>
+      </div>
+    `);
+  }
+}
 ```
 
 ## What-if scenarios
@@ -364,6 +407,28 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
       });
     },
   }).addTo(map);
+
+  // Counties Manukau / Northern region highlight overlay
+  if (showAutoresearch) {
+    const northernFeatures = sa2Geojson.features.filter(f => {
+      const region = f.properties?.health_region || "";
+      return region === "Northern | Te Tai Tokerau";
+    });
+    if (northernFeatures.length > 0) {
+      L.geoJSON({ type: "FeatureCollection", features: northernFeatures }, {
+        style: () => ({
+          weight: 2,
+          color: "#7b3294",
+          dashArray: "6,4",
+          fillOpacity: 0,
+          opacity: 0.8,
+        }),
+        onEachFeature: (feature, layer) => {
+          layer.bindTooltip("Northern region (includes Counties Manukau)", { sticky: true });
+        },
+      }).addTo(map);
+    }
+  }
 
   // Facility markers
   for (const f of filteredFacilities) {
