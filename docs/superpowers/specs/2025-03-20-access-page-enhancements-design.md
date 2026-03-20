@@ -151,6 +151,26 @@ Collapsible section below the map showing:
 - Population coverage: % of people within 15/30/45/60 min by quintile
 - When scenario active: delta for each stat vs baseline
 
+### Spatial statistics (new — informed by Rogerson Ch 8, Gimond Ch 11-13)
+
+**Global Moran's I** for the travel time surface. Answers: "is access deprivation spatially clustered or randomly distributed?" Computed client-side using distance-based spatial weights (w_ij = 1/d_ij for SA2 pairs within a threshold distance, 0 otherwise). Formula (Rogerson eq 8.19):
+
+```
+I = n * sum_i(sum_j(w_ij * z_i * z_j)) / (S_0 * sum_i(z_i^2))
+```
+
+where z_i is the standardised travel time at SA2 i, and S_0 = sum of all weights. Significance tested via z-score against the normal approximation (valid for n > 30, which we have at ~2,000 SA2s). Reported as: "Moran's I = X.XX (z = Y.YY, p < 0.001) — travel time shows [significant positive/no significant] spatial autocorrelation."
+
+**Local Moran's I (LISA)** for each SA2. Identifies statistically significant hotspots (High-High: poor access surrounded by poor access) and coldspots (Low-Low: good access clusters). Categories:
+- **HH (hot spot)**: high travel time, neighbours also high — these are the *structurally underserved* areas
+- **LL (cold spot)**: low travel time, neighbours also low — well-served clusters
+- **HL (outlier)**: high travel time but neighbours are low — isolated access desert
+- **LH (outlier)**: low travel time but neighbours are high — isolated facility
+
+Displayed as a toggleable overlay layer on the Leaflet map. Only statistically significant clusters shown (p < 0.05 with FDR correction for multiple testing). This replaces the arbitrary >45 min "facility desert" threshold with a statistically grounded definition.
+
+**Nearest-neighbour statistic R** for facility point pattern. R = observed mean nearest-neighbour distance / expected under CSR (Rogerson eq 8.8). Reports whether GPs are clustered (R < 1, indicating market-driven concentration), random (R ≈ 1), or dispersed (R > 1, indicating planned distribution). Quick computation: O(n log n) with a k-d tree, or O(n^2) brute force for 1,252 facilities (~1.5M comparisons, sub-second).
+
 ### Cross-tabulation table
 Pivot: health region (rows) × NZDep quintile (columns). Cell value: population-weighted median travel time. Second table: population count per cell. These are the tables an analyst would copy into a report.
 
@@ -158,8 +178,8 @@ Pivot: health region (rows) × NZDep quintile (columns). Cell value: population-
 Expose DuckDB-WASM via `Inputs.text` → `db.query()`. Pre-populated with example queries. **Safe because DuckDB-WASM runs entirely in the browser sandbox against read-only parquet files** — no server, no mutation possible.
 
 ### Files changed
-- `src/access.md` — export button, stats panel, cross-tab table
-- `src/components/access-stats.js` — extracted stats computation (Gini, correlation, weighted percentiles)
+- `src/access.md` — export button, stats panel, cross-tab table, LISA map layer toggle
+- `src/components/access-stats.js` — extracted stats computation (Gini, correlation, weighted percentiles, Moran's I, LISA, nearest-neighbour R)
 
 ## Implementation order
 
@@ -168,6 +188,18 @@ Expose DuckDB-WASM via `Inputs.text` → `db.query()`. Pre-populated with exampl
 3. **Analyst layer** — CSV export + stats panel, needed before scenarios (so analysts can export scenario results)
 4. **What-if scenarios** — the big feature, depends on correct stats and analyst layer for validation
 5. **Autoresearcher connection** — depends on scenarios being in place
+
+## Methodology caveats (to add to page footer)
+
+These caveats should be added to the methodology section at the bottom of `src/access.md`, drawing on Rogerson (2001) Ch 1.6 and Gimond Ch 6:
+
+**Modifiable Areal Unit Problem (MAUP)**: Results are sensitive to the choice of spatial unit. SA2 areas vary dramatically in size (from <1 km² urban to >1,000 km² rural). Aggregating to health regions or TAs would produce different patterns. The SA2-level analysis is the finest granularity available from Stats NZ but is not immune to MAUP effects. (Rogerson 1.6.1; Gimond Ch 6)
+
+**Ecological fallacy**: Area-level deprivation (NZDep) and area-level access do not necessarily describe individuals. An SA2 with NZDep Q5 and 40 min travel time does not mean every resident is deprived and poorly served — it means the *area average* has those characteristics. Individual-level access depends on car ownership, mobility, employment flexibility, and other factors not captured here. (Rogerson 1.6.1)
+
+**Boundary effects**: SA2s near the coast or national border may have inflated travel times because the nearest facility is constrained to be within NZ. Island SA2s (Chatham Islands, Great Barrier) are excluded from the map but included in statistics with capped travel times. (Rogerson 1.6.2)
+
+**Spatial autocorrelation**: Travel times are spatially autocorrelated — nearby SA2s tend to have similar values. This violates the independence assumption of standard statistical tests (e.g., Pearson correlation between NZDep and travel time). The Moran's I and LISA statistics explicitly account for this. Correlation and regression results should be interpreted with this caveat. (Rogerson 1.6.4, Ch 8-9)
 
 ## Non-goals
 - No new pipeline fetchers
