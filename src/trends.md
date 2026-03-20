@@ -120,13 +120,13 @@ const slopeData = (() => {
 ```js
 display(html`
   <div style="
-    border-left: 4px solid #666;
-    background: #f7f7f7;
+    border-left: 4px solid var(--theme-foreground-faint, #666);
+    background: var(--theme-background-alt, #f7f7f7);
     border-radius: 0 6px 6px 0;
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
     font-size: 0.85em;
-    color: #333;
+    color: var(--theme-foreground, #333);
   ">
     <strong>Methodological note</strong> — Pre-COVID period: 2011–2019 (9 annual data points).
     Post-COVID period: 2023–2024 (2 points only). COVID years 2020–2022 are excluded from both
@@ -145,7 +145,7 @@ display(html`
     const total = slopeData.length;
     const worsenedCount = slopeData.filter(worsened).length;
     const improvedCount = slopeData.filter(d => !worsened(d)).length;
-    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+    display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
       Of <strong>${total}</strong> indicator-ethnicity trajectories analysed, <strong style="color: #c0392b;">${worsenedCount} worsened</strong> and <strong style="color: #4575b4;">${improvedCount} improved</strong> after the pandemic.
     </div>`);
   }
@@ -226,7 +226,7 @@ if (slopeData.length === 0) {
     ],
   }));
 
-  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.4rem;">
+  display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.4rem;">
     Open circle = pre-COVID slope (2011–19) · Filled circle = post-COVID slope (2023–24) ·
     Line colour = direction of change. Units: percentage points per year.
   </p>`);
@@ -242,15 +242,15 @@ if (slopeData.length > 0) {
 
   display(html`
     <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
-      <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
+      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #fdf2f2); border: 1px solid #e8a8a8; border-radius: 6px; color: var(--theme-foreground, #222);">
         <strong style="color: #c0392b;">${worsenedCount}</strong> indicator–ethnicity pairs
         worsened trajectory post-COVID
-        ${biggestWorsen ? html`<br><small style="color: #555;">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(2)} pp/yr</small>` : ""}
+        ${biggestWorsen ? html`<br><small style="color: var(--theme-foreground-muted, #555);">Largest: ${biggestWorsen.indicator} (${biggestWorsen.ethnicity}), +${biggestWorsen.slope_change?.toFixed(2)} pp/yr</small>` : ""}
       </div>
-      <div style="padding: 0.75rem 1.25rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222;">
+      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #f0f9f4); border: 1px solid #90d0aa; border-radius: 6px; color: var(--theme-foreground, #222);">
         <strong style="color: #2d8a4e;">${improvedCount}</strong> indicator–ethnicity pairs
         improved trajectory post-COVID
-        ${biggestImprove ? html`<br><small style="color: #555;">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(2)} pp/yr</small>` : ""}
+        ${biggestImprove ? html`<br><small style="color: var(--theme-foreground-muted, #555);">Largest: ${biggestImprove.indicator} (${biggestImprove.ethnicity}), ${biggestImprove.slope_change?.toFixed(2)} pp/yr</small>` : ""}
       </div>
     </div>
   `);
@@ -383,7 +383,7 @@ Indicators where the trajectory changed most, showing all years including the CO
       </div>
     `);
 
-    display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
       Grey shading = COVID period (2020–22), excluded from regressions.
       Dashed grey line = pre-COVID trend extrapolated forward.
       Coloured line = post-COVID observed trend.

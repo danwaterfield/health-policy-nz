@@ -200,7 +200,7 @@ const displayEthnicity = (name) => ({ "Maori": "Māori", "non-Maori": "non-Māor
 display(html`
   <div style="
     border-left: 4px solid #c0392b;
-    background: #fdf2f2;
+    background: var(--theme-background-alt, #fdf2f2);
     border-radius: 0 6px 6px 0;
     padding: 1rem 1.25rem;
     margin: 1.5rem 0;
@@ -209,22 +209,22 @@ display(html`
     <strong style="display: block; margin-bottom: 0.4rem; color: #c0392b;">
       ⚠ Methodological note: all gaps shown here are most likely underestimates
     </strong>
-    <span style="color: #222;">Every known bias in the underlying data runs in the same direction — toward understating disparity between Māori/Pacific and European/Other populations. Reasons include:</span>
-    <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; color: #222;">
+    <span style="color: var(--theme-foreground, #222);">Every known bias in the underlying data runs in the same direction — toward understating disparity between Māori/Pacific and European/Other populations. Reasons include:</span>
+    <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; color: var(--theme-foreground, #222);">
       <li><strong>Ethnic miscoding</strong>: ~20% of Māori are miscoded as European/Other in administrative records, contaminating the reference group upward and the target group downward.</li>
       <li><strong>Survey exclusions</strong>: NZHS excludes people in prisons, hospitals, and residential care — groups with disproportionately high Māori/Pacific representation and worse health outcomes.</li>
       <li><strong>Suppression of small cells</strong>: estimates with n &lt; 30 are hidden; these are concentrated in rural Māori/Pacific communities with the highest need.</li>
       <li><strong>No age standardisation</strong>: Māori/Pacific populations are younger on average, so crude rates understate age-adjusted disadvantage for conditions that worsen with age.</li>
       <li><strong>Total response vs prioritised ethnicity</strong>: total response inflates denominator counts for Māori/Pacific, suppressing apparent rates.</li>
     </ul>
-    <span style="display: block; margin-top: 0.5rem; color: #444; font-size: 0.9em;">
+    <span style="display: block; margin-top: 0.5rem; color: var(--theme-foreground-muted, #444); font-size: 0.9em;">
       Treat every gap on this page as a floor, not a ceiling.
     </span>
   </div>
 `);
 ```
 
-<h2 style="border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem;">Current Equity Gaps</h2>
+<h2 style="border-bottom: 2px solid var(--theme-foreground-faintest, #e5e7eb); padding-bottom: 0.5rem; margin-top: 2rem;">Current Equity Gaps</h2>
 
 ## National Summary (${latestYear})
 
@@ -243,7 +243,7 @@ if (noEthnicitySelected) {
   const ratioText = worst.reference_value > 0
     ? `(${(worst.target_value / worst.reference_value).toFixed(1)}x the rate for European/Other)`
     : "";
-  display(html`<p style="font-size: 1.05em; font-weight: 500; color: #333; margin: 0.5rem 0 1rem; line-height: 1.5;">
+  display(html`<p style="font-size: 1.05em; font-weight: 500; color: var(--theme-foreground, #333); margin: 0.5rem 0 1rem; line-height: 1.5;">
     <strong style="color: #c0392b;">${displayEthnicity(worst.ethnicity)}</strong> have a
     <strong>${Math.abs(worst.absolute_gap).toFixed(1)} percentage point</strong> ${dirLabel} rate
     for ${ind?.name?.toLowerCase() ?? "this indicator"} compared to European/Other
@@ -312,13 +312,13 @@ if (noEthnicitySelected) {
   // Non-significant gaps note
   const nonSig = nationalGaps.filter(d => !d.significant);
   if (nonSig.length > 0) {
-    display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
+    display(html`<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
       <strong>~</strong> ${nonSig.map(d => d.ethnicity).join(", ")}: gap CI crosses zero —
       difference from European/Other is not statistically significant at 95% confidence.
     </p>`);
   }
 
-  display(html`<p style="font-size: 0.8em; color: #444; margin-top: 0.5rem; border-top: 1px solid #eee; padding-top: 0.5rem;">
+  display(html`<p style="font-size: 0.8em; color: var(--theme-foreground-muted, #444); margin-top: 0.5rem; border-top: 1px solid var(--theme-foreground-faintest, #eee); padding-top: 0.5rem;">
     <strong>CI note:</strong> Error bars assume the two survey estimates (target group vs. European/Other) are
     statistically independent. In a complex survey design they are correlated, so these CIs are
     <em>conservatively wide</em> — reported significance is a lower bound. Exact gap CIs require NZHS unit record
@@ -327,7 +327,7 @@ if (noEthnicitySelected) {
 }
 ```
 
-<h2 style="border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem;">Trend Over Time</h2>
+<h2 style="border-bottom: 2px solid var(--theme-foreground-faintest, #e5e7eb); padding-bottom: 0.5rem; margin-top: 2rem;">Trend Over Time</h2>
 
 ```js
 if (trendGaps.length === 0) {
@@ -407,7 +407,7 @@ if (trendGaps.length === 0) {
   display(trendPlot);
   display(exportButtons(trendPlot, trendGaps, { filename: "equity-gap-trend" }));
 
-  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
     <strong>Note</strong>: the dashed vertical line marks 2020. Data from 2020–2022 reflects pandemic
     disruption — reduced survey participation, deferred care, and changed service use patterns — and
     is <em>not directly comparable</em> to other years. Treat trend direction across this break with caution.
@@ -423,8 +423,8 @@ if (trendGaps.length === 0) {
     display(html`
       <div style="
         padding: 2rem;
-        background: #f9f9f9;
-        border: 1px dashed #ccc;
+        background: var(--theme-background-alt, #f9f9f9);
+        border: 1px dashed var(--theme-foreground-faintest, #ccc);
         border-radius: 8px;
         text-align: center;
         color: #636363;
@@ -447,12 +447,12 @@ if (trendGaps.length === 0) {
       title: `Equity gap by health region (${latestYear})`,
     }));
     display(html`
-      <div style="flex:1; min-width:220px; font-size:0.85em; color:#555; padding-top: 2rem;">
+      <div style="flex:1; min-width:220px; font-size:0.85em; color: var(--theme-foreground-muted, #555); padding-top: 2rem;">
         <p><strong>How to read:</strong> Each DHB is coloured by its health region's equity gap for the selected indicator and ethnicity.</p>
         <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.75rem;">
           <span><span style="display:inline-block; width:14px; height:14px; background:#c0392b; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Adverse gap (Māori/Pacific worse)</span>
           <span><span style="display:inline-block; width:14px; height:14px; background:#4575b4; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Favourable gap</span>
-          <span><span style="display:inline-block; width:14px; height:14px; background:#ffffbf; border:1px solid #ccc; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Neutral / no gap</span>
+          <span><span style="display:inline-block; width:14px; height:14px; background:#ffffbf; border:1px solid var(--theme-foreground-faintest, #ccc); border-radius:2px; vertical-align:middle; margin-right:4px;"></span> Neutral / no gap</span>
           <span><span style="display:inline-block; width:14px; height:14px; background:#e0e0e0; border-radius:2px; vertical-align:middle; margin-right:4px;"></span> No data</span>
         </div>
         <p style="margin-top:0.75rem;">Geography: 20 legacy DHBs coloured by their parent health region. Data is only available at the 4-region level from NZHS.</p>
@@ -521,8 +521,8 @@ display(Inputs.table(summaryGaps, {
 }));
 ```
 
-<details style="margin-top: 2rem; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.25rem;">
-<summary style="cursor: pointer; padding: 1rem; font-size: 1.1em; font-weight: 600; color: #1e293b;">
+<details style="margin-top: 2rem; border: 1px solid var(--theme-foreground-faintest, #e5e7eb); border-radius: 8px; padding: 0.25rem;">
+<summary style="cursor: pointer; padding: 1rem; font-size: 1.1em; font-weight: 600; color: var(--theme-foreground, #1e293b);">
 Why these gaps are underestimates — deprivation, life expectancy, and measurement bias
 </summary>
 <div style="padding: 0 1rem 1rem;">
@@ -580,7 +580,7 @@ if (regionalNzdep.length === 0) {
       ),
     ],
   }));
-  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
     Source: NZDep2018 — University of Otago Department of Public Health. Aggregated from SA1 level to health region via legacy DHB assignments.
     Higher Q5 share correlates with higher Māori/Pacific population proportion and worse health outcomes across most indicators.
   </p>`);
@@ -635,7 +635,7 @@ if (lifeTables.length === 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.85em; color: #555; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
     The life expectancy gap (~7–8 years for males, ~7 years for females) is one of the
     most robust measures of health disparity and is <em>not</em> subject to the same
     measurement biases as survey-based rates — it derives from death registrations,
@@ -675,20 +675,20 @@ if (biasEstimates.length === 0) {
         The true equity gap for most indicators is likely larger than shown by the amounts below.
       </p>
       ${biasEstimates.map(b => html`
-        <details style="border: 1px solid #ddd; border-radius: 6px; margin-bottom: 0.5rem; padding: 0.75rem 1rem;">
+        <details style="border: 1px solid var(--theme-foreground-faintest, #ddd); border-radius: 6px; margin-bottom: 0.5rem; padding: 0.75rem 1rem;">
           <summary style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 600;">${biasTypeLabel[b.bias_type] ?? b.bias_type}
-              <span style="font-weight: 400; color: #666; margin-left: 0.5rem;">→ ${b.applies_to}</span>
+              <span style="font-weight: 400; color: var(--theme-foreground-muted, #666); margin-left: 0.5rem;">→ ${b.applies_to}</span>
             </span>
             <span style="
-              background: #fdf2f2; color: #c0392b; border-radius: 4px;
+              background: var(--theme-background-alt, #fdf2f2); color: #c0392b; border-radius: 4px;
               padding: 2px 8px; font-size: 0.85em; font-weight: 600; white-space: nowrap;
             ">
               gap understated by ${b.magnitude_lower_pct?.toFixed(0)}–${b.magnitude_upper_pct?.toFixed(0)}%
             </span>
           </summary>
-          <p style="margin: 0.5rem 0 0.25rem; font-size: 0.9em; color: #333;">${b.notes}</p>
-          <p style="margin: 0.25rem 0 0; font-size: 0.8em; color: #555;">
+          <p style="margin: 0.5rem 0 0.25rem; font-size: 0.9em; color: var(--theme-foreground, #333);">${b.notes}</p>
+          <p style="margin: 0.25rem 0 0; font-size: 0.8em; color: var(--theme-foreground-muted, #555);">
             <strong>Method:</strong> ${b.method}<br>
             <strong>Source:</strong> ${b.source}
           </p>
@@ -701,7 +701,7 @@ if (biasEstimates.length === 0) {
   const maxUpper = Math.max(...biasEstimates.map(b => b.magnitude_upper_pct ?? 0));
   const sumLower = biasEstimates.reduce((s, b) => s + (b.magnitude_lower_pct ?? 0), 0) * 0.5;
   display(html`
-    <div style="border-left: 4px solid #c0392b; background: #fdf2f2; padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; font-size: 0.9em; color: #222;">
+    <div style="border-left: 4px solid #c0392b; background: var(--theme-background-alt, #fdf2f2); padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; font-size: 0.9em; color: var(--theme-foreground, #222);">
       <strong>Combined floor estimate (conservative, non-additive):</strong>
       gaps on this page are likely understated by at least ${sumLower.toFixed(0)}% and
       plausibly by ${maxUpper.toFixed(0)}%+ for indicators with strong age gradients or
@@ -727,7 +727,7 @@ if (correctionsData.length > 0) {
   const maoriRow = correctionsData.find(d => d.ethnicity === "Maori");
   const totalPrison = correctionsData.reduce((s, d) => s + (d.total_count ?? 0), 0);
   display(html`
-    <p style="font-size: 0.9em; color: #555; margin: 0.5rem 0;">
+    <p style="font-size: 0.9em; color: var(--theme-foreground-muted, #555); margin: 0.5rem 0;">
       Corrections NZ (Dec ${correctionsData[0]?.year}): total prison population <strong>${totalPrison.toLocaleString()}</strong>,
       of whom <strong style="color: #c0392b;">${maoriRow?.pct_of_total?.toFixed(1)}% are Māori</strong>
       (${maoriRow?.total_count?.toLocaleString()} people).

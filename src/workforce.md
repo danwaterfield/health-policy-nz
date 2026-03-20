@@ -53,13 +53,13 @@ const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "di
     const exceed = gpRegional.filter(d => (d.vacancy_rate ?? 0) > 0.08);
     const worst = [...gpRegional].sort((a, b) => (b.vacancy_rate ?? 0) - (a.vacancy_rate ?? 0))[0];
     const worstPct = ((worst.vacancy_rate ?? 0) * 100).toFixed(1);
-    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+    display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
       <strong>${exceed.length}</strong> of ${gpRegional.length} regions exceed the 8% GP vacancy threshold. The most acute shortage is in <strong>${worst.region}</strong> at <strong>${worstPct}%</strong> vacancy.
     </div>`);
   } else if (latestGps.length === 0) {
     // No data — show nothing
   } else {
-    display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+    display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
       GP workforce data available for national level only.
     </div>`);
   }
@@ -93,7 +93,7 @@ if (latestGps.length === 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
     <span style="color: #2d8a4e;">■</span> &lt;8% (meeting GPS target)
     <span style="color: #e5850b; margin-left: 1rem;">■</span> 8–15% (at risk)
     <span style="color: #c0392b; margin-left: 1rem;">■</span> &gt;15% (critical shortage)
@@ -157,7 +157,7 @@ if (latestNurses.length > 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+  display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
     <span style="color: #e5850b;">■</span> &lt;20% vacancy
     <span style="color: #c0392b; margin-left: 1rem;">■</span> &gt;20% vacancy (critical)
     <span style="color: #e5850b; margin-left: 1rem;">- -</span> 12% reference threshold
@@ -205,12 +205,12 @@ display(dataFreshness(sourceFreshness));
 
 <div style="
   border-left: 4px solid #e5850b;
-  background: #fef9ec;
+  background: var(--theme-background-alt, #fef9ec);
   border-radius: 0 6px 6px 0;
   padding: 0.75rem 1rem;
   margin: 1rem 0;
   font-size: 0.85em;
-  color: #222;
+  color: var(--theme-foreground, #222);
 ">
   <strong style="color: #b36000;">⚠ Data provenance note</strong><br>
   2023 district figures are sourced from Health NZ and Medical Council of NZ annual workforce reports (manually extracted — no machine-readable download is available). <strong>2024 district-level figures are modelled estimates</strong>, extrapolated from 2023 values using the observed national trend (vacancy rates +0.7–2 pp, FTE counts −1–2%). They should not be cited as official statistics. The national 2024 totals are from Health NZ published data and are authoritative. District-level 2024 data will be updated when Health NZ publishes the next workforce census.

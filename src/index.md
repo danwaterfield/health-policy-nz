@@ -95,15 +95,15 @@ display(html`
       const color = severityColor(gap);
       const abs = Math.abs(gap).toFixed(1);
       return html`
-        <div style="border-left: 4px solid ${color}; background: #fafafa; padding: 1rem 1.25rem; border-radius: 0 6px 6px 0;">
-          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #555; margin-bottom: 0.25rem;">
+        <div style="border-left: 4px solid ${color}; background: var(--theme-background-alt, #fafafa); padding: 1rem 1.25rem; border-radius: 0 6px 6px 0;">
+          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: var(--theme-foreground-muted, #555); margin-bottom: 0.25rem;">
             ${displayEthnicity(d.ethnicity)} · ${d.year}
           </div>
           <div style="font-size: 1.5em; font-weight: 700; color: ${color}; line-height: 1.1;">
             ${gap >= 0 ? "+" : "−"}${abs} pp
           </div>
           <div style="font-size: 0.95em; font-weight: 600; margin: 0.25rem 0 0.5rem;">${d.indicator}</div>
-          <div style="font-size: 0.85em; color: #555;">
+          <div style="font-size: 0.85em; color: var(--theme-foreground-muted, #555);">
             ${d.target_value?.toFixed(1)}${d.unit} vs ${d.reference_value?.toFixed(1)}${d.unit} for European/Other
           </div>
         </div>
@@ -117,8 +117,8 @@ display(html`
 display(html`
   <p style="
     font-size: 0.88em;
-    color: #555;
-    border-top: 1px solid #e0e0e0;
+    color: var(--theme-foreground-muted, #555);
+    border-top: 1px solid var(--theme-foreground-faintest, #e0e0e0);
     padding-top: 0.75rem;
     margin-top: 0.25rem;
   ">

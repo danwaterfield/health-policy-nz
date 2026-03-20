@@ -122,7 +122,7 @@ const hasCI = filtered.some(d => d.value_lower_ci != null && d.value_upper_ci !=
     if (bestEth) {
       const displayName = ({"Maori": "Māori"})[bestEth] ?? bestEth;
       const dir = bestChange > 0 ? "increased" : "decreased";
-      display(html`<div style="background: #f0f4f8; border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+      display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
         <strong>${ind?.name ?? "Indicator"}</strong> for <strong>${displayName}</strong> has ${dir} by <strong>${Math.abs(bestChange).toFixed(1)}</strong> percentage points since ${earliest}, from ${bestStart.toFixed(1)}% to ${bestEnd.toFixed(1)}%.
       </div>`);
     }
@@ -293,7 +293,7 @@ if (regionData.length > 1) {
 ```
 
 <details style="margin-top: 1.5rem;">
-<summary style="cursor: pointer; font-weight: 600; color: #1e293b; font-size: 1em;">View data table</summary>
+<summary style="cursor: pointer; font-weight: 600; color: var(--theme-foreground, #1e293b); font-size: 1em;">View data table</summary>
 
 ```js
 if (filtered.length > 0) {
@@ -309,7 +309,7 @@ if (filtered.length > 0) {
     { sort: "Year", reverse: true }
   ));
   if (filtered.some(d => d.suppressed)) {
-    display(html`<p style="font-size: 0.82em; color: #555; margin-top: 0.25rem;">
+    display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
       <strong>S*</strong> = Suppressed: sample size too small (n &lt; 30) to report reliably. Value withheld to protect confidentiality.
     </p>`);
   }

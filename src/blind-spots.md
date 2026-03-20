@@ -50,7 +50,7 @@ const severityConfig = {
 ```js
 if (spots.length === 0) {
   display(html`
-    <div style="padding: 2rem; background: #f5f5f5; border-radius: 8px; color: #555;">
+    <div style="padding: 2rem; background: var(--theme-background-alt, #f5f5f5); border-radius: 8px; color: var(--theme-foreground-muted, #555);">
       <p>Blind spots not yet populated.</p>
     </div>
   `);
@@ -61,14 +61,14 @@ if (spots.length === 0) {
   const lowCount = spots.filter(d => d.severity === "low").length;
   display(html`
     <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0 1.5rem;">
-      <div style="padding: 0.5rem 1rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222; font-size: 0.9em;">
+      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #fdf2f2); border: 1px solid #e8a8a8; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
         <strong style="color: #c0392b;">▲ ${highCount}</strong> high severity
       </div>
-      <div style="padding: 0.5rem 1rem; background: #fef9ec; border: 1px solid #f0d090; border-radius: 6px; color: #222; font-size: 0.9em;">
+      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #fef9ec); border: 1px solid #f0d090; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
         <strong style="color: #e5850b;">◆ ${medCount}</strong> medium severity
       </div>
       ${lowCount > 0 ? html`
-      <div style="padding: 0.5rem 1rem; background: #f0f9f4; border: 1px solid #90d0aa; border-radius: 6px; color: #222; font-size: 0.9em;">
+      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #f0f9f4); border: 1px solid #90d0aa; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
         <strong style="color: #2d8a4e;">● ${lowCount}</strong> low severity
       </div>` : ""}
     </div>
@@ -104,29 +104,29 @@ if (spots.length === 0) {
               font-size: 0.72em;
               text-transform: uppercase;
               letter-spacing: 0.05em;
-              color: #555;
+              color: var(--theme-foreground-muted, #555);
               margin-left: 0.75rem;
               padding: 1px 6px;
-              border: 1px solid #ccc;
+              border: 1px solid var(--theme-foreground-faintest, #ccc);
               border-radius: 3px;
             ">${spot.domain}</span>` : ""}
           </div>
         </div>
 
-        <p style="margin: 0.75rem 0 0.5rem; font-size: 0.95em; color: #222;">${spot.description}</p>
+        <p style="margin: 0.75rem 0 0.5rem; font-size: 0.95em; color: var(--theme-foreground, #222);">${spot.description}</p>
 
         <details style="margin-top: 0.75rem;">
-          <summary style="cursor: pointer; color: #444; font-size: 0.9em; font-weight: 500;">
+          <summary style="cursor: pointer; color: var(--theme-foreground-muted, #444); font-size: 0.9em; font-weight: 500;">
             Why is this missing?
           </summary>
-          <p style="margin: 0.5rem 0 0; font-size: 0.9em; color: #333;">${spot.why_missing}</p>
+          <p style="margin: 0.5rem 0 0; font-size: 0.9em; color: var(--theme-foreground, #333);">${spot.why_missing}</p>
         </details>
 
         <details style="margin-top: 0.5rem;">
-          <summary style="cursor: pointer; color: #444; font-size: 0.9em; font-weight: 500;">
+          <summary style="cursor: pointer; color: var(--theme-foreground-muted, #444); font-size: 0.9em; font-weight: 500;">
             Best available proxy &amp; limitations
           </summary>
-          <p style="margin: 0.5rem 0 0; font-size: 0.9em; color: #333;">${spot.proxy_limitation}</p>
+          <p style="margin: 0.5rem 0 0; font-size: 0.9em; color: var(--theme-foreground, #333);">${spot.proxy_limitation}</p>
         </details>
 
         ${(() => {
@@ -158,10 +158,10 @@ if (spots.length > 0) {
 
   display(html`
     <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
-      <div style="padding: 0.75rem 1.25rem; background: #fdf2f2; border: 1px solid #e8a8a8; border-radius: 6px; color: #222;">
+      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #fdf2f2); border: 1px solid #e8a8a8; border-radius: 6px; color: var(--theme-foreground, #222);">
         <strong style="color: #c0392b;">${highCount}</strong> high-severity gaps
       </div>
-      <div style="padding: 0.75rem 1.25rem; background: #fef9ec; border: 1px solid #f0d090; border-radius: 6px; color: #222;">
+      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #fef9ec); border: 1px solid #f0d090; border-radius: 6px; color: var(--theme-foreground, #222);">
         <strong style="color: #e5850b;">${medCount}</strong> medium-severity gaps
       </div>
     </div>
