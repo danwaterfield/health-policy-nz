@@ -22,6 +22,9 @@ CREATE SEQUENCE IF NOT EXISTS fact_corrections_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS fact_age_distribution_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS fact_bias_estimates_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS mrp_estimates_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS fact_facilities_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS fact_access_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS fact_sa2_nzdep_id_seq START 1;
 
 -- Dimensions
 CREATE TABLE IF NOT EXISTS dim_geography (
@@ -272,6 +275,48 @@ CREATE TABLE IF NOT EXISTS fact_policy_events (
     source_url VARCHAR
 );
 
+-- Health facilities (GPs, hospitals, urgent care) from OSM / MoH
+CREATE TABLE IF NOT EXISTS fact_facilities (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    facility_type VARCHAR CHECK (facility_type IN ('gp','hospital','urgent_care')),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    sa2_code VARCHAR,
+    sa2_name VARCHAR,
+    health_region VARCHAR,
+    source VARCHAR
+);
+
+-- Spatial access: drive time from SA2 centroid to nearest facility
+CREATE TABLE IF NOT EXISTS fact_access (
+    id INTEGER PRIMARY KEY,
+    sa2_code VARCHAR,
+    sa2_name VARCHAR,
+    facility_type VARCHAR CHECK (facility_type IN ('gp','hospital','urgent_care')),
+    nearest_minutes DOUBLE,
+    nearest_km DOUBLE,
+    facility_count_30min INTEGER,
+    nzdep_quintile INTEGER,
+    nzdep_score DOUBLE,
+    health_region VARCHAR,
+    centroid_lat DOUBLE,
+    centroid_lon DOUBLE,
+    source VARCHAR
+);
+
+-- NZDep2018 aggregated to SA2 level (from SA1 data)
+CREATE TABLE IF NOT EXISTS fact_sa2_nzdep (
+    id INTEGER PRIMARY KEY,
+    sa2_code VARCHAR,
+    sa2_name VARCHAR,
+    nzdep_mean_score DOUBLE,
+    nzdep_quintile INTEGER,
+    sa1_count INTEGER,
+    health_region VARCHAR,
+    source VARCHAR
+);
+
 -- Blind spots registry
 CREATE TABLE IF NOT EXISTS blind_spots (
     id INTEGER PRIMARY KEY,
@@ -304,6 +349,9 @@ ALLOWED_TABLES = {
     "blind_spots", "fact_life_tables", "fact_nzdep", "fact_electoral_roll",
     "fact_corrections", "fact_age_distribution", "fact_bias_estimates",
     "fact_policy_events",
+    "fact_facilities",
+    "fact_access",
+    "fact_sa2_nzdep",
 }
 
 

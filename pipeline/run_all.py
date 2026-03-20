@@ -19,6 +19,8 @@ from pipeline.fetch.corrections import CorrectionsFetcher
 from pipeline.fetch.census_age import CensusAgeFetcher
 from pipeline.fetch.boundaries import BoundariesFetcher
 from pipeline.fetch.policytrace import PolicyTraceFetcher
+from pipeline.fetch.sa2_boundaries import SA2BoundariesFetcher
+from pipeline.fetch.facilities import FacilitiesFetcher
 from pipeline.transform.boundaries import BoundariesTransformer
 from pipeline.transform.policytrace import PolicyTraceTransformer
 from pipeline.transform.normalise import load_lookups
@@ -35,6 +37,9 @@ from pipeline.transform.equity_gap import EquityGapTransformer
 from pipeline.transform.projections import ProjectionsTransformer
 from pipeline.transform.blind_spots import BlindSpotsTransformer
 from pipeline.transform.bias_estimates import BiasEstimatesTransformer
+from pipeline.transform.sa2_boundaries import SA2BoundariesTransformer
+from pipeline.transform.facilities import FacilitiesTransformer
+from pipeline.transform.travel_time import TravelTimeTransformer
 import pipeline.export as export_module
 
 
@@ -60,6 +65,8 @@ def run(dry_run=False):
         CensusAgeFetcher(),
         BoundariesFetcher(),
         PolicyTraceFetcher(),
+        SA2BoundariesFetcher(),
+        FacilitiesFetcher(),
     ]
 
     raw_paths = {}
@@ -83,6 +90,8 @@ def run(dry_run=False):
         (CensusAgeTransformer(), "census_age"),
         (BoundariesTransformer(), "boundaries"),
         (PolicyTraceTransformer(), "policytrace"),
+        (SA2BoundariesTransformer(), "sa2_boundaries"),
+        (FacilitiesTransformer(), "facilities"),
     ]
 
     # Track which transforms fail so we can warn about derived tables
@@ -112,7 +121,8 @@ def run(dry_run=False):
         print("[pipeline] Derived tables may be incomplete")
 
     for DerivedClass in [EquityGapTransformer, ProjectionsTransformer,
-                         BlindSpotsTransformer, BiasEstimatesTransformer]:
+                         BlindSpotsTransformer, BiasEstimatesTransformer,
+                         TravelTimeTransformer]:
         try:
             DerivedClass().transform(conn, dry_run=dry_run)
         except Exception as e:

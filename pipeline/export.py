@@ -21,6 +21,9 @@ TABLES_TO_EXPORT = [
     "fact_age_distribution",
     "fact_bias_estimates",
     "fact_policy_events",
+    "fact_facilities",
+    "fact_access",
+    "fact_sa2_nzdep",
     # mrp_estimates omitted — stub table, empty until Stats NZ Data Lab access
 ]
 

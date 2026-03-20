@@ -94,6 +94,16 @@ SOURCES = {
         "filename": "census_age_seed.csv",
         "description": "Stats NZ 2018 Census age distribution by ethnicity",
     },
+    "sa2_boundaries": {
+        "url": None,  # seed GeoJSON — Stats NZ Datafinder SA2 2025 generalised
+        "filename": "sa2_2025_simplified.geojson",
+        "description": "Stats NZ SA2 2025 generalised boundaries (simplified, WGS84)",
+    },
+    "facilities": {
+        "url": None,  # fetched from OSM Overpass; seed fallback
+        "filename": "nz_facilities.json",
+        "description": "NZ health facilities (GPs, hospitals, urgent care) from OpenStreetMap",
+    },
 }
 
 # GPS 2024-27 scorecard rules: threshold values per indicator slug
