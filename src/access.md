@@ -12,6 +12,7 @@ import * as d3 from "npm:d3";
 import L from "npm:leaflet";
 import {exportButtons} from "./components/chart-export.js";
 import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm} from "./components/access-stats.js";
+import {buildSA2Popup, buildFacilityPopup, findNearestFacility} from "./components/access-detail.js";
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
 ```
 
@@ -174,6 +175,15 @@ for (const row of filteredAccess) {
   }
 }
 
+// Load SA2 centroids for popup distance calculations
+const centroids = await FileAttachment("data/sa2-centroids.json").json();
+
+// Compute national median GP drive time for relative comparison
+const gpAccess = filteredAccess.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+const nationalMedianGP = gpAccess.length > 0
+  ? gpAccess.map(d => d.nearest_minutes).sort((a, b) => a - b)[Math.floor(gpAccess.length / 2)]
+  : 0;
+
 // Choose what to colour by
 const colorBy = hasAccess ? "travel_time" : "deprivation";
 ```
@@ -245,6 +255,7 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
       if (nz) parts.push(`NZDep Q${nz.nzdep_quintile} (score: ${nz.nzdep_mean_score?.toFixed(1)})`);
       if (access) parts.push(`${access.nearest_minutes?.toFixed(0)} min to nearest ${access.facility_type}`);
       layer.bindTooltip(parts.join("\n"), { sticky: true });
+      layer.bindPopup(() => buildSA2Popup(code, accessLookup, nzdepLookup, facilities, centroids, nationalMedianGP), { maxWidth: 300 });
       layer.on("mouseover", (e) => { e.target.setStyle({ weight: 2, color: "#333", fillOpacity: 0.9 }); });
       layer.on("mouseout", (e) => { e.target.setStyle({ weight: 0.3, color: "#666", fillOpacity: 0.7 }); });
     },
@@ -259,7 +270,10 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
       color: "#fff",
       weight: 0.5,
       fillOpacity: 0.85,
-    }).bindTooltip(`${f.name} (${f.facility_type})`).addTo(map);
+    })
+    .bindTooltip(`${f.name} (${f.facility_type})`)
+    .bindPopup(() => buildFacilityPopup(f, nzdepLookup, centroids), { maxWidth: 280 })
+    .addTo(map);
   }
 
   // Legend
