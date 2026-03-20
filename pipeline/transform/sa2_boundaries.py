@@ -104,6 +104,24 @@ class SA2BoundariesTransformer(BaseTransformer):
         self.log(f"TopoJSON written to {SA2_TOPOJSON_DEST} ({size_kb} KB)")
         annotated.unlink(missing_ok=True)
 
+        # Assign region to unmatched SA2s via nearest-neighbour
+        sa2s_with_region = [(c["lat"], c["lon"], c["health_region"])
+                             for c in centroids if c.get("health_region")]
+        for c in centroids:
+            if not c.get("health_region") and c["lat"] != 0:
+                best_dist = float("inf")
+                best_region = ""
+                for rlat, rlon, region in sa2s_with_region:
+                    d = (c["lat"] - rlat)**2 + (c["lon"] - rlon)**2
+                    if d < best_dist:
+                        best_dist = d
+                        best_region = region
+                c["health_region"] = best_region
+                # Also update the nzdep_by_sa2 dict so the DB insert gets the region
+                sa2_code = c["sa2_code"]
+                if sa2_code in nzdep_by_sa2:
+                    nzdep_by_sa2[sa2_code]["health_region"] = best_region
+
         # Write centroids JSON for Observable
         with open(SA2_CENTROIDS_DEST, "w") as f:
             json.dump(centroids, f)
@@ -130,6 +148,7 @@ class SA2BoundariesTransformer(BaseTransformer):
             df["quintile"] = pd.to_numeric(df["NZDep2018"], errors="coerce")
             df["dhb"] = df["DHB_2018_name"].astype(str).str.strip()
             df["health_region"] = df["dhb"].map(DHB_TO_REGION)
+            df["population"] = pd.to_numeric(df["URPopnSA1_2018"], errors="coerce").fillna(0).astype(int)
 
             result = {}
             for sa2_code, group in df.groupby("sa2_code"):
@@ -149,6 +168,7 @@ class SA2BoundariesTransformer(BaseTransformer):
                     "score": float(scores.mean()),
                     "quintile": quintile,
                     "sa1_count": len(scores),
+                    "population": int(group["population"].sum()),
                     "sa2_name": group["sa2_name"].iloc[0],
                     "health_region": region,
                 }
@@ -169,14 +189,15 @@ class SA2BoundariesTransformer(BaseTransformer):
             conn.execute("""
                 INSERT INTO fact_sa2_nzdep
                     (id, sa2_code, sa2_name, nzdep_mean_score, nzdep_quintile,
-                     sa1_count, health_region, source)
-                VALUES (nextval('fact_sa2_nzdep_id_seq'), ?, ?, ?, ?, ?, ?, ?)
+                     sa1_count, population, health_region, source)
+                VALUES (nextval('fact_sa2_nzdep_id_seq'), ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 sa2_code,
                 data.get("sa2_name", ""),
                 data.get("score"),
                 data.get("quintile"),
                 data.get("sa1_count", 0),
+                data.get("population", 0),
                 data.get("health_region", ""),
                 "NZDep2018 SA1→SA2 aggregation",
             ))

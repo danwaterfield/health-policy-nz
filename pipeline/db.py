@@ -313,6 +313,7 @@ CREATE TABLE IF NOT EXISTS fact_sa2_nzdep (
     nzdep_mean_score DOUBLE,
     nzdep_quintile INTEGER,
     sa1_count INTEGER,
+    population INTEGER,
     health_region VARCHAR,
     source VARCHAR
 );
