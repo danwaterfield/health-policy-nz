@@ -884,29 +884,17 @@ if (hasAccess) {
     return row;
   });
 
-  display(html`
-    <table style="font-size: 0.85em; border-collapse: collapse; width: 100%; margin: 1rem 0;">
-      <caption style="font-weight: 600; margin-bottom: 0.5rem; text-align: left;">Population-weighted median drive time (minutes) by region and deprivation</caption>
-      <thead>
-        <tr style="border-bottom: 2px solid #333;">
-          <th style="padding: 4px 8px; text-align: left;">Health region</th>
-          <th style="padding: 4px 8px; text-align: right;">Q1 (least)</th>
-          <th style="padding: 4px 8px; text-align: right;">Q2</th>
-          <th style="padding: 4px 8px; text-align: right;">Q3</th>
-          <th style="padding: 4px 8px; text-align: right;">Q4</th>
-          <th style="padding: 4px 8px; text-align: right;">Q5 (most)</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${crosstab.map(r => `
-          <tr style="border-bottom: 1px solid #eee;">
-            <td style="padding: 4px 8px;">${r.region}</td>
-            ${[1,2,3,4,5].map(q => `<td style="padding: 4px 8px; text-align: right; ${r[`q${q}`] > 30 ? "color: #d73027; font-weight: 600;" : ""}">${r[`q${q}`] != null ? r[`q${q}`].toFixed(1) : "—"}</td>`).join("")}
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `);
+  // Build cross-tab as flat data for Inputs.table
+  const crosstabFlat = crosstab.map(r => ({
+    "Health region": r.region,
+    "Q1 (least)": r.q1 != null ? r.q1.toFixed(1) : "—",
+    "Q2": r.q2 != null ? r.q2.toFixed(1) : "—",
+    "Q3": r.q3 != null ? r.q3.toFixed(1) : "—",
+    "Q4": r.q4 != null ? r.q4.toFixed(1) : "—",
+    "Q5 (most)": r.q5 != null ? r.q5.toFixed(1) : "—",
+  }));
+  display(html`<p style="font-weight: 600; margin-bottom: 0.25rem;">Population-weighted median drive time (minutes) by region and deprivation</p>`);
+  display(Inputs.table(crosstabFlat));
 } else {
   display(html`<p style="color: #666; font-style: italic;">Cross-tabulation requires travel time data.</p>`);
 }

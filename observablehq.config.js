@@ -3,7 +3,7 @@ export default {
   base: "/health-policy-nz/",
   title: "NZ Health System Dashboard",
   style: "style.css",
-  head: `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' blob: https://*.basemaps.cartocdn.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self' https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none';">
+  head: `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' blob: https://*.basemaps.cartocdn.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta name="description" content="A synthesis of public New Zealand health data — equity gaps, service access, workforce, and demand projections. Open source, zero cloud spend.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="NZ Health System Dashboard">
