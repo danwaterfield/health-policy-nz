@@ -85,7 +85,7 @@ const showAutoresearch = view(Inputs.toggle({label: "Show autoresearch focus are
 if (showAutoresearch) {
   if (topAgent) {
     display(html`
-      <div style="background: #f3e8ff; border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
+      <div style="background: var(--theme-background-alt, #f3e8ff); border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
         <strong style="color: #7b3294;">Autoresearch: Top Configuration (Counties Manukau)</strong>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85em;">
           <div><strong>Agent:</strong> ${topAgent.agent}</div>
@@ -101,7 +101,7 @@ if (showAutoresearch) {
     `);
   } else {
     display(html`
-      <div style="background: #f3e8ff; border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
+      <div style="background: var(--theme-background-alt, #f3e8ff); border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
         <strong style="color: #7b3294;">Autoresearch: No accepted configurations found</strong>
         <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
           Run the autoresearch simulation to populate results.
@@ -115,9 +115,9 @@ if (showAutoresearch) {
 
 ## What-if scenarios
 
-<details style="border: 1px solid #ddd; border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; background: #fafafa;">
+<details style="border: 1px solid var(--theme-foreground-faintest, #ddd); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; background: var(--theme-background-alt, #fafafa);">
 <summary style="cursor: pointer; font-weight: 600; padding: 0.25rem 0;">Explore scenario controls</summary>
-<p style="font-size: 0.85em; color: #555; margin: 0.5rem 0 1rem 0;">
+<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin: 0.5rem 0 1rem 0;">
 Adjust the controls below to model what-if scenarios. The map, charts, and statistics will update to reflect the modelled changes.
 </p>
 
@@ -178,23 +178,23 @@ if (scenarioActive && hasAccess) {
   const medianDelta = scenarioMedian - baseMedian;
 
   display(html`
-    <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 0.5rem 0 1rem 0;">
+    <div style="background: var(--theme-background-alt, #fff3cd); border: 1px solid var(--theme-foreground-faintest, #ffc107); border-radius: 8px; padding: 1rem; margin: 0.5rem 0 1rem 0;">
       <div style="font-weight: 600; margin-bottom: 0.5rem;">Scenario impact</div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; font-size: 0.9em;">
         <div>
           <span style="font-size: 1.3em; font-weight: 700;">${diff.peopleAffected.toLocaleString()}</span><br>
-          <span style="color: #666;">people affected (&gt;0.5 min change)</span>
+          <span style="color: var(--theme-foreground-muted, #666);">people affected (&gt;0.5 min change)</span>
         </div>
         <div>
           <span style="font-size: 1.3em; font-weight: 700;">${diff.sa2sCrossed}</span><br>
-          <span style="color: #666;">SA2s crossing 30-min threshold</span>
+          <span style="color: var(--theme-foreground-muted, #666);">SA2s crossing 30-min threshold</span>
         </div>
         <div>
           <span style="font-size: 1.3em; font-weight: 700; color: ${medianDelta > 0 ? "#d73027" : medianDelta < 0 ? "#4575b4" : "#333"};">${medianDelta > 0 ? "+" : ""}${medianDelta.toFixed(1)} min</span><br>
-          <span style="color: #666;">median GP drive time change</span>
+          <span style="color: var(--theme-foreground-muted, #666);">median GP drive time change</span>
         </div>
       </div>
-      <div style="font-size: 0.8em; color: #856404; margin-top: 0.5rem;">
+      <div style="font-size: 0.8em; color: var(--theme-foreground-muted, #856404); margin-top: 0.5rem;">
         Active: ${fuelMultiplier !== 1 ? `fuel x${fuelMultiplier}` : ""}${telehealthOn ? ` telehealth cap ${telehealthCap} min` : ""}${pandemicPct > 0 ? ` ${pandemicPct}% facilities removed` : ""}
       </div>
     </div>
@@ -236,24 +236,24 @@ if (hasAccess) {
 
   display(html`
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
-      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
         <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q1 (least deprived)</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q1Med != null ? q1Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q1Med != null ? q1Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
         <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
       </div>
-      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
         <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 (most deprived)</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q5Med != null ? q5Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q5Med != null ? q5Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
         <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
       </div>
-      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
         <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 areas &gt;30 min</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;">%</span></div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;">%</span></div>
         <div style="font-size: 0.75em; color: #999;">of people in most deprived SA2s</div>
       </div>
-      <div style="padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px;">
+      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
         <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Facilities</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: #222;">${facilities.length.toLocaleString()}</div>
+        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${facilities.length.toLocaleString()}</div>
         <div style="font-size: 0.75em; color: #999;">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
       </div>
     </div>
