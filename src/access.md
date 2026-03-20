@@ -67,7 +67,7 @@ const hasAccess = accessData.length > 0;
 
 // Load top autoresearch configuration for Counties Manukau
 const topAgentRows = Array.from(await db.query(`
-  SELECT * FROM sim_agents WHERE accepted = true ORDER BY overall_score DESC LIMIT 1
+  SELECT * FROM sim_agents WHERE accepted > 0 ORDER BY best_value DESC LIMIT 1
 `));
 const topAgent = topAgentRows[0] || null;
 ```
@@ -95,10 +95,10 @@ if (showAutoresearch) {
       <div style="background: #f3e8ff; border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
         <strong style="color: #7b3294;">Autoresearch: Top Configuration (Counties Manukau)</strong>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85em;">
-          <div><strong>Strategy:</strong> ${topAgent.strategy}</div>
-          <div><strong>Score:</strong> ${topAgent.overall_score?.toFixed(2)}</div>
-          <div><strong>Coverage:</strong> ${(topAgent.coverage * 100)?.toFixed(0)}%</div>
-          <div><strong>Wait time:</strong> ${topAgent.wait_time?.toFixed(1)} days</div>
+          <div><strong>Agent:</strong> ${topAgent.agent}</div>
+          <div><strong>Metric:</strong> ${topAgent.primary_metric}</div>
+          <div><strong>Best:</strong> ${topAgent.best_value?.toFixed(3)}</div>
+          <div><strong>Experiments:</strong> ${topAgent.experiments}</div>
         </div>
         <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
           Based on 887 simulated configurations for Counties Manukau.
@@ -375,7 +375,7 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
     maxZoom: 15,
   }).addTo(map);
 
-  // SA2 choropleth layer — store reference for LISA styling
+  // SA2 choropleth layer — store on window for LISA styling from other cells
   const sa2Layer = L.geoJSON(sa2Geojson, {
     style: (feature) => ({
       fillColor: fillFn(feature.properties?.sa2_code),
@@ -475,6 +475,9 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
     onAdd() { return legendEl; },
   });
   new LegendControl({ position: "bottomright" }).addTo(map);
+
+  // Expose sa2Layer for LISA styling from other cells
+  window._sa2Layer = sa2Layer;
 }
 ```
 
@@ -675,8 +678,8 @@ if (hasAccess) {
     };
 
     // Apply LISA styling to SA2 layer
-    if (typeof sa2Layer !== "undefined") {
-      sa2Layer.eachLayer(layer => {
+    if (window._sa2Layer) {
+      window._sa2Layer.eachLayer(layer => {
         const code = layer.feature?.properties?.sa2_code;
         const cat = lisaByCode.get(code) || "ns";
         layer.feature.properties._lisaCategory = cat;
@@ -697,8 +700,8 @@ if (hasAccess) {
     display(lisaStatusEl);
   } else {
     // Reset LISA styling when toggled off
-    if (typeof sa2Layer !== "undefined") {
-      sa2Layer.eachLayer(layer => {
+    if (window._sa2Layer) {
+      window._sa2Layer.eachLayer(layer => {
         if (layer.feature?.properties) layer.feature.properties._lisaCategory = "ns";
         layer.setStyle({ weight: 0.3, color: "#666", dashArray: null, opacity: 0.4 });
       });
