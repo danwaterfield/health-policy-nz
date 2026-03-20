@@ -11,7 +11,7 @@ import * as topojson from "npm:topojson-client";
 import * as d3 from "npm:d3";
 import L from "npm:leaflet";
 import {exportButtons} from "./components/chart-export.js";
-import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm} from "./components/access-stats.js";
+import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm, moranI, localMoranI, nearestNeighbourR} from "./components/access-stats.js";
 import {buildSA2Popup, buildFacilityPopup, findNearestFacility} from "./components/access-detail.js";
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
 ```
@@ -67,6 +67,10 @@ const facilityType = view(Inputs.select(
   new Map([["GPs", "gp"], ["Hospitals", "hospital"], ["All types", "all"]]),
   { label: "Facility type", value: "gp" }
 ));
+```
+
+```js
+const showLISA = view(Inputs.toggle({ label: "Show access hotspots (LISA)", value: false }));
 ```
 
 ## Key statistics
@@ -237,8 +241,8 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
     maxZoom: 15,
   }).addTo(map);
 
-  // SA2 choropleth layer
-  L.geoJSON(sa2Geojson, {
+  // SA2 choropleth layer — store reference for LISA styling
+  const sa2Layer = L.geoJSON(sa2Geojson, {
     style: (feature) => ({
       fillColor: fillFn(feature.properties?.sa2_code),
       fillOpacity: 0.7,
@@ -257,7 +261,16 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
       layer.bindTooltip(parts.join("\n"), { sticky: true });
       layer.bindPopup(() => buildSA2Popup(code, accessLookup, nzdepLookup, facilities, centroids, nationalMedianGP), { maxWidth: 300 });
       layer.on("mouseover", (e) => { e.target.setStyle({ weight: 2, color: "#333", fillOpacity: 0.9 }); });
-      layer.on("mouseout", (e) => { e.target.setStyle({ weight: 0.3, color: "#666", fillOpacity: 0.7 }); });
+      layer.on("mouseout", (e) => {
+        const lisaCat = e.target.feature?.properties?._lisaCategory;
+        if (lisaCat && lisaCat !== "ns") {
+          const lisaStyles = { HH: { color: "#d73027", weight: 2, dashArray: null }, LL: { color: "#4575b4", weight: 2, dashArray: null }, HL: { color: "#999", weight: 1.5, dashArray: "4,3" }, LH: { color: "#999", weight: 1.5, dashArray: "4,3" } };
+          const ls = lisaStyles[lisaCat] || {};
+          e.target.setStyle({ weight: ls.weight || 0.3, color: ls.color || "#666", fillOpacity: 0.7, dashArray: ls.dashArray || null });
+        } else {
+          e.target.setStyle({ weight: 0.3, color: "#666", fillOpacity: 0.7 });
+        }
+      });
     },
   }).addTo(map);
 
@@ -464,6 +477,282 @@ if (hasAccess) {
 }
 ```
 
+```js
+// LISA layer toggle — compute once, apply/remove on toggle
+{
+  // Build SA2 code → LISA category lookup from GP travel times
+  const lisaStatusEl = document.createElement("p");
+  lisaStatusEl.style.cssText = "font-size: 0.85em; color: #555; margin: 0.5rem 0;";
+
+  if (showLISA && hasAccess) {
+    lisaStatusEl.textContent = "Computing spatial autocorrelation (this may take a few seconds)...";
+    display(lisaStatusEl);
+
+    // Defer heavy computation to avoid blocking UI
+    await new Promise(r => setTimeout(r, 50));
+
+    // Gather GP travel times aligned with centroids
+    const gpRows = accessData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+    const gpLookup = new Map();
+    for (const r of gpRows) {
+      const existing = gpLookup.get(r.sa2_code);
+      if (!existing || r.nearest_minutes < existing.nearest_minutes) gpLookup.set(r.sa2_code, r);
+    }
+
+    const lisaInput = centroids
+      .filter(c => gpLookup.has(c.sa2_code))
+      .map(c => ({ code: c.sa2_code, val: gpLookup.get(c.sa2_code).nearest_minutes, lat: c.lat, lon: c.lon }));
+
+    const vals = lisaInput.map(d => d.val);
+    const lats = lisaInput.map(d => d.lat);
+    const lons = lisaInput.map(d => d.lon);
+
+    const lisaResults = localMoranI(vals, lats, lons, 50);
+    const lisaByCode = new Map();
+    lisaResults.forEach((r, idx) => { lisaByCode.set(lisaInput[idx].code, r.category); });
+
+    const lisaStyles = {
+      HH: { color: "#d73027", weight: 2, dashArray: null },
+      LL: { color: "#4575b4", weight: 2, dashArray: null },
+      HL: { color: "#999", weight: 1.5, dashArray: "4,3" },
+      LH: { color: "#999", weight: 1.5, dashArray: "4,3" },
+    };
+
+    // Apply LISA styling to SA2 layer
+    if (typeof sa2Layer !== "undefined") {
+      sa2Layer.eachLayer(layer => {
+        const code = layer.feature?.properties?.sa2_code;
+        const cat = lisaByCode.get(code) || "ns";
+        layer.feature.properties._lisaCategory = cat;
+        if (cat !== "ns") {
+          const s = lisaStyles[cat];
+          layer.setStyle({ weight: s.weight, color: s.color, dashArray: s.dashArray, opacity: 0.8 });
+        }
+      });
+    }
+
+    const hhCount = lisaResults.filter(r => r.category === "HH").length;
+    const llCount = lisaResults.filter(r => r.category === "LL").length;
+    const hlCount = lisaResults.filter(r => r.category === "HL").length;
+    const lhCount = lisaResults.filter(r => r.category === "LH").length;
+    lisaStatusEl.innerHTML = `<strong>${hhCount}</strong> HH hotspots (structurally underserved), <strong>${llCount}</strong> LL coldspots (well-served), ${hlCount} HL outliers, ${lhCount} LH outliers.`;
+  } else if (showLISA && !hasAccess) {
+    lisaStatusEl.textContent = "LISA requires travel time data. Run the pipeline with OSRM access.";
+    display(lisaStatusEl);
+  } else {
+    // Reset LISA styling when toggled off
+    if (typeof sa2Layer !== "undefined") {
+      sa2Layer.eachLayer(layer => {
+        if (layer.feature?.properties) layer.feature.properties._lisaCategory = "ns";
+        layer.setStyle({ weight: 0.3, color: "#666", dashArray: null, opacity: 0.4 });
+      });
+    }
+  }
+}
+```
+
+## CSV export
+
+```js
+{
+  const exportBtn = document.createElement("button");
+  exportBtn.textContent = "Download SA2 access data (CSV)";
+  exportBtn.style.cssText = "padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #4575b4; background: #f0f7ff; color: #4575b4; cursor: pointer; font-size: 0.9em;";
+  exportBtn.addEventListener("click", () => {
+    const header = "sa2_code,sa2_name,nzdep_quintile,nzdep_score,population,health_region,nearest_gp_minutes,nearest_gp_km,nearest_hospital_minutes,nearest_hospital_km,facilities_within_30min";
+    const gpLookup = new Map();
+    const hospLookup = new Map();
+    for (const r of accessData) {
+      if (r.facility_type === "gp") {
+        const ex = gpLookup.get(r.sa2_code);
+        if (!ex || r.nearest_minutes < ex.nearest_minutes) gpLookup.set(r.sa2_code, r);
+      } else if (r.facility_type === "hospital") {
+        const ex = hospLookup.get(r.sa2_code);
+        if (!ex || r.nearest_minutes < ex.nearest_minutes) hospLookup.set(r.sa2_code, r);
+      }
+    }
+    const rows = sa2Nzdep.map(d => {
+      const gp = gpLookup.get(d.sa2_code);
+      const hosp = hospLookup.get(d.sa2_code);
+      const escapeName = (d.sa2_name || "").includes(",") ? `"${d.sa2_name}"` : d.sa2_name;
+      const escapeRegion = (d.health_region || "").includes(",") ? `"${d.health_region}"` : d.health_region;
+      return [
+        d.sa2_code, escapeName, d.nzdep_quintile, d.nzdep_mean_score?.toFixed(1) ?? "",
+        d.population || "", escapeRegion,
+        gp?.nearest_minutes?.toFixed(1) ?? "", gp?.nearest_km?.toFixed(1) ?? "",
+        hosp?.nearest_minutes?.toFixed(1) ?? "", hosp?.nearest_km?.toFixed(1) ?? "",
+        gp?.facility_count_30min ?? ""
+      ].join(",");
+    });
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "nz_sa2_access_data.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  display(exportBtn);
+}
+```
+
+## Summary statistics
+
+```js
+if (hasAccess) {
+  const allMins = filteredAccess.filter(d => d.nearest_minutes != null).map(d => d.nearest_minutes);
+  const allWeights = filteredAccess.filter(d => d.nearest_minutes != null).map(d => popLookup.get(d.sa2_code) || 1);
+  const allScores = filteredAccess.filter(d => d.nearest_minutes != null && d.nzdep_score != null).map(d => d.nzdep_score);
+  const allMinsForCorr = filteredAccess.filter(d => d.nearest_minutes != null && d.nzdep_score != null).map(d => d.nearest_minutes);
+
+  const wMean = allWeights.reduce((s, w, i) => s + w * allMins[i], 0) / allWeights.reduce((s, w) => s + w, 0);
+  const wMed = weightedMedian(allMins, allWeights);
+  const p25 = weightedPercentile(allMins, allWeights, 0.25);
+  const p75 = weightedPercentile(allMins, allWeights, 0.75);
+  const p90 = weightedPercentile(allMins, allWeights, 0.90);
+  const giniVal = gini(allMins, allWeights);
+  const corrVal = pearsonR(allScores, allMinsForCorr);
+
+  const totalPop = allWeights.reduce((s, w) => s + w, 0);
+  const within15 = allMins.reduce((s, v, i) => s + (v <= 15 ? allWeights[i] : 0), 0);
+  const within30 = allMins.reduce((s, v, i) => s + (v <= 30 ? allWeights[i] : 0), 0);
+  const within45 = allMins.reduce((s, v, i) => s + (v <= 45 ? allWeights[i] : 0), 0);
+  const within60 = allMins.reduce((s, v, i) => s + (v <= 60 ? allWeights[i] : 0), 0);
+
+  // Quintile-level stats
+  const quintileRows = [1, 2, 3, 4, 5].map(q => {
+    const rows = filteredAccess.filter(d => d.nzdep_quintile === q && d.nearest_minutes != null);
+    const mins = rows.map(d => d.nearest_minutes);
+    const wts = rows.map(d => popLookup.get(d.sa2_code) || 1);
+    return {
+      q,
+      wMean: wts.reduce((s, w, i) => s + w * mins[i], 0) / (wts.reduce((s, w) => s + w, 0) || 1),
+      wMed: weightedMedian(mins, wts),
+      p25: weightedPercentile(mins, wts, 0.25),
+      p75: weightedPercentile(mins, wts, 0.75),
+      p90: weightedPercentile(mins, wts, 0.90),
+    };
+  });
+
+  // Spatial stats (compute once — Moran's I is expensive)
+  let moranResult = null;
+  let nnrResult = null;
+  if (centroids.length > 0) {
+    const gpRows = accessData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+    const gpMap = new Map();
+    for (const r of gpRows) {
+      const ex = gpMap.get(r.sa2_code);
+      if (!ex || r.nearest_minutes < ex.nearest_minutes) gpMap.set(r.sa2_code, r);
+    }
+    const spatialInput = centroids.filter(c => gpMap.has(c.sa2_code));
+    const sVals = spatialInput.map(c => gpMap.get(c.sa2_code).nearest_minutes);
+    const sLats = spatialInput.map(c => c.lat);
+    const sLons = spatialInput.map(c => c.lon);
+
+    moranResult = moranI(sVals, sLats, sLons, 50);
+
+    // Nearest-neighbour R on facility locations (NZ land area ~268,021 km2)
+    const facLats = facilities.filter(f => f.latitude != null).map(f => f.latitude);
+    const facLons = facilities.filter(f => f.longitude != null).map(f => f.longitude);
+    nnrResult = nearestNeighbourR(facLats, facLons, 268021);
+  }
+
+  display(html`
+    <details style="margin: 1rem 0; border: 1px solid #ddd; border-radius: 8px; padding: 0.5rem 1rem;">
+      <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0;">Detailed summary statistics</summary>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+        <div>
+          <h4 style="margin: 0 0 0.5rem 0; color: #333;">Overall (population-weighted)</h4>
+          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
+            <tr><td style="padding: 2px 8px;">Weighted mean</td><td style="padding: 2px 8px; text-align: right;"><strong>${wMean.toFixed(1)} min</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Weighted median</td><td style="padding: 2px 8px; text-align: right;"><strong>${wMed?.toFixed(1) ?? "—"} min</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">P25</td><td style="padding: 2px 8px; text-align: right;">${p25?.toFixed(1) ?? "—"} min</td></tr>
+            <tr><td style="padding: 2px 8px;">P75</td><td style="padding: 2px 8px; text-align: right;">${p75?.toFixed(1) ?? "—"} min</td></tr>
+            <tr><td style="padding: 2px 8px;">P90</td><td style="padding: 2px 8px; text-align: right;">${p90?.toFixed(1) ?? "—"} min</td></tr>
+            <tr style="border-top: 1px solid #eee;"><td style="padding: 2px 8px;">Gini coefficient</td><td style="padding: 2px 8px; text-align: right;"><strong>${giniVal.toFixed(3)}</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Pearson r (NZDep score vs travel time)</td><td style="padding: 2px 8px; text-align: right;"><strong>${corrVal.r?.toFixed(3) ?? "—"}</strong> (n=${corrVal.n})</td></tr>
+          </table>
+          <h4 style="margin: 1rem 0 0.5rem 0; color: #333;">Population coverage</h4>
+          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
+            <tr><td style="padding: 2px 8px;">Within 15 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within15 / totalPop * 100).toFixed(1)}%</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Within 30 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within30 / totalPop * 100).toFixed(1)}%</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Within 45 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within45 / totalPop * 100).toFixed(1)}%</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Within 60 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within60 / totalPop * 100).toFixed(1)}%</strong></td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 0.5rem 0; color: #333;">By NZDep quintile (pop-weighted)</h4>
+          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
+            <tr style="border-bottom: 1px solid #ccc;"><th style="padding: 2px 6px; text-align: left;">Q</th><th style="padding: 2px 6px; text-align: right;">Mean</th><th style="padding: 2px 6px; text-align: right;">Median</th><th style="padding: 2px 6px; text-align: right;">P25</th><th style="padding: 2px 6px; text-align: right;">P75</th><th style="padding: 2px 6px; text-align: right;">P90</th></tr>
+            ${quintileRows.map(r => `<tr><td style="padding: 2px 6px;">Q${r.q}</td><td style="padding: 2px 6px; text-align: right;">${r.wMean.toFixed(1)}</td><td style="padding: 2px 6px; text-align: right;">${r.wMed?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p25?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p75?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p90?.toFixed(1) ?? "—"}</td></tr>`).join("")}
+          </table>
+          ${moranResult ? `
+          <h4 style="margin: 1rem 0 0.5rem 0; color: #333;">Spatial statistics</h4>
+          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
+            <tr><td style="padding: 2px 8px;">Global Moran's I</td><td style="padding: 2px 8px; text-align: right;"><strong>${moranResult.I.toFixed(3)}</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">Moran's I z-score</td><td style="padding: 2px 8px; text-align: right;">${moranResult.z.toFixed(2)}</td></tr>
+            <tr><td style="padding: 2px 8px;">Moran's I p-value</td><td style="padding: 2px 8px; text-align: right;">${moranResult.p < 0.001 ? "<0.001" : moranResult.p.toFixed(3)}</td></tr>
+            <tr style="border-top: 1px solid #eee;"><td style="padding: 2px 8px;">Nearest-neighbour R (facilities)</td><td style="padding: 2px 8px; text-align: right;"><strong>${nnrResult?.R ?? "—"}</strong></td></tr>
+            <tr><td style="padding: 2px 8px;">NNR z-score</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.z ?? "—"}</td></tr>
+            <tr><td style="padding: 2px 8px;">Observed mean NND</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.Ro ?? "—"} km</td></tr>
+            <tr><td style="padding: 2px 8px;">Expected mean NND (random)</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.Re ?? "—"} km</td></tr>
+          </table>
+          ` : ""}
+        </div>
+      </div>
+    </details>
+  `);
+} else {
+  display(html`<p style="color: #666; font-style: italic;">Summary statistics require travel time data.</p>`);
+}
+```
+
+## Cross-tabulation: health region x NZDep quintile
+
+```js
+if (hasAccess) {
+  // Pivot: health region rows × NZDep quintile columns, population-weighted median travel time
+  const regions = [...new Set(filteredAccess.map(d => d.health_region).filter(Boolean))].sort();
+  const crosstab = regions.map(region => {
+    const row = { region };
+    for (const q of [1, 2, 3, 4, 5]) {
+      const rows = filteredAccess.filter(d => d.health_region === region && d.nzdep_quintile === q && d.nearest_minutes != null);
+      const mins = rows.map(d => d.nearest_minutes);
+      const wts = rows.map(d => popLookup.get(d.sa2_code) || 1);
+      row[`q${q}`] = weightedMedian(mins, wts);
+    }
+    return row;
+  });
+
+  display(html`
+    <table style="font-size: 0.85em; border-collapse: collapse; width: 100%; margin: 1rem 0;">
+      <caption style="font-weight: 600; margin-bottom: 0.5rem; text-align: left;">Population-weighted median drive time (minutes) by region and deprivation</caption>
+      <thead>
+        <tr style="border-bottom: 2px solid #333;">
+          <th style="padding: 4px 8px; text-align: left;">Health region</th>
+          <th style="padding: 4px 8px; text-align: right;">Q1 (least)</th>
+          <th style="padding: 4px 8px; text-align: right;">Q2</th>
+          <th style="padding: 4px 8px; text-align: right;">Q3</th>
+          <th style="padding: 4px 8px; text-align: right;">Q4</th>
+          <th style="padding: 4px 8px; text-align: right;">Q5 (most)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${crosstab.map(r => `
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 4px 8px;">${r.region}</td>
+            ${[1,2,3,4,5].map(q => `<td style="padding: 4px 8px; text-align: right; ${r[`q${q}`] > 30 ? "color: #d73027; font-weight: 600;" : ""}">${r[`q${q}`] != null ? r[`q${q}`].toFixed(1) : "—"}</td>`).join("")}
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `);
+} else {
+  display(html`<p style="color: #666; font-style: italic;">Cross-tabulation requires travel time data.</p>`);
+}
+```
+
 ## Facility distribution by type
 
 ```js
@@ -539,5 +828,13 @@ display(Plot.plot({
 **Methodology:** Each SA2 centroid is routed to its 3 nearest facilities (by straight-line distance) via OSRM driving directions. The minimum drive time is reported. NZDep2018 is aggregated from SA1 to SA2 using modal quintile assignment.
 
 **Limitations:** SA2 2025 boundaries use a different concordance than the 2018 NZDep data — ~70% of SA2s have matched NZDep scores. Facility data from OSM may be incomplete; pharmacies and urgent care centres are underrepresented. Drive times assume car travel and do not account for public transport, which disproportionately affects deprived communities.
+
+**MAUP:** Results are sensitive to the choice of spatial unit. SA2 areas vary dramatically in size. Aggregating to health regions or TAs would produce different patterns.
+
+**Ecological fallacy:** Area-level deprivation and access do not necessarily describe individuals. An SA2 with NZDep Q5 and 40 min travel time does not mean every resident is deprived and poorly served.
+
+**Boundary effects:** SA2s near the coast may have inflated travel times. Island SA2s (Chatham Islands) are excluded from the map but included with capped times.
+
+**Spatial autocorrelation:** Travel times are spatially autocorrelated — nearby SA2s tend to have similar values. The Moran's I and LISA statistics account for this. Standard correlation results should be interpreted with this caveat.
 
 </div>
