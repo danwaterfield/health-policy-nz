@@ -11,6 +11,7 @@ import * as topojson from "npm:topojson-client";
 import * as d3 from "npm:d3";
 import L from "npm:leaflet";
 import {exportButtons} from "./components/chart-export.js";
+import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm} from "./components/access-stats.js";
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
 ```
 
@@ -54,6 +55,8 @@ const sa2Nzdep = Array.from(await db.query(`
   WHERE nzdep_quintile IS NOT NULL
 `));
 
+const popLookup = new Map(sa2Nzdep.map(d => [d.sa2_code, d.population || 0]));
+
 const hasAccess = accessData.length > 0;
 ```
 
@@ -76,11 +79,20 @@ const filteredAccess = facilityType === "all"
 if (hasAccess) {
   const byQuintile = [1, 2, 3, 4, 5].map(q => {
     const rows = filteredAccess.filter(d => d.nzdep_quintile === q);
-    const minutes = rows.map(d => d.nearest_minutes).filter(d => d != null).sort((a, b) => a - b);
-    const median = minutes.length > 0 ? minutes[Math.floor(minutes.length / 2)] : null;
-    const over30 = minutes.filter(d => d > 30).length;
-    const pctOver30 = minutes.length > 0 ? (over30 / minutes.length * 100) : 0;
-    return { quintile: q, median, pctOver30, n: minutes.length };
+    const validMinutes = [];
+    const validWeights = [];
+    rows.forEach(d => {
+      if (d.nearest_minutes != null) {
+        validMinutes.push(d.nearest_minutes);
+        validWeights.push(popLookup.get(d.sa2_code) || 1);
+      }
+    });
+    const med = weightedMedian(validMinutes, validWeights);
+    const totalPop = validWeights.reduce((s, w) => s + w, 0);
+    const popOver30 = rows.filter(d => d.nearest_minutes > 30)
+      .reduce((s, d) => s + (popLookup.get(d.sa2_code) || 0), 0);
+    const pctOver30 = totalPop > 0 ? (popOver30 / totalPop * 100) : 0;
+    return { quintile: q, median: med, pctOver30, n: validMinutes.length, totalPop };
   });
 
   const q1Med = byQuintile[0]?.median;
@@ -92,12 +104,12 @@ if (hasAccess) {
       <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #4575b4;">
         <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Least deprived (Q1)</div>
         <div style="font-size: 2rem; font-weight: 700; color: #4575b4;">${q1Med != null ? q1Med.toFixed(0) + " min" : "—"}</div>
-        <div style="font-size: 0.85em; color: #666;">median drive time</div>
+        <div style="font-size: 0.85em; color: #666;">median drive time (pop-weighted)</div>
       </div>
       <div style="background: #fdf2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #d73027;">
         <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Most deprived (Q5)</div>
         <div style="font-size: 2rem; font-weight: 700; color: #d73027;">${q5Med != null ? q5Med.toFixed(0) + " min" : "—"}</div>
-        <div style="font-size: 0.85em; color: #666;">median drive time</div>
+        <div style="font-size: 0.85em; color: #666;">median drive time (pop-weighted)</div>
       </div>
       <div style="background: #fff8f0; padding: 1rem; border-radius: 8px; border-left: 4px solid #e69f00;">
         <div style="font-size: 0.8em; color: #555; text-transform: uppercase; letter-spacing: 0.5px;">Q5 areas >30 min</div>
@@ -111,6 +123,18 @@ if (hasAccess) {
       </div>
     </div>
   `);
+
+  display(html`<p style="font-size: 0.8em; color: #888; margin-top: 0.5rem;">
+    Based on ${sa2Nzdep.length.toLocaleString()} of ${accessData.length > 0 ? (accessData.length / 2).toLocaleString() : "—"} SA2 areas with matched NZDep data (SA2 2018→2025 concordance).
+    Unmatched areas shown in grey on the map. Statistics are population-weighted using 2018 usually-resident population.
+  </p>`);
+
+  display(html`<p style="font-size: 0.85em; color: #555; margin: 0.5rem 0; line-height: 1.5;">
+    <strong>Note:</strong> Q5 (most deprived) areas often show <em>lower</em> median drive times than Q1 because
+    most Q5 SA2s are in dense urban centres (South Auckland, Porirua) near many GPs. The equity story is in
+    the <strong>tail</strong>: ${byQuintile[4]?.pctOver30?.toFixed(0) ?? "—"}% of people in Q5 areas are
+    &gt;30 min from the nearest GP, compared to ${byQuintile[0]?.pctOver30?.toFixed(0) ?? "—"}% in Q1 areas.
+  </p>`);
 } else {
   display(html`<p style="color: #666; font-style: italic;">
     Travel time data not yet computed. Run the pipeline with OSRM access to populate.
