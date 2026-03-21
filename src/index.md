@@ -89,21 +89,19 @@ const severityColor = (gap) => Math.abs(gap) >= 20 ? "#c0392b" : Math.abs(gap) >
 const displayEthnicity = (name) => ({ "Maori": "Māori", "Pacific": "Pacific", "Asian": "Asian", "European/Other": "European/Other", "Total": "Total", "MELAA": "MELAA", "Other": "Other" })[name] ?? name;
 
 display(html`
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+  <div class="stat-grid">
     ${topGaps.map(d => {
       const gap = d.absolute_gap;
       const color = severityColor(gap);
       const abs = Math.abs(gap).toFixed(1);
       return html`
-        <div style="border-left: 4px solid ${color}; background: var(--theme-background-alt, #fafafa); padding: 1rem 1.25rem; border-radius: 0 6px 6px 0;">
-          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: var(--theme-foreground-muted, #555); margin-bottom: 0.25rem;">
-            ${displayEthnicity(d.ethnicity)} · ${d.year}
-          </div>
-          <div style="font-size: 1.5em; font-weight: 700; color: ${color}; line-height: 1.1;">
+        <div class="stat-card" style="border-left: 4px solid ${color};">
+          <div class="stat-label">${displayEthnicity(d.ethnicity)} · ${d.year}</div>
+          <div class="stat-value" style="color: ${color};">
             ${gap >= 0 ? "+" : "−"}${abs} pp
           </div>
           <div style="font-size: 0.95em; font-weight: 600; margin: 0.25rem 0 0.5rem;">${d.indicator}</div>
-          <div style="font-size: 0.85em; color: var(--theme-foreground-muted, #555);">
+          <div class="stat-sub">
             ${d.target_value?.toFixed(1)}${d.unit} vs ${d.reference_value?.toFixed(1)}${d.unit} for European/Other
           </div>
         </div>
@@ -115,13 +113,7 @@ display(html`
 
 ```js
 display(html`
-  <p style="
-    font-size: 0.88em;
-    color: var(--theme-foreground-muted, #555);
-    border-top: 1px solid var(--theme-foreground-faintest, #e0e0e0);
-    padding-top: 0.75rem;
-    margin-top: 0.25rem;
-  ">
+  <p class="note">
     <strong style="color: #c0392b;">These figures are underestimates.</strong>
     Ethnic miscoding (~20% of Māori recorded as European/Other), NZHS exclusions (prisons, hospitals,
     residential care), suppression of small rural cells, and the absence of age standardisation all

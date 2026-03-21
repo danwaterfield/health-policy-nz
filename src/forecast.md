@@ -96,7 +96,7 @@ const serviceDisplayName = (s) => {
       const pctChange = ((last.projected_volume - first.projected_volume) / first.projected_volume) * 100;
       const dir = pctChange >= 0 ? "increase" : "decrease";
       const regionName = geographies.find(d => d.id === selectedGeo)?.name ?? "the selected region";
-      display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+      display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
         Under the baseline scenario, <strong>${serviceDisplayName(selectedService)}</strong> demand in <strong>${regionName}</strong> is projected to ${dir} by <strong>${Math.abs(pctChange).toFixed(1)}%</strong> between ${first.year} and ${last.year}.
       </div>`);
     }
@@ -109,7 +109,7 @@ const serviceDisplayName = (s) => {
 ```js
 if (!hasData) {
   display(html`
-    <div style="padding: 2rem; background: var(--theme-background-alt, #f5f5f5); border-radius: 8px; color: var(--theme-foreground, #333);">
+    <div class="note">
       <p><strong>No projection data available</strong></p>
       <p>Projection data has not yet been ingested for this selection.</p>
     </div>
@@ -196,11 +196,13 @@ if (!hasData) {
 
   // Legend
   display(html`
-    <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; margin: 0.5rem 0 1rem;">
+    <p class="methodology">
       <span><span style="color: #1f77b4; font-weight: bold;">—</span> Baseline</span>
+      &nbsp;&nbsp;
       <span><span style="color: #aec7e8;">- -</span> Low / High scenarios</span>
-      <span style="color: #636363; font-style: italic;">Dashed = projected</span>
-    </div>
+      &nbsp;&nbsp;
+      <em>Dashed = projected</em>
+    </p>
   `);
 }
 ```
@@ -210,11 +212,11 @@ if (!hasData) {
 ```js
 if (projections && projections.length > 0) {
   display(html`
-    <blockquote style="border-left: 3px solid var(--theme-foreground-faintest, #ccc); padding: 0.5rem 1rem; color: var(--theme-foreground, #333); font-size: 0.9rem;">
+    <p class="note">
       Utilisation-based projection: current service volume scaled by Stats NZ subnational
       population growth ratios (low / medium / high scenarios). Deferred demand factor applied
       where specified. Projections run in 5-year steps from 2023 baseline.
-    </blockquote>
+    </p>
   `);
 }
 ```
@@ -231,7 +233,7 @@ The following relationships are established in NZ health literature. These are q
 | Age 85+ population share | Aged residential care demand | ~2 years |
 | Amenable mortality | GP density (rural) | Long-term |
 
-<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<div class="note">
 <strong>Related:</strong> Current workforce capacity may not meet projected demand. See <a href="./workforce">Workforce</a> for regional vacancy rates. These projections do not account for equity — see <a href="./equity">Equity Gap Explorer</a> for who is most affected.
 </div>
 

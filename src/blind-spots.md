@@ -8,7 +8,7 @@ Known gaps in NZ public health data that limit what this dashboard can show.
 
 These are not analytical limitations — they are structural absences in the data itself.
 
-<div style="background: #fef3cd; border-left: 4px solid #d97706; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<div class="note">
 <strong>Before citing this dashboard:</strong>
 <ol style="margin: 0.5rem 0 0; padding-left: 1.25rem;">
 <li>Check whether the indicator covers the population you care about</li>
@@ -50,7 +50,7 @@ const severityConfig = {
 ```js
 if (spots.length === 0) {
   display(html`
-    <div style="padding: 2rem; background: var(--theme-background-alt, #f5f5f5); border-radius: 8px; color: var(--theme-foreground-muted, #555);">
+    <div class="note">
       <p>Blind spots not yet populated.</p>
     </div>
   `);
@@ -60,16 +60,19 @@ if (spots.length === 0) {
   const medCount = spots.filter(d => d.severity === "medium").length;
   const lowCount = spots.filter(d => d.severity === "low").length;
   display(html`
-    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0 1.5rem;">
-      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #fdf2f2); border: 1px solid #e8a8a8; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
-        <strong style="color: #c0392b;">▲ ${highCount}</strong> high severity
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">High severity</div>
+        <div class="stat-value" style="color: #c0392b;">▲ ${highCount}</div>
       </div>
-      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #fef9ec); border: 1px solid #f0d090; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
-        <strong style="color: #e5850b;">◆ ${medCount}</strong> medium severity
+      <div class="stat-card">
+        <div class="stat-label">Medium severity</div>
+        <div class="stat-value" style="color: #e5850b;">◆ ${medCount}</div>
       </div>
       ${lowCount > 0 ? html`
-      <div style="padding: 0.5rem 1rem; background: var(--theme-background-alt, #f0f9f4); border: 1px solid #90d0aa; border-radius: 6px; color: var(--theme-foreground, #222); font-size: 0.9em;">
-        <strong style="color: #2d8a4e;">● ${lowCount}</strong> low severity
+      <div class="stat-card">
+        <div class="stat-label">Low severity</div>
+        <div class="stat-value" style="color: #2d8a4e;">● ${lowCount}</div>
       </div>` : ""}
     </div>
   `);
@@ -157,12 +160,14 @@ if (spots.length > 0) {
   const medCount = spots.filter(d => d.severity === "medium").length;
 
   display(html`
-    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0;">
-      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #fdf2f2); border: 1px solid #e8a8a8; border-radius: 6px; color: var(--theme-foreground, #222);">
-        <strong style="color: #c0392b;">${highCount}</strong> high-severity gaps
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">High-severity gaps</div>
+        <div class="stat-value" style="color: #c0392b;">${highCount}</div>
       </div>
-      <div style="padding: 0.75rem 1.25rem; background: var(--theme-background-alt, #fef9ec); border: 1px solid #f0d090; border-radius: 6px; color: var(--theme-foreground, #222);">
-        <strong style="color: #e5850b;">${medCount}</strong> medium-severity gaps
+      <div class="stat-card">
+        <div class="stat-label">Medium-severity gaps</div>
+        <div class="stat-value" style="color: #e5850b;">${medCount}</div>
       </div>
     </div>
   `);

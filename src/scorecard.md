@@ -205,7 +205,7 @@ const scorecardCards = GPS_PRIORITIES.map(p => {
 });
 
 display(html`
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+  <div class="stat-grid">
     ${scorecardCards}
   </div>
 `);
@@ -246,7 +246,7 @@ display(html`
   if (offTrack > 0) parts.push(`${offTrack} off track`);
   if (noData > 0) parts.push(`${noData} with no data`);
 
-  display(html`<div style="background: var(--theme-background-alt, #f0f4f8); border-left: 4px solid #2563eb; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px; font-size: 1.05em; line-height: 1.6;">
+  display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
     <strong>${parts.join(", ")}</strong> of ${total} GPS targets.${worst ? html` <strong>${worst.metric}</strong> is the furthest from target.` : ""}
   </div>`);
 }
@@ -306,7 +306,7 @@ if (edTrend.length > 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
+  display(html`<p class="methodology">
     <span style="color: #2d8a4e;">●</span> Meeting target (≥95%)
     <span style="color: #c0392b; margin-left: 1rem;">●</span> Below target (&lt;95%)
     <span style="color: #2d8a4e; margin-left: 1rem;">- -</span> 95% target line
@@ -365,7 +365,7 @@ if (fsaTrend.length > 0) {
       }),
     ],
   }));
-  display(html`<p style="font-size: 0.82em; color: var(--theme-foreground-muted, #555); margin-top: 0.25rem;">
+  display(html`<p class="methodology">
     <span style="color: #2d8a4e;">●</span> Meeting target (≤42 days)
     <span style="color: #c0392b; margin-left: 1rem;">●</span> Exceeds target (&gt;42 days)
     <span style="color: #2d8a4e; margin-left: 1rem;">- -</span> 42-day target line
@@ -373,7 +373,7 @@ if (fsaTrend.length > 0) {
 }
 ```
 
-<div style="background: #f8f4ff; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;">
+<div class="note">
 <strong>Related:</strong> National targets can mask regional disparities. See <a href="./equity">Equity Gap Explorer</a> for how outcomes vary by ethnicity, and <a href="./workforce">Workforce</a> for the supply constraints behind these numbers.
 </div>
 
