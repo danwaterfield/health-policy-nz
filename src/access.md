@@ -4,7 +4,7 @@ title: Spatial Access to Health Services
 
 # Spatial Access to Health Services
 
-Do deprived communities face longer travel times to reach care? This page maps NZ's 2,395 Statistical Area 2 zones by deprivation and proximity to GPs, hospitals, and urgent care.
+<p class="lead">Do deprived communities face longer travel times to reach care? This page maps NZ's 2,395 Statistical Area 2 zones by deprivation and proximity to GPs, hospitals, and urgent care.</p>
 
 ```js
 import * as topojson from "npm:topojson-client";
@@ -15,14 +15,6 @@ import {median, weightedMedian, weightedPercentile, gini, pearsonR, haversineKm,
 import {buildSA2Popup, buildFacilityPopup, findNearestFacility} from "./components/access-detail.js";
 import {removeFacilitiesByPercent, applyFuelMultiplier, applyTelehealthCap, scenarioDiff} from "./components/scenario-engine.js";
 const sa2Topo = await FileAttachment("data/nz-sa2.json").json();
-```
-
-```html
-<link rel="stylesheet" href="npm:leaflet/dist/leaflet.css">
-<style>
-  .leaflet-container { background: #eaf2f8 !important; }
-  #access-map { width: 100%; height: 700px; border-radius: 8px; border: 1px solid #ddd; }
-</style>
 ```
 
 ```js
@@ -65,6 +57,14 @@ const topAgentRows = Array.from(await db.query(`
 const topAgent = topAgentRows[0] || null;
 ```
 
+```html
+<link rel="stylesheet" href="npm:leaflet/dist/leaflet.css">
+<style>
+  .leaflet-container { background: #eaf2f8 !important; }
+  #access-map { width: 100%; height: 700px; border-radius: 8px; border: 1px solid #ddd; }
+</style>
+```
+
 ```js
 // Controls
 const facilityType = view(Inputs.select(
@@ -85,15 +85,15 @@ const showAutoresearch = view(Inputs.toggle({label: "Show autoresearch focus are
 if (showAutoresearch) {
   if (topAgent) {
     display(html`
-      <div style="background: var(--theme-background-alt, #f3e8ff); border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
-        <strong style="color: #7b3294;">Autoresearch: Top Configuration (Counties Manukau)</strong>
+      <div class="note">
+        <strong>Autoresearch: Top Configuration (Counties Manukau)</strong>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.85em;">
           <div><strong>Agent:</strong> ${topAgent.agent}</div>
           <div><strong>Metric:</strong> ${topAgent.primary_metric}</div>
           <div><strong>Best:</strong> ${topAgent.best_value?.toFixed(3)}</div>
           <div><strong>Experiments:</strong> ${topAgent.experiments}</div>
         </div>
-        <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
+        <p style="margin: 0.5rem 0 0;">
           Based on 887 simulated configurations for Counties Manukau.
           <a href="./autoresearch">View full analysis →</a>
         </p>
@@ -101,9 +101,9 @@ if (showAutoresearch) {
     `);
   } else {
     display(html`
-      <div style="background: var(--theme-background-alt, #f3e8ff); border: 1px solid #7b3294; border-radius: 8px; padding: 1rem; margin: 0.5rem 0;">
-        <strong style="color: #7b3294;">Autoresearch: No accepted configurations found</strong>
-        <p style="font-size: 0.8em; color: #666; margin: 0.5rem 0 0;">
+      <div class="note">
+        <strong>Autoresearch: No accepted configurations found</strong>
+        <p style="margin: 0.5rem 0 0;">
           Run the autoresearch simulation to populate results.
           <a href="./autoresearch">View autoresearch page →</a>
         </p>
@@ -113,44 +113,8 @@ if (showAutoresearch) {
 }
 ```
 
-## What-if scenarios
-
-<details style="border: 1px solid var(--theme-foreground-faintest, #ddd); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; background: var(--theme-background-alt, #fafafa);">
-<summary style="cursor: pointer; font-weight: 600; padding: 0.25rem 0;">Explore scenario controls</summary>
-<p style="font-size: 0.85em; color: var(--theme-foreground-muted, #555); margin: 0.5rem 0 1rem 0;">
-Adjust the controls below to model what-if scenarios. The map, charts, and statistics will update to reflect the modelled changes.
-</p>
-
 ```js
-const fuelMultiplier = view(Inputs.range([1, 3], {step: 0.1, value: 1, label: "Fuel price multiplier"}));
-```
-
-```js
-const telehealthOn = view(Inputs.toggle({label: "Universal telehealth", value: false}));
-```
-
-```js
-const telehealthCap = telehealthOn
-  ? view(Inputs.select([10, 15, 20], {label: "Max effective travel time (min)", value: 15}))
-  : 15;
-```
-
-```js
-const pandemicPct = view(Inputs.range([0, 50], {step: 5, value: 0, label: "% facilities removed (pandemic mode)"}));
-```
-
-```js
-const scenarioResetBtn = view(Inputs.button("Reset all scenarios"));
-```
-
-```js
-// When reset is clicked, the button value increments — we use it to reset inputs.
-// Observable re-evaluates downstream cells automatically when inputs change.
-```
-
-</details>
-
-```js
+// Compute scenario data early — needed by map and stats
 const scenarioActive = fuelMultiplier !== 1 || telehealthOn || pandemicPct > 0;
 let scenarioData = accessData;
 if (pandemicPct > 0) {
@@ -165,120 +129,12 @@ if (telehealthOn) {
 ```
 
 ```js
-if (scenarioActive && hasAccess) {
-  const diff = scenarioDiff(accessData, scenarioData, popLookup);
-  const scenarioGpRows = scenarioData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
-  const baseGpRows = accessData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
-  const scenarioMedian = scenarioGpRows.length > 0
-    ? [...scenarioGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(scenarioGpRows.length / 2)].nearest_minutes
-    : 0;
-  const baseMedian = baseGpRows.length > 0
-    ? [...baseGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(baseGpRows.length / 2)].nearest_minutes
-    : 0;
-  const medianDelta = scenarioMedian - baseMedian;
-
-  display(html`
-    <div style="background: var(--theme-background-alt, #fff3cd); border: 1px solid var(--theme-foreground-faintest, #ffc107); border-radius: 8px; padding: 1rem; margin: 0.5rem 0 1rem 0;">
-      <div style="font-weight: 600; margin-bottom: 0.5rem;">Scenario impact</div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; font-size: 0.9em;">
-        <div>
-          <span style="font-size: 1.3em; font-weight: 700;">${diff.peopleAffected.toLocaleString()}</span><br>
-          <span style="color: var(--theme-foreground-muted, #666);">people affected (&gt;0.5 min change)</span>
-        </div>
-        <div>
-          <span style="font-size: 1.3em; font-weight: 700;">${diff.sa2sCrossed}</span><br>
-          <span style="color: var(--theme-foreground-muted, #666);">SA2s crossing 30-min threshold</span>
-        </div>
-        <div>
-          <span style="font-size: 1.3em; font-weight: 700; color: ${medianDelta > 0 ? "#d73027" : medianDelta < 0 ? "#4575b4" : "#333"};">${medianDelta > 0 ? "+" : ""}${medianDelta.toFixed(1)} min</span><br>
-          <span style="color: var(--theme-foreground-muted, #666);">median GP drive time change</span>
-        </div>
-      </div>
-      <div style="font-size: 0.8em; color: var(--theme-foreground-muted, #856404); margin-top: 0.5rem;">
-        Active: ${fuelMultiplier !== 1 ? `fuel x${fuelMultiplier}` : ""}${telehealthOn ? ` telehealth cap ${telehealthCap} min` : ""}${pandemicPct > 0 ? ` ${pandemicPct}% facilities removed` : ""}
-      </div>
-    </div>
-  `);
-}
-```
-
-## Key statistics
-
-```js
-// Compute summary stats
+// Compute summary stats — needed by map and stat cards
 const activeData = scenarioActive ? scenarioData : accessData;
 const filteredAccess = facilityType === "all"
   ? activeData
   : activeData.filter(d => d.facility_type === facilityType);
-
-if (hasAccess) {
-  const byQuintile = [1, 2, 3, 4, 5].map(q => {
-    const rows = filteredAccess.filter(d => d.nzdep_quintile === q);
-    const validMinutes = [];
-    const validWeights = [];
-    rows.forEach(d => {
-      if (d.nearest_minutes != null) {
-        validMinutes.push(d.nearest_minutes);
-        validWeights.push(popLookup.get(d.sa2_code) || 1);
-      }
-    });
-    const med = weightedMedian(validMinutes, validWeights);
-    const totalPop = validWeights.reduce((s, w) => s + w, 0);
-    const popOver30 = rows.filter(d => d.nearest_minutes > 30)
-      .reduce((s, d) => s + (popLookup.get(d.sa2_code) || 0), 0);
-    const pctOver30 = totalPop > 0 ? (popOver30 / totalPop * 100) : 0;
-    return { quintile: q, median: med, pctOver30, n: validMinutes.length, totalPop };
-  });
-
-  const q1Med = byQuintile[0]?.median;
-  const q5Med = byQuintile[4]?.median;
-  const q5Over30 = byQuintile[4]?.pctOver30;
-
-  display(html`
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
-      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
-        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q1 (least deprived)</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q1Med != null ? q1Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
-        <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
-      </div>
-      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
-        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 (most deprived)</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q5Med != null ? q5Med.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;"> min</span></div>
-        <div style="font-size: 0.75em; color: #999;">pop-weighted median</div>
-      </div>
-      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
-        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Q5 areas &gt;30 min</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span style="font-size: 0.5em; font-weight: 400; color: #888;">%</span></div>
-        <div style="font-size: 0.75em; color: #999;">of people in most deprived SA2s</div>
-      </div>
-      <div style="padding: 1rem; border: 1px solid var(--theme-foreground-faintest, #e0e0e0); border-radius: 6px;">
-        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Facilities</div>
-        <div style="font-size: 1.8rem; font-weight: 600; color: var(--theme-foreground, #222);">${facilities.length.toLocaleString()}</div>
-        <div style="font-size: 0.75em; color: #999;">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
-      </div>
-    </div>
-  `);
-
-  display(html`<p style="font-size: 0.8em; color: #888; margin-top: 0.5rem;">
-    Based on ${sa2Nzdep.length.toLocaleString()} of ${accessData.length > 0 ? (accessData.length / 2).toLocaleString() : "—"} SA2 areas with matched NZDep data (SA2 2018→2025 concordance).
-    Unmatched areas shown in grey on the map. Statistics are population-weighted using 2018 usually-resident population.
-  </p>`);
-
-  display(html`<p style="font-size: 0.85em; color: #555; margin: 0.5rem 0; line-height: 1.5;">
-    <strong>Note:</strong> Q5 (most deprived) areas often show <em>lower</em> median drive times than Q1 because
-    most Q5 SA2s are in dense urban centres (South Auckland, Porirua) near many GPs. The equity story is in
-    the <strong>tail</strong>: ${byQuintile[4]?.pctOver30?.toFixed(0) ?? "—"}% of people in Q5 areas are
-    &gt;30 min from the nearest GP, compared to ${byQuintile[0]?.pctOver30?.toFixed(0) ?? "—"}% in Q1 areas.
-  </p>`);
-} else {
-  display(html`<p style="color: #666; font-style: italic;">
-    Travel time data not yet computed. Run the pipeline with OSRM access to populate.
-    Showing deprivation and facility locations only.
-  </p>`);
-}
 ```
-
-## Deprivation map — SA2 level
 
 ```js
 // Decode TopoJSON, filter out Chatham Islands which distort the Mercator projection
@@ -318,6 +174,8 @@ const nationalMedianGP = gpAccess.length > 0
 // Choose what to colour by
 const colorBy = hasAccess ? "travel_time" : "deprivation";
 ```
+
+## Deprivation map — SA2 level
 
 ```js
 {
@@ -475,6 +333,145 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
 }
 ```
 
+## Key statistics
+
+```js
+if (hasAccess) {
+  const byQuintile = [1, 2, 3, 4, 5].map(q => {
+    const rows = filteredAccess.filter(d => d.nzdep_quintile === q);
+    const validMinutes = [];
+    const validWeights = [];
+    rows.forEach(d => {
+      if (d.nearest_minutes != null) {
+        validMinutes.push(d.nearest_minutes);
+        validWeights.push(popLookup.get(d.sa2_code) || 1);
+      }
+    });
+    const med = weightedMedian(validMinutes, validWeights);
+    const totalPop = validWeights.reduce((s, w) => s + w, 0);
+    const popOver30 = rows.filter(d => d.nearest_minutes > 30)
+      .reduce((s, d) => s + (popLookup.get(d.sa2_code) || 0), 0);
+    const pctOver30 = totalPop > 0 ? (popOver30 / totalPop * 100) : 0;
+    return { quintile: q, median: med, pctOver30, n: validMinutes.length, totalPop };
+  });
+
+  const q1Med = byQuintile[0]?.median;
+  const q5Med = byQuintile[4]?.median;
+  const q5Over30 = byQuintile[4]?.pctOver30;
+
+  display(html`
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Q1 (least deprived)</div>
+        <div class="stat-value">${q1Med != null ? q1Med.toFixed(0) : "—"}<span class="stat-unit"> min</span></div>
+        <div class="stat-sub">pop-weighted median</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Q5 (most deprived)</div>
+        <div class="stat-value">${q5Med != null ? q5Med.toFixed(0) : "—"}<span class="stat-unit"> min</span></div>
+        <div class="stat-sub">pop-weighted median</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Q5 areas &gt;30 min</div>
+        <div class="stat-value">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span class="stat-unit">%</span></div>
+        <div class="stat-sub">of people in most deprived SA2s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Facilities</div>
+        <div class="stat-value">${facilities.length.toLocaleString()}</div>
+        <div class="stat-sub">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
+      </div>
+    </div>
+  `);
+
+  display(html`<p class="note">
+    Based on ${sa2Nzdep.length.toLocaleString()} of ${accessData.length > 0 ? (accessData.length / 2).toLocaleString() : "—"} SA2 areas with matched NZDep data (SA2 2018→2025 concordance).
+    Unmatched areas shown in grey on the map. Statistics are population-weighted using 2018 usually-resident population.
+  </p>`);
+
+  display(html`<p class="note">
+    <strong>Note:</strong> Q5 (most deprived) areas often show <em>lower</em> median drive times than Q1 because
+    most Q5 SA2s are in dense urban centres (South Auckland, Porirua) near many GPs. The equity story is in
+    the <strong>tail</strong>: ${byQuintile[4]?.pctOver30?.toFixed(0) ?? "—"}% of people in Q5 areas are
+    &gt;30 min from the nearest GP, compared to ${byQuintile[0]?.pctOver30?.toFixed(0) ?? "—"}% in Q1 areas.
+  </p>`);
+} else {
+  display(html`<p class="note">
+    Travel time data not yet computed. Run the pipeline with OSRM access to populate.
+    Showing deprivation and facility locations only.
+  </p>`);
+}
+```
+
+## What-if scenarios
+
+<details class="details-panel">
+<summary>Explore scenario controls</summary>
+
+```js
+const fuelMultiplier = view(Inputs.range([1, 3], {step: 0.1, value: 1, label: "Fuel price multiplier"}));
+```
+
+```js
+const telehealthOn = view(Inputs.toggle({label: "Universal telehealth", value: false}));
+```
+
+```js
+const telehealthCap = telehealthOn
+  ? view(Inputs.select([10, 15, 20], {label: "Max effective travel time (min)", value: 15}))
+  : 15;
+```
+
+```js
+const pandemicPct = view(Inputs.range([0, 50], {step: 5, value: 0, label: "% facilities removed (pandemic mode)"}));
+```
+
+```js
+const scenarioResetBtn = view(Inputs.button("Reset all scenarios"));
+```
+
+```js
+// When reset is clicked, the button value increments — we use it to reset inputs.
+// Observable re-evaluates downstream cells automatically when inputs change.
+```
+
+</details>
+
+```js
+if (scenarioActive && hasAccess) {
+  const diff = scenarioDiff(accessData, scenarioData, popLookup);
+  const scenarioGpRows = scenarioData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+  const baseGpRows = accessData.filter(d => d.facility_type === "gp" && d.nearest_minutes != null);
+  const scenarioMedian = scenarioGpRows.length > 0
+    ? [...scenarioGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(scenarioGpRows.length / 2)].nearest_minutes
+    : 0;
+  const baseMedian = baseGpRows.length > 0
+    ? [...baseGpRows].sort((a, b) => a.nearest_minutes - b.nearest_minutes)[Math.floor(baseGpRows.length / 2)].nearest_minutes
+    : 0;
+  const medianDelta = scenarioMedian - baseMedian;
+
+  display(html`
+    <div class="scenario-impact">
+      <div>
+        <div class="impact-value">${diff.peopleAffected.toLocaleString()}</div>
+        <div class="impact-label">people affected (&gt;0.5 min change)</div>
+      </div>
+      <div>
+        <div class="impact-value">${diff.sa2sCrossed}</div>
+        <div class="impact-label">SA2s crossing 30-min threshold</div>
+      </div>
+      <div>
+        <div class="impact-value" style="color: ${medianDelta > 0 ? "#d73027" : medianDelta < 0 ? "#4575b4" : "#333"};">${medianDelta > 0 ? "+" : ""}${medianDelta.toFixed(1)} min</div>
+        <div class="impact-label">median GP drive time change</div>
+      </div>
+    </div>
+  `);
+
+  display(html`<p class="note">
+    Active: ${fuelMultiplier !== 1 ? `fuel x${fuelMultiplier}` : ""}${telehealthOn ? ` telehealth cap ${telehealthCap} min` : ""}${pandemicPct > 0 ? ` ${pandemicPct}% facilities removed` : ""}
+  </p>`);
+}
+```
 
 ## Deprivation vs access
 
@@ -558,7 +555,7 @@ if (hasAccess) {
   }));
 } else {
   // Fallback: NZDep distribution chart
-  display(html`<p style="color: #666; font-style: italic;">
+  display(html`<p class="note">
     Deprivation vs access scatter will appear once travel times are computed.
     Showing NZDep distribution by health region below.
   </p>`);
@@ -624,7 +621,7 @@ if (hasAccess) {
     width: { sa2_name: 200, health_region: 250 },
   }));
 } else {
-  display(html`<p style="color: #666; font-style: italic;">
+  display(html`<p class="note">
     Facility desert table will appear once travel times are computed.
   </p>`);
 }
@@ -703,6 +700,9 @@ if (hasAccess) {
   }
 }
 ```
+
+<details class="details-panel">
+<summary>Analyst tools</summary>
 
 ## CSV export
 
@@ -812,8 +812,8 @@ if (hasAccess) {
   }
 
   display(html`
-    <details style="margin: 1rem 0; border: 1px solid #ddd; border-radius: 8px; padding: 0.5rem 1rem;">
-      <summary style="cursor: pointer; font-weight: 600; padding: 0.5rem 0;">Detailed summary statistics</summary>
+    <details class="details-panel">
+      <summary>Detailed summary statistics</summary>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
         <div>
           <h4 style="margin: 0 0 0.5rem 0; color: #333;">Overall (population-weighted)</h4>
@@ -857,7 +857,7 @@ if (hasAccess) {
     </details>
   `);
 } else {
-  display(html`<p style="color: #666; font-style: italic;">Summary statistics require travel time data.</p>`);
+  display(html`<p class="note">Summary statistics require travel time data.</p>`);
 }
 ```
 
@@ -890,9 +890,11 @@ if (hasAccess) {
   display(html`<p style="font-weight: 600; margin-bottom: 0.25rem;">Population-weighted median drive time (minutes) by region and deprivation</p>`);
   display(Inputs.table(crosstabFlat));
 } else {
-  display(html`<p style="color: #666; font-style: italic;">Cross-tabulation requires travel time data.</p>`);
+  display(html`<p class="note">Cross-tabulation requires travel time data.</p>`);
 }
 ```
+
+</details>
 
 ## Facility distribution by type
 
@@ -962,7 +964,7 @@ display(Plot.plot({
 
 ---
 
-<div style="font-size: 0.8em; color: #888; margin-top: 2rem;">
+<div class="methodology">
 
 **Sources:** SA2 boundaries from Stats NZ (CC BY 4.0, 2025 edition). Facility locations from OpenStreetMap (ODbL). NZDep2018 from University of Otago. Drive times via OSRM.
 
