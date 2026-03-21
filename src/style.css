@@ -1,3 +1,173 @@
+/* ============================================================
+   Design System — Research Publication Style
+   ============================================================ */
+
+:root {
+  /* Data colours — charts only */
+  --color-adverse: #c4391d;
+  --color-favourable: #2166ac;
+  --color-neutral: #969696;
+
+  /* Ethnicity (Wong colorblind palette) */
+  --color-maori: #e69f00;
+  --color-pacific: #56b4e9;
+  --color-asian: #009e73;
+  --color-european: #0072b2;
+  --color-total: #555;
+
+  /* Status */
+  --color-on-track: #2d8a4e;
+  --color-at-risk: #e5850b;
+  --color-off-track: #c4391d;
+
+  /* Facilities */
+  --color-gp: #2d8a4e;
+  --color-hospital: #7b3294;
+
+  /* Typography */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-stat: 1.75rem;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+}
+
+/* Stat cards */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.stat-card {
+  padding: var(--space-md);
+  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
+  border-radius: 4px;
+}
+
+.stat-label {
+  font-size: var(--text-xs);
+  color: var(--theme-foreground-faint, #999);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-xs);
+}
+
+.stat-value {
+  font-size: var(--text-stat);
+  font-weight: var(--weight-bold);
+  color: var(--theme-foreground, #222);
+  line-height: var(--leading-tight);
+}
+
+.stat-unit {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--theme-foreground-faint, #999);
+}
+
+.stat-sub {
+  font-size: var(--text-xs);
+  color: var(--theme-foreground-faint, #999);
+  margin-top: var(--space-xs);
+}
+
+/* Note / callout */
+.note {
+  font-size: var(--text-sm);
+  color: var(--theme-foreground-muted, #666);
+  line-height: var(--leading-relaxed);
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--theme-foreground-faintest, #e0e0e0);
+  margin: var(--space-lg) 0;
+}
+
+.note strong {
+  color: var(--theme-foreground, #222);
+}
+
+/* Methodology footer */
+.methodology {
+  font-size: var(--text-sm);
+  color: var(--theme-foreground-faint, #999);
+  line-height: var(--leading-relaxed);
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--theme-foreground-faintest, #e0e0e0);
+}
+
+.methodology p {
+  margin: var(--space-sm) 0;
+}
+
+.methodology strong {
+  color: var(--theme-foreground-muted, #666);
+}
+
+/* Collapsible panels */
+.details-panel {
+  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
+  border-radius: 4px;
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--space-md) 0;
+}
+
+.details-panel summary {
+  cursor: pointer;
+  font-weight: var(--weight-medium);
+  padding: var(--space-xs) 0;
+  color: var(--theme-foreground, #222);
+}
+
+/* Scenario impact panel */
+.scenario-impact {
+  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
+  border-radius: 4px;
+  padding: var(--space-md);
+  margin: var(--space-md) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-md);
+}
+
+.impact-label {
+  font-size: var(--text-xs);
+  color: var(--theme-foreground-faint, #999);
+}
+
+.impact-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--theme-foreground, #222);
+}
+
+/* Lead paragraph */
+.lead {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--theme-foreground-muted, #666);
+  margin-bottom: var(--space-lg);
+}
+
+/* ============================================================
+   Print styles
+   ============================================================ */
+
 @media print {
   /* Hide navigation and interactive controls */
   nav,
