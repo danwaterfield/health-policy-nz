@@ -205,12 +205,15 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
   // Create map container
   const container = document.createElement("div");
   container.id = "access-map";
+  container.style.width = "100%";
+  container.style.height = "600px";
   display(container);
 
-  // Wait a tick for DOM insertion
-  await new Promise(r => setTimeout(r, 50));
+  // Wait for DOM insertion — Leaflet needs the container to have dimensions
+  await new Promise(r => setTimeout(r, 200));
 
   const map = L.map(container, { zoomSnap: 0.25 }).setView([-41.3, 173.0], 5.5);
+  setTimeout(() => map.invalidateSize(), 300);
 
   // CartoDB Positron basemap (clean, light, free)
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
