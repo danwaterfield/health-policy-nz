@@ -59,10 +59,6 @@ const topAgent = topAgentRows[0] || null;
 
 ```html
 <link rel="stylesheet" href="npm:leaflet/dist/leaflet.css">
-<style>
-  .leaflet-container { background: #eaf2f8 !important; }
-  #access-map { width: 100%; height: 700px; border-radius: 8px; border: 1px solid #ddd; }
-</style>
 ```
 
 ```js
@@ -175,7 +171,6 @@ const nationalMedianGP = gpAccess.length > 0
 const colorBy = hasAccess ? "travel_time" : "deprivation";
 ```
 
-## Deprivation map — SA2 level
 
 ```js
 {
@@ -212,7 +207,6 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
   // Create map container
   const container = document.createElement("div");
   container.id = "access-map";
-  container.style.cssText = "width:100%; height:700px; border-radius:8px; border:1px solid #ddd;";
   display(container);
 
   // Wait a tick for DOM insertion
@@ -333,8 +327,6 @@ const colorBy = hasAccess ? "travel_time" : "deprivation";
 }
 ```
 
-## Key statistics
-
 ```js
 if (hasAccess) {
   const byQuintile = [1, 2, 3, 4, 5].map(q => {
@@ -358,84 +350,49 @@ if (hasAccess) {
   const q1Med = byQuintile[0]?.median;
   const q5Med = byQuintile[4]?.median;
   const q5Over30 = byQuintile[4]?.pctOver30;
+  const q1Over30 = byQuintile[0]?.pctOver30;
+  const gpCount = facilities.filter(f => f.facility_type === "gp").length;
+  const hospCount = facilities.filter(f => f.facility_type === "hospital").length;
 
-  display(html`
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Q1 (least deprived)</div>
-        <div class="stat-value">${q1Med != null ? q1Med.toFixed(0) : "—"}<span class="stat-unit"> min</span></div>
-        <div class="stat-sub">pop-weighted median</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Q5 (most deprived)</div>
-        <div class="stat-value">${q5Med != null ? q5Med.toFixed(0) : "—"}<span class="stat-unit"> min</span></div>
-        <div class="stat-sub">pop-weighted median</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Q5 areas &gt;30 min</div>
-        <div class="stat-value">${q5Over30 != null ? q5Over30.toFixed(0) : "—"}<span class="stat-unit">%</span></div>
-        <div class="stat-sub">of people in most deprived SA2s</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Facilities</div>
-        <div class="stat-value">${facilities.length.toLocaleString()}</div>
-        <div class="stat-sub">${facilities.filter(f => f.facility_type === "gp").length} GPs, ${facilities.filter(f => f.facility_type === "hospital").length} hospitals</div>
-      </div>
-    </div>
-  `);
+  display(html`<p>
+    The map above shows estimated drive times from ${sa2Nzdep.length.toLocaleString()} SA2 areas
+    to the nearest of ${gpCount.toLocaleString()} GPs and ${hospCount.toLocaleString()} hospitals
+    mapped from OpenStreetMap. The population-weighted median drive time is
+    <strong>${q1Med != null ? q1Med.toFixed(0) : "—"} minutes</strong> for the least deprived areas (Q1) and
+    <strong>${q5Med != null ? q5Med.toFixed(0) : "—"} minutes</strong> for the most deprived (Q5).
+  </p>`);
 
-  display(html`<p class="note">
-    Based on ${sa2Nzdep.length.toLocaleString()} of ${accessData.length > 0 ? (accessData.length / 2).toLocaleString() : "—"} SA2 areas with matched NZDep data (SA2 2018→2025 concordance).
-    Unmatched areas shown in grey on the map. Statistics are population-weighted using 2018 usually-resident population.
+  display(html`<p>
+    The medians are similar because most Q5 areas are in dense urban centres — South Auckland, Porirua —
+    where GPs are close. The disparity is in the tail:
+    <strong>${q5Over30 != null ? q5Over30.toFixed(0) : "—"}%</strong> of people in the most deprived areas
+    are more than 30 minutes from a GP, compared to
+    <strong>${q1Over30 != null ? q1Over30.toFixed(0) : "—"}%</strong> in the least deprived.
   </p>`);
 
   display(html`<p class="note">
-    <strong>Note:</strong> Q5 (most deprived) areas often show <em>lower</em> median drive times than Q1 because
-    most Q5 SA2s are in dense urban centres (South Auckland, Porirua) near many GPs. The equity story is in
-    the <strong>tail</strong>: ${byQuintile[4]?.pctOver30?.toFixed(0) ?? "—"}% of people in Q5 areas are
-    &gt;30 min from the nearest GP, compared to ${byQuintile[0]?.pctOver30?.toFixed(0) ?? "—"}% in Q1 areas.
+    ${sa2Nzdep.length.toLocaleString()} of ${(accessData.length / 2).toLocaleString()} SA2 areas
+    matched between 2025 boundaries and 2018 NZDep data (~70% concordance).
+    Unmatched areas shown in grey. Statistics are population-weighted.
   </p>`);
 } else {
-  display(html`<p class="note">
-    Travel time data not yet computed. Run the pipeline with OSRM access to populate.
-    Showing deprivation and facility locations only.
+  display(html`<p>
+    Travel time data not yet computed. The map above shows NZDep2018 deprivation by SA2.
   </p>`);
 }
 ```
 
 ## What-if scenarios
 
-<details class="details-panel">
-<summary>Explore scenario controls</summary>
-
 ```js
 const fuelMultiplier = view(Inputs.range([1, 3], {step: 0.1, value: 1, label: "Fuel price multiplier"}));
-```
-
-```js
 const telehealthOn = view(Inputs.toggle({label: "Universal telehealth", value: false}));
-```
-
-```js
 const telehealthCap = telehealthOn
   ? view(Inputs.select([10, 15, 20], {label: "Max effective travel time (min)", value: 15}))
   : 15;
-```
-
-```js
 const pandemicPct = view(Inputs.range([0, 50], {step: 5, value: 0, label: "% facilities removed (pandemic mode)"}));
-```
-
-```js
 const scenarioResetBtn = view(Inputs.button("Reset all scenarios"));
 ```
-
-```js
-// When reset is clicked, the button value increments — we use it to reset inputs.
-// Observable re-evaluates downstream cells automatically when inputs change.
-```
-
-</details>
 
 ```js
 if (scenarioActive && hasAccess) {
@@ -811,51 +768,44 @@ if (hasAccess) {
     nnrResult = nearestNeighbourR(facLats, facLons, 268021);
   }
 
-  display(html`
-    <details class="details-panel">
-      <summary>Detailed summary statistics</summary>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-        <div>
-          <h4 style="margin: 0 0 0.5rem 0; color: #333;">Overall (population-weighted)</h4>
-          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
-            <tr><td style="padding: 2px 8px;">Weighted mean</td><td style="padding: 2px 8px; text-align: right;"><strong>${wMean.toFixed(1)} min</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Weighted median</td><td style="padding: 2px 8px; text-align: right;"><strong>${wMed?.toFixed(1) ?? "—"} min</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">P25</td><td style="padding: 2px 8px; text-align: right;">${p25?.toFixed(1) ?? "—"} min</td></tr>
-            <tr><td style="padding: 2px 8px;">P75</td><td style="padding: 2px 8px; text-align: right;">${p75?.toFixed(1) ?? "—"} min</td></tr>
-            <tr><td style="padding: 2px 8px;">P90</td><td style="padding: 2px 8px; text-align: right;">${p90?.toFixed(1) ?? "—"} min</td></tr>
-            <tr style="border-top: 1px solid #eee;"><td style="padding: 2px 8px;">Gini coefficient</td><td style="padding: 2px 8px; text-align: right;"><strong>${giniVal.toFixed(3)}</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Pearson r (NZDep score vs travel time)</td><td style="padding: 2px 8px; text-align: right;"><strong>${corrVal.r?.toFixed(3) ?? "—"}</strong> (n=${corrVal.n})</td></tr>
-          </table>
-          <h4 style="margin: 1rem 0 0.5rem 0; color: #333;">Population coverage</h4>
-          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
-            <tr><td style="padding: 2px 8px;">Within 15 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within15 / totalPop * 100).toFixed(1)}%</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Within 30 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within30 / totalPop * 100).toFixed(1)}%</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Within 45 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within45 / totalPop * 100).toFixed(1)}%</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Within 60 min</td><td style="padding: 2px 8px; text-align: right;"><strong>${(within60 / totalPop * 100).toFixed(1)}%</strong></td></tr>
-          </table>
-        </div>
-        <div>
-          <h4 style="margin: 0 0 0.5rem 0; color: #333;">By NZDep quintile (pop-weighted)</h4>
-          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
-            <tr style="border-bottom: 1px solid #ccc;"><th style="padding: 2px 6px; text-align: left;">Q</th><th style="padding: 2px 6px; text-align: right;">Mean</th><th style="padding: 2px 6px; text-align: right;">Median</th><th style="padding: 2px 6px; text-align: right;">P25</th><th style="padding: 2px 6px; text-align: right;">P75</th><th style="padding: 2px 6px; text-align: right;">P90</th></tr>
-            ${quintileRows.map(r => `<tr><td style="padding: 2px 6px;">Q${r.q}</td><td style="padding: 2px 6px; text-align: right;">${r.wMean.toFixed(1)}</td><td style="padding: 2px 6px; text-align: right;">${r.wMed?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p25?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p75?.toFixed(1) ?? "—"}</td><td style="padding: 2px 6px; text-align: right;">${r.p90?.toFixed(1) ?? "—"}</td></tr>`).join("")}
-          </table>
-          ${moranResult ? `
-          <h4 style="margin: 1rem 0 0.5rem 0; color: #333;">Spatial statistics</h4>
-          <table style="font-size: 0.85em; border-collapse: collapse; width: 100%;">
-            <tr><td style="padding: 2px 8px;">Global Moran's I</td><td style="padding: 2px 8px; text-align: right;"><strong>${moranResult.I.toFixed(3)}</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">Moran's I z-score</td><td style="padding: 2px 8px; text-align: right;">${moranResult.z.toFixed(2)}</td></tr>
-            <tr><td style="padding: 2px 8px;">Moran's I p-value</td><td style="padding: 2px 8px; text-align: right;">${moranResult.p < 0.001 ? "<0.001" : moranResult.p.toFixed(3)}</td></tr>
-            <tr style="border-top: 1px solid #eee;"><td style="padding: 2px 8px;">Nearest-neighbour R (facilities)</td><td style="padding: 2px 8px; text-align: right;"><strong>${nnrResult?.R ?? "—"}</strong></td></tr>
-            <tr><td style="padding: 2px 8px;">NNR z-score</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.z ?? "—"}</td></tr>
-            <tr><td style="padding: 2px 8px;">Observed mean NND</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.Ro ?? "—"} km</td></tr>
-            <tr><td style="padding: 2px 8px;">Expected mean NND (random)</td><td style="padding: 2px 8px; text-align: right;">${nnrResult?.Re ?? "—"} km</td></tr>
-          </table>
-          ` : ""}
-        </div>
-      </div>
-    </details>
-  `);
+  // Overall stats as flat data for Inputs.table
+  const overallStats = [
+    { Statistic: "Weighted mean", Value: `${wMean.toFixed(1)} min` },
+    { Statistic: "Weighted median", Value: `${wMed?.toFixed(1) ?? "—"} min` },
+    { Statistic: "P25", Value: `${p25?.toFixed(1) ?? "—"} min` },
+    { Statistic: "P75", Value: `${p75?.toFixed(1) ?? "—"} min` },
+    { Statistic: "P90", Value: `${p90?.toFixed(1) ?? "—"} min` },
+    { Statistic: "Gini coefficient", Value: giniVal.toFixed(3) },
+    { Statistic: "Pearson r (NZDep vs time)", Value: `${corrVal.r?.toFixed(3) ?? "—"} (n=${corrVal.n})` },
+    { Statistic: "Within 15 min", Value: `${(within15 / totalPop * 100).toFixed(1)}%` },
+    { Statistic: "Within 30 min", Value: `${(within30 / totalPop * 100).toFixed(1)}%` },
+    { Statistic: "Within 45 min", Value: `${(within45 / totalPop * 100).toFixed(1)}%` },
+    { Statistic: "Within 60 min", Value: `${(within60 / totalPop * 100).toFixed(1)}%` },
+  ];
+
+  if (moranResult) {
+    overallStats.push(
+      { Statistic: "Global Moran's I", Value: moranResult.I.toFixed(3) },
+      { Statistic: "Moran's I z-score", Value: moranResult.z.toFixed(2) },
+      { Statistic: "Moran's I p-value", Value: moranResult.p < 0.001 ? "<0.001" : moranResult.p.toFixed(3) },
+      { Statistic: "Nearest-neighbour R", Value: nnrResult?.R ?? "—" },
+      { Statistic: "NNR z-score", Value: nnrResult?.z ?? "—" },
+    );
+  }
+
+  const quintileFlat = quintileRows.map(r => ({
+    Quintile: `Q${r.q}`,
+    Mean: r.wMean.toFixed(1),
+    Median: r.wMed?.toFixed(1) ?? "—",
+    P25: r.p25?.toFixed(1) ?? "—",
+    P75: r.p75?.toFixed(1) ?? "—",
+    P90: r.p90?.toFixed(1) ?? "—",
+  }));
+
+  display(html`<h3>Overall (population-weighted)</h3>`);
+  display(Inputs.table(overallStats));
+  display(html`<h3>By NZDep quintile</h3>`);
+  display(Inputs.table(quintileFlat));
 } else {
   display(html`<p class="note">Summary statistics require travel time data.</p>`);
 }

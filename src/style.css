@@ -1,167 +1,214 @@
 /* ============================================================
    Design System — Research Publication Style
+
+   Principle: colour carries information, typography creates
+   hierarchy, whitespace creates structure. No decoration.
    ============================================================ */
 
 :root {
-  /* Data colours — charts only */
+  /* Data colours — charts only, never UI chrome */
   --color-adverse: #c4391d;
   --color-favourable: #2166ac;
   --color-neutral: #969696;
-
-  /* Ethnicity (Wong colorblind palette) */
   --color-maori: #e69f00;
   --color-pacific: #56b4e9;
   --color-asian: #009e73;
   --color-european: #0072b2;
   --color-total: #555;
-
-  /* Status */
   --color-on-track: #2d8a4e;
   --color-at-risk: #e5850b;
   --color-off-track: #c4391d;
-
-  /* Facilities */
   --color-gp: #2d8a4e;
   --color-hospital: #7b3294;
-
-  /* Typography */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-stat: 1.75rem;
-  --weight-normal: 400;
-  --weight-medium: 500;
-  --weight-bold: 600;
-  --leading-tight: 1.25;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.75;
-
-  /* Spacing */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
 }
 
-/* Stat cards */
+/* ---- Global overrides ---- */
+
+/* Tighten heading spacing — Observable defaults are too loose */
+h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+/* ---- Lead paragraph ---- */
+
+.lead {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--theme-foreground-muted, #555);
+  max-width: 640px;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Stat cards ---- */
+
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--space-md);
-  margin: var(--space-lg) 0;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0 2rem;
 }
 
 .stat-card {
-  padding: var(--space-md);
-  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
-  border-radius: 4px;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--theme-foreground-faintest, #e5e5e5);
 }
 
 .stat-label {
-  font-size: var(--text-xs);
+  font-size: 0.7rem;
   color: var(--theme-foreground-faint, #999);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--space-xs);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
 }
 
 .stat-value {
-  font-size: var(--text-stat);
-  font-weight: var(--weight-bold);
+  font-size: 1.6rem;
+  font-weight: 600;
   color: var(--theme-foreground, #222);
-  line-height: var(--leading-tight);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat-unit {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-normal);
+  font-size: 0.85rem;
+  font-weight: 400;
   color: var(--theme-foreground-faint, #999);
+  margin-left: 0.1em;
 }
 
 .stat-sub {
-  font-size: var(--text-xs);
-  color: var(--theme-foreground-faint, #999);
-  margin-top: var(--space-xs);
+  font-size: 0.7rem;
+  color: var(--theme-foreground-faint, #aaa);
+  margin-top: 0.2rem;
+  line-height: 1.4;
 }
 
-/* Note / callout */
+/* ---- Note / callout ---- */
+
 .note {
-  font-size: var(--text-sm);
+  font-size: 0.85rem;
   color: var(--theme-foreground-muted, #666);
-  line-height: var(--leading-relaxed);
-  padding-left: var(--space-md);
-  border-left: 2px solid var(--theme-foreground-faintest, #e0e0e0);
-  margin: var(--space-lg) 0;
+  line-height: 1.65;
+  padding-left: 0.75rem;
+  border-left: 1.5px solid var(--theme-foreground-faintest, #ddd);
+  margin: 1.25rem 0;
+  max-width: 640px;
 }
 
 .note strong {
   color: var(--theme-foreground, #222);
+  font-weight: 600;
 }
 
-/* Methodology footer */
+/* ---- Methodology footer ---- */
+
 .methodology {
-  font-size: var(--text-sm);
-  color: var(--theme-foreground-faint, #999);
-  line-height: var(--leading-relaxed);
-  margin-top: var(--space-2xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--theme-foreground-faintest, #e0e0e0);
+  font-size: 0.8rem;
+  color: var(--theme-foreground-faint, #aaa);
+  line-height: 1.6;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  max-width: 640px;
 }
 
 .methodology p {
-  margin: var(--space-sm) 0;
+  margin: 0.35rem 0;
 }
 
 .methodology strong {
-  color: var(--theme-foreground-muted, #666);
+  color: var(--theme-foreground-muted, #888);
+  font-weight: 600;
 }
 
-/* Collapsible panels */
+/* ---- Collapsible panels ---- */
+
 .details-panel {
-  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
-  border-radius: 4px;
-  padding: var(--space-sm) var(--space-md);
-  margin: var(--space-md) 0;
+  border: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  margin: 1rem 0;
 }
 
 .details-panel summary {
   cursor: pointer;
-  font-weight: var(--weight-medium);
-  padding: var(--space-xs) 0;
-  color: var(--theme-foreground, #222);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  color: var(--theme-foreground-muted, #555);
 }
 
-/* Scenario impact panel */
+.details-panel[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Scenario impact ---- */
+
 .scenario-impact {
-  border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
-  border-radius: 4px;
-  padding: var(--space-md);
-  margin: var(--space-md) 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--space-md);
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  border-bottom: 1px solid var(--theme-foreground-faintest, #e5e5e5);
 }
 
 .impact-label {
-  font-size: var(--text-xs);
+  font-size: 0.7rem;
   color: var(--theme-foreground-faint, #999);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .impact-value {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
+  font-size: 1.2rem;
+  font-weight: 600;
   color: var(--theme-foreground, #222);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Lead paragraph */
-.lead {
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--theme-foreground-muted, #666);
-  margin-bottom: var(--space-lg);
+/* ---- Map container ---- */
+
+#access-map {
+  width: calc(100% + 2rem);
+  margin-left: -1rem;
+  height: 70vh;
+  min-height: 450px;
+  max-height: 750px;
+  border-top: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  border-bottom: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  border-radius: 0;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.leaflet-container {
+  background: #eaf2f8 !important;
+}
+
+/* ---- Observable input overrides — make controls smaller ---- */
+
+form[class*="Input"] label,
+.observablehq--inspect label {
+  font-size: 0.8rem;
+}
+
+/* ---- Tables ---- */
+
+/* Make Observable's default tables a bit tighter */
+table {
+  font-size: 0.85rem;
 }
 
 /* ============================================================
@@ -169,7 +216,6 @@
    ============================================================ */
 
 @media print {
-  /* Hide navigation and interactive controls */
   nav,
   [style*="sidebar"],
   .observablehq--sidebar,
@@ -182,34 +228,30 @@
     display: none !important;
   }
 
-  /* Full-width content */
   main, .observablehq {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 1rem !important;
   }
 
-  /* Chart sizing */
   svg {
     max-width: 100% !important;
     height: auto !important;
   }
 
-  /* Subtle border around chart containers */
   .card {
     border: 1px solid #ccc !important;
     box-shadow: none !important;
   }
 
-  /* Page breaks */
   h2 {
     page-break-after: avoid;
   }
+
   svg, table, .card {
     page-break-inside: avoid;
   }
 
-  /* Clean backgrounds */
   body {
     background: white !important;
     color: black !important;
