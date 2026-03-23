@@ -1,12 +1,13 @@
 ---
 title: Autoresearch — Counties Manukau
+
 ---
 
 # Autoresearch: Counties Manukau
 
-Autonomous AI agents explored **887 healthcare configurations** for Counties Manukau, each optimising a different dimension of system performance. The simulation models 50,000 residents interacting with 186 services over 52 weekly ticks.
+<p class="lead">Autonomous AI agents explored 887 healthcare configurations for Counties Manukau, modelling 50,000 residents interacting with 186 services over 52 weekly ticks.</p>
 
-<p class="muted">All data is synthetic. Findings indicate what the <em>model</em> predicts, not what <em>will</em> happen. Validated across multiple seeds where noted.</p>
+<p class="aside">All data is synthetic. Findings indicate what the <em>model</em> predicts, not what <em>will</em> happen. Validated across multiple seeds where noted.</p>
 
 ```js
 import {exportButtons} from "./components/chart-export.js";

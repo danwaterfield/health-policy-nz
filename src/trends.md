@@ -1,10 +1,11 @@
 ---
 title: Pandemic Break Analysis
+
 ---
 
 # Did COVID Change the Trajectory of Inequity?
 
-Comparing the *rate of change* of equity gaps before and after the pandemic — not just levels, but whether the gap was widening or narrowing and at what speed.
+<p class="lead">Comparing the <em>rate of change</em> of equity gaps before and after the pandemic — not just levels, but whether the gap was widening or narrowing and at what speed.</p>
 
 ```js
 import {dataFreshness} from "./components/data-freshness.js";
@@ -119,7 +120,7 @@ const slopeData = (() => {
 
 ```js
 display(html`
-  <div class="note">
+  <div class="aside">
     <strong>Methodological note</strong> — Pre-COVID period: 2011–2019 (9 annual data points).
     Post-COVID period: 2023–2024 (2 points only). COVID years 2020–2022 are excluded from both
     regressions as the NZHS methodology notes reduced participation and service disruption make
@@ -137,7 +138,7 @@ display(html`
     const total = slopeData.length;
     const worsenedCount = slopeData.filter(worsened).length;
     const improvedCount = slopeData.filter(d => !worsened(d)).length;
-    display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
+    display(html`<div class="aside" style="font-size: 1.05em; line-height: 1.6;">
       Of <strong>${total}</strong> indicator-ethnicity trajectories analysed, <strong style="color: #c0392b;">${worsenedCount} worsened</strong> and <strong style="color: #4575b4;">${improvedCount} improved</strong> after the pandemic.
     </div>`);
   }
@@ -416,7 +417,7 @@ if (slopeData.length > 0) {
 }
 ```
 
-<div class="note">
+<div class="aside">
 <strong>Related:</strong> These trajectory shifts compound existing equity gaps. See <a href="./equity">Equity Gap Explorer</a> for current disparity levels, and <a href="./blind-spots">Blind Spots</a> for limitations of the underlying data.
 </div>
 

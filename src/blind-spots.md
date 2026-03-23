@@ -1,14 +1,13 @@
 ---
 title: Blind Spots
+
 ---
 
 # Data Blind Spots
 
-Known gaps in NZ public health data that limit what this dashboard can show.
+<p class="lead">Known gaps in NZ public health data that limit what this dashboard can show. These are not analytical limitations — they are structural absences in the data itself.</p>
 
-These are not analytical limitations — they are structural absences in the data itself.
-
-<div class="note">
+<div class="aside">
 <strong>Before citing this dashboard:</strong>
 <ol style="margin: 0.5rem 0 0; padding-left: 1.25rem;">
 <li>Check whether the indicator covers the population you care about</li>
@@ -50,7 +49,7 @@ const severityConfig = {
 ```js
 if (spots.length === 0) {
   display(html`
-    <div class="note">
+    <div class="aside">
       <p>Blind spots not yet populated.</p>
     </div>
   `);

@@ -1,12 +1,24 @@
 /* ============================================================
-   Design System — Research Publication Style
+   Design System — Research Publication
 
-   Principle: colour carries information, typography creates
-   hierarchy, whitespace creates structure. No decoration.
+   Distinct from Observable's default "air" theme by using:
+   - Sans-serif body (air uses Source Serif)
+   - Warm paper background
+   - Much larger headings with tight tracking
+   - Small-caps section labels
+   - Generous section spacing
+   - Narrow text measure with full-bleed charts
    ============================================================ */
 
 :root {
-  /* Data colours — charts only, never UI chrome */
+  /* Override Observable theme colours */
+  --theme-background: #faf9f6 !important;
+  --theme-foreground: #2c2c2c !important;
+  --theme-foreground-muted: #6b6b6b !important;
+  --theme-foreground-faint: #a0a0a0 !important;
+  --theme-foreground-faintest: #e0ddd8 !important;
+
+  /* Data colours — charts only */
   --color-adverse: #c4391d;
   --color-favourable: #2166ac;
   --color-neutral: #969696;
@@ -22,134 +34,201 @@
   --color-hospital: #7b3294;
 }
 
-/* ---- Global overrides ---- */
+/* ---- Kill the default serif — go sans ---- */
 
-/* Tighten heading spacing — Observable defaults are too loose */
+body,
+#observablehq-main,
+main,
+main p,
+main li,
+main td,
+main th,
+main div,
+main span,
+h1, h2, h3, h4 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+}
+
+/* ---- Warm paper background ---- */
+
+body {
+  background: #faf9f6 !important;
+  counter-reset: sidenote-counter;
+}
+
+/* Sidebar also warm */
+nav, aside, [class*="sidebar"] {
+  background: #f5f3ef !important;
+}
+
+/* ---- Headings — large, tight, distinctive ---- */
+
+h1 {
+  font-size: 2.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.1 !important;
+  margin-bottom: 1.5rem !important;
+  color: #1a1a1a !important;
+}
+
 h2 {
-  margin-top: 2.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #888 !important;
+  margin-top: 4rem !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
 }
 
 h3 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.25rem;
-  font-weight: 500;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.5rem !important;
+  color: #2c2c2c !important;
+}
+
+/* ---- Body text ---- */
+
+main p {
+  font-size: 1.08rem !important;
+  line-height: 1.85 !important;
+  max-width: 600px;
+  color: #2c2c2c !important;
 }
 
 /* ---- Lead paragraph ---- */
 
 .lead {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--theme-foreground-muted, #555);
-  max-width: 640px;
-  margin-bottom: 1.5rem;
+  font-size: 1.25rem !important;
+  line-height: 1.7 !important;
+  color: #555 !important;
+  max-width: 600px;
+  margin-bottom: 2.5rem !important;
+  font-weight: 300 !important;
 }
 
-/* ---- Stat cards ---- */
+/* ---- Aside — methodology caveats ---- */
+
+.aside {
+  font-size: 0.82rem !important;
+  color: #888 !important;
+  line-height: 1.6 !important;
+  padding: 1rem 1.25rem !important;
+  background: #f3f1ec !important;
+  border-radius: 3px;
+  border: none !important;
+  border-left: none !important;
+  margin: 1.5rem 0 !important;
+  max-width: 600px;
+}
+
+.aside strong {
+  color: #555 !important;
+  font-weight: 600 !important;
+}
+
+/* ---- Inline figures ---- */
+
+.fig {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fig-adverse {
+  color: var(--color-adverse);
+}
+
+.fig-favourable {
+  color: var(--color-favourable);
+}
+
+/* ---- Stat grid ---- */
 
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
-  margin: 1.5rem 0 2rem;
+  gap: 2rem;
+  margin: 2rem 0;
 }
 
 .stat-card {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  padding: 0;
+  border: none !important;
+  border-bottom: none !important;
 }
 
 .stat-label {
-  font-size: 0.7rem;
-  color: var(--theme-foreground-faint, #999);
+  font-size: 0.65rem !important;
+  color: #aaa !important;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.15rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
 }
 
 .stat-value {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--theme-foreground, #222);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  color: #1a1a1a !important;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
 .stat-unit {
   font-size: 0.85rem;
   font-weight: 400;
-  color: var(--theme-foreground-faint, #999);
-  margin-left: 0.1em;
+  color: #aaa;
+  margin-left: 0.15em;
 }
 
 .stat-sub {
   font-size: 0.7rem;
-  color: var(--theme-foreground-faint, #aaa);
-  margin-top: 0.2rem;
-  line-height: 1.4;
-}
-
-/* ---- Note / callout ---- */
-
-.note {
-  font-size: 0.85rem;
-  color: var(--theme-foreground-muted, #666);
-  line-height: 1.65;
-  padding-left: 0.75rem;
-  border-left: 1.5px solid var(--theme-foreground-faintest, #ddd);
-  margin: 1.25rem 0;
-  max-width: 640px;
-}
-
-.note strong {
-  color: var(--theme-foreground, #222);
-  font-weight: 600;
+  color: #aaa;
+  margin-top: 0.25rem;
 }
 
 /* ---- Methodology footer ---- */
 
 .methodology {
-  font-size: 0.8rem;
-  color: var(--theme-foreground-faint, #aaa);
-  line-height: 1.6;
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--theme-foreground-faintest, #e5e5e5);
-  max-width: 640px;
+  font-size: 0.78rem !important;
+  color: #999 !important;
+  line-height: 1.7 !important;
+  margin-top: 5rem !important;
+  padding-top: 2rem !important;
+  border-top: 1px solid #e0ddd8 !important;
+  max-width: 600px;
 }
 
 .methodology p {
-  margin: 0.35rem 0;
+  margin: 0.4rem 0;
+  font-size: 0.78rem !important;
 }
 
 .methodology strong {
-  color: var(--theme-foreground-muted, #888);
+  color: #777 !important;
   font-weight: 600;
 }
 
-/* ---- Collapsible panels ---- */
+/* ---- Collapsible ---- */
 
 .details-panel {
-  border: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  border: 1px solid #e0ddd8 !important;
   border-radius: 3px;
   padding: 0.5rem 0.75rem;
   margin: 1rem 0;
+  background: transparent !important;
 }
 
 .details-panel summary {
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0.25rem 0;
-  color: var(--theme-foreground-muted, #555);
-}
-
-.details-panel[open] summary {
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #888;
 }
 
 /* ---- Scenario impact ---- */
@@ -157,71 +236,179 @@ h3 {
 .scenario-impact {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1.5rem;
-  margin: 1rem 0;
-  padding: 1rem 0;
-  border-top: 1px solid var(--theme-foreground-faintest, #e5e5e5);
-  border-bottom: 1px solid var(--theme-foreground-faintest, #e5e5e5);
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  border-top: 2px solid #e0ddd8;
+  border-bottom: 2px solid #e0ddd8;
 }
 
 .impact-label {
-  font-size: 0.7rem;
-  color: var(--theme-foreground-faint, #999);
+  font-size: 0.6rem !important;
+  color: #aaa !important;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
 }
 
 .impact-value {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--theme-foreground, #222);
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #1a1a1a !important;
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- Map container ---- */
+/* ---- Map ---- */
 
 #access-map {
   width: 100%;
   height: 600px;
-  border: 1px solid var(--theme-foreground-faintest, #e5e5e5);
-  border-radius: 3px;
-  margin: 0.5rem 0 1.5rem;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 1.5rem 0 2rem;
 }
 
 .leaflet-container {
-  background: #eaf2f8 !important;
+  background: #eef2f6 !important;
 }
 
-/* ---- Observable input overrides — make controls smaller ---- */
+/* ---- Controls — compact horizontal bar ---- */
 
 form[class*="Input"] label,
 .observablehq--inspect label {
-  font-size: 0.8rem;
+  font-size: 0.78rem !important;
+}
+
+/* Make Inputs.form() lay out horizontally */
+form[class*="Input"] > div {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem 1.5rem !important;
+  align-items: center !important;
+}
+
+form[class*="Input"] > div > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+}
+
+/* Tighter range inputs */
+input[type="range"] {
+  max-width: 120px !important;
+}
+
+input[type="number"] {
+  max-width: 50px !important;
+  font-size: 0.8rem !important;
 }
 
 /* ---- Tables ---- */
 
-/* Make Observable's default tables a bit tighter */
 table {
-  font-size: 0.85rem;
+  font-size: 0.82rem !important;
+}
+
+th {
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.06em !important;
+  color: #999 !important;
+}
+
+/* ---- Source line ---- */
+
+.source-line {
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 3rem;
+  max-width: 600px;
+}
+
+/* ---- Links ---- */
+
+main a:not([class]) {
+  color: #2166ac !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid #2166ac40 !important;
+}
+
+main a:not([class]):hover {
+  border-bottom-color: #2166ac !important;
+}
+
+/* ---- HR ---- */
+
+hr {
+  margin: 4rem 0 !important;
+  border: none !important;
+  border-top: 1px solid #e0ddd8 !important;
+}
+
+/* ---- Sidenote system ---- */
+
+.sidenote-container {
+  position: relative;
+  max-width: 600px;
+  overflow: visible;
+}
+
+.sidenote-number {
+  counter-increment: sidenote-counter;
+}
+
+.sidenote-number::after {
+  content: counter(sidenote-counter);
+  font-size: 0.6em;
+  position: relative;
+  top: -0.5em;
+  color: #888;
+}
+
+.sidenote {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #888;
+}
+
+.sidenote::before {
+  content: counter(sidenote-counter) ". ";
+  font-size: 0.85em;
+  color: #aaa;
+}
+
+@media (min-width: 1200px) {
+  .sidenote {
+    float: right;
+    clear: right;
+    margin-right: -55%;
+    width: 45%;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 1199px) {
+  .sidenote {
+    display: block;
+    margin: 0.5rem 0 0.75rem 1rem;
+    padding-left: 0.75rem;
+    border-left: 1.5px solid #e0ddd8;
+  }
 }
 
 /* ============================================================
-   Print styles
+   Print
    ============================================================ */
 
 @media print {
-  nav,
-  [style*="sidebar"],
-  .observablehq--sidebar,
-  .observablehq-header,
-  .observablehq-footer,
-  button,
-  input[type="checkbox"],
-  select,
-  label:has(input) {
+  nav, [style*="sidebar"], .observablehq--sidebar,
+  .observablehq-header, .observablehq-footer,
+  button, input[type="checkbox"], select, label:has(input) {
     display: none !important;
   }
+
+  body { background: white !important; }
 
   main, .observablehq {
     max-width: 100% !important;
@@ -229,26 +416,7 @@ table {
     padding: 0 1rem !important;
   }
 
-  svg {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  .card {
-    border: 1px solid #ccc !important;
-    box-shadow: none !important;
-  }
-
-  h2 {
-    page-break-after: avoid;
-  }
-
-  svg, table, .card {
-    page-break-inside: avoid;
-  }
-
-  body {
-    background: white !important;
-    color: black !important;
-  }
+  svg { max-width: 100% !important; height: auto !important; }
+  h2 { page-break-after: avoid; }
+  svg, table { page-break-inside: avoid; }
 }

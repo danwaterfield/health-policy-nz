@@ -1,10 +1,11 @@
 ---
 title: Equity Gap Explorer
+
 ---
 
 # Equity Gap Explorer
 
-Comparing health indicator values for Māori and Pacific peoples against the European/Other reference population, at national and regional level.
+<p class="lead">Comparing health indicator values for Māori and Pacific peoples against the European/Other reference population, at national and regional level.</p>
 
 ```js
 import {choropleth} from "./components/choropleth.js";
@@ -197,24 +198,13 @@ const displayEthnicity = (name) => ({ "Maori": "Māori", "non-Maori": "non-Māor
 ```
 
 ```js
-display(html`
-  <div class="note">
-    <strong style="display: block; margin-bottom: 0.4rem; color: #c0392b;">
-      ⚠ Methodological note: all gaps shown here are most likely underestimates
-    </strong>
-    Every known bias in the underlying data runs in the same direction — toward understating disparity between Māori/Pacific and European/Other populations. Reasons include:
-    <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem;">
-      <li><strong>Ethnic miscoding</strong>: ~20% of Māori are miscoded as European/Other in administrative records, contaminating the reference group upward and the target group downward.</li>
-      <li><strong>Survey exclusions</strong>: NZHS excludes people in prisons, hospitals, and residential care — groups with disproportionately high Māori/Pacific representation and worse health outcomes.</li>
-      <li><strong>Suppression of small cells</strong>: estimates with n &lt; 30 are hidden; these are concentrated in rural Māori/Pacific communities with the highest need.</li>
-      <li><strong>No age standardisation</strong>: Māori/Pacific populations are younger on average, so crude rates understate age-adjusted disadvantage for conditions that worsen with age.</li>
-      <li><strong>Total response vs prioritised ethnicity</strong>: total response inflates denominator counts for Māori/Pacific, suppressing apparent rates.</li>
-    </ul>
-    <span style="display: block; margin-top: 0.5rem; font-size: 0.9em;">
-      Treat every gap on this page as a floor, not a ceiling.
-    </span>
-  </div>
-`);
+display(html`<p>
+  Every gap on this page should be read as a floor, not a ceiling.
+  Every known bias in the underlying data runs toward understating disparities between Māori/Pacific and European/Other populations.
+</p>
+<p class="aside">
+  <strong>Why these are underestimates:</strong> Ethnic miscoding (~20% of Māori recorded as European/Other) contaminates the reference group. Survey exclusions (prisons, hospitals, residential care) remove the sickest. Suppression of small cells (n&lt;30) hides rural Māori/Pacific communities. No age standardisation means crude rates understate age-adjusted disadvantage. Total response ethnicity inflates denominators.
+</p>`);
 ```
 
 ## Current Equity Gaps
@@ -305,7 +295,7 @@ if (noEthnicitySelected) {
   // Non-significant gaps note
   const nonSig = nationalGaps.filter(d => !d.significant);
   if (nonSig.length > 0) {
-    display(html`<p class="note">
+    display(html`<p class="aside">
       <strong>~</strong> ${nonSig.map(d => d.ethnicity).join(", ")}: gap CI crosses zero —
       difference from European/Other is not statistically significant at 95% confidence.
     </p>`);
@@ -400,7 +390,7 @@ if (trendGaps.length === 0) {
   display(trendPlot);
   display(exportButtons(trendPlot, trendGaps, { filename: "equity-gap-trend" }));
 
-  display(html`<p class="note">
+  display(html`<p class="aside">
     <strong>Note</strong>: the dashed vertical line marks 2020. Data from 2020–2022 reflects pandemic
     disruption — reduced survey participation, deferred care, and changed service use patterns — and
     is <em>not directly comparable</em> to other years. Treat trend direction across this break with caution.
@@ -414,7 +404,7 @@ if (trendGaps.length === 0) {
 {
   if (regionalGaps.length === 0) {
     display(html`
-      <div class="note" style="text-align: center;">
+      <div class="aside" style="text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.4;">🗺</div>
         <p style="font-weight: 600; margin: 0 0 0.5rem;">No regional map for this selection</p>
         <p style="font-size: 0.85em; margin: 0;">
@@ -655,7 +645,7 @@ if (biasEstimates.length === 0) {
 
   display(html`
     <div style="margin: 1rem 0;">
-      <p class="note" style="font-size: 0.95em; margin-bottom: 0.75rem;">
+      <p class="aside" style="font-size: 0.95em; margin-bottom: 0.75rem;">
         Each row below is a separate, <em>compounding</em> source of understatement.
         They are not additive in a simple sense, but they all run in the same direction.
         The true equity gap for most indicators is likely larger than shown by the amounts below.
@@ -687,7 +677,7 @@ if (biasEstimates.length === 0) {
   const maxUpper = Math.max(...biasEstimates.map(b => b.magnitude_upper_pct ?? 0));
   const sumLower = biasEstimates.reduce((s, b) => s + (b.magnitude_lower_pct ?? 0), 0) * 0.5;
   display(html`
-    <div class="note">
+    <div class="aside">
       <strong>Combined floor estimate (conservative, non-additive):</strong>
       gaps on this page are likely understated by at least ${sumLower.toFixed(0)}% and
       plausibly by ${maxUpper.toFixed(0)}%+ for indicators with strong age gradients or
@@ -713,7 +703,7 @@ if (correctionsData.length > 0) {
   const maoriRow = correctionsData.find(d => d.ethnicity === "Maori");
   const totalPrison = correctionsData.reduce((s, d) => s + (d.total_count ?? 0), 0);
   display(html`
-    <p class="note">
+    <p class="aside">
       Corrections NZ (Dec ${correctionsData[0]?.year}): total prison population <strong>${totalPrison.toLocaleString()}</strong>,
       of whom <strong style="color: #c0392b;">${maoriRow?.pct_of_total?.toFixed(1)}% are Māori</strong>
       (${maoriRow?.total_count?.toLocaleString()} people).
@@ -728,7 +718,7 @@ if (correctionsData.length > 0) {
 </div>
 </details>
 
-<div class="note">
+<div class="aside">
 <strong>Related:</strong> Equity gaps interact with workforce shortages — regions with the highest vacancy rates often have the worst outcomes. See <a href="./workforce">Workforce</a>. For how demand will grow in these regions, see <a href="./forecast">Demand Forecast</a>. For what the data cannot tell us, see <a href="./blind-spots">Blind Spots</a>.
 </div>
 

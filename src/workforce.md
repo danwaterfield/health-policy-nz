@@ -1,10 +1,11 @@
 ---
 title: Workforce
+
 ---
 
 # Workforce Pressure
 
-GP density, nursing vacancy rates, and workforce shortfalls by region.
+<p class="lead">GP density, nursing vacancy rates, and workforce shortfalls by region.</p>
 
 ```js
 import {exportButtons} from "./components/chart-export.js";
@@ -53,15 +54,15 @@ const latestNurses = nurses.filter(d => d.year === latestYear && d.level === "di
     const exceed = gpRegional.filter(d => (d.vacancy_rate ?? 0) > 0.08);
     const worst = [...gpRegional].sort((a, b) => (b.vacancy_rate ?? 0) - (a.vacancy_rate ?? 0))[0];
     const worstPct = ((worst.vacancy_rate ?? 0) * 100).toFixed(1);
-    display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
-      <strong>${exceed.length}</strong> of ${gpRegional.length} regions exceed the 8% GP vacancy threshold. The most acute shortage is in <strong>${worst.region}</strong> at <strong>${worstPct}%</strong> vacancy.
-    </div>`);
+    display(html`<p>
+      <span class="fig fig-adverse">${exceed.length}</span> of ${gpRegional.length} regions exceed the 8% GP vacancy threshold. The most acute shortage is in <strong>${worst.region}</strong> at <span class="fig fig-adverse">${worstPct}%</span> vacancy.
+    </p>`);
   } else if (latestGps.length === 0) {
     // No data — show nothing
   } else {
-    display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
+    display(html`<p>
       GP workforce data available for national level only.
-    </div>`);
+    </p>`);
   }
 }
 ```
@@ -190,7 +191,7 @@ display(Inputs.table(workforce.filter(d => d.year === latestYear), {
 display(exportButtons(null, workforce.filter(d => d.year === latestYear), { filename: "workforce-data" }));
 ```
 
-<div class="note">
+<div class="aside">
 <strong>Related:</strong> These workforce gaps interact with projected demand growth. See <a href="./forecast">Demand Forecast</a> for how demographic change will compound pressure on understaffed regions. For the equity implications, see <a href="./equity">Equity Gap Explorer</a>.
 </div>
 
@@ -203,7 +204,7 @@ display(dataFreshness(sourceFreshness));
 
 *Source: Health New Zealand / Medical Council NZ workforce reports (seed data, manually compiled) | Crown Copyright*
 
-<div class="note">
+<div class="aside">
   <strong>⚠ Data provenance note</strong><br>
   2023 district figures are sourced from Health NZ and Medical Council of NZ annual workforce reports (manually extracted — no machine-readable download is available). <strong>2024 district-level figures are modelled estimates</strong>, extrapolated from 2023 values using the observed national trend (vacancy rates +0.7–2 pp, FTE counts −1–2%). They should not be cited as official statistics. The national 2024 totals are from Health NZ published data and are authoritative. District-level 2024 data will be updated when Health NZ publishes the next workforce census.
 </div>

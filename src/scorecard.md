@@ -1,10 +1,11 @@
 ---
 title: GPS Scorecard
+
 ---
 
 # GPS 2024–27 Accountability Scorecard
 
-New Zealand Government Policy Statement on Health 2024–27 priority areas.
+<p class="lead">Tracking New Zealand's Government Policy Statement on Health 2024–27 against available data.</p>
 
 ```js
 import {exportButtons} from "./components/chart-export.js";
@@ -125,8 +126,8 @@ const GPS_PRIORITIES = [
   },
 ];
 
-// Populate values from data
-const scorecardCards = GPS_PRIORITIES.map(p => {
+// Populate values from data — prose-first narrative
+const scorecardData = GPS_PRIORITIES.map(p => {
   let value = null;
   let displayValue = "—";
   let source = "";
@@ -161,95 +162,40 @@ const scorecardCards = GPS_PRIORITIES.map(p => {
   }
 
   const tl = trafficLight(value, p.greenThreshold, p.direction);
-
-  return html`
-    <div style="
-      border-radius: 12px;
-      border: 1px solid var(--theme-foreground-faintest, #e0e0e0);
-      border-left: 5px solid ${tl.color};
-      padding: 1.25rem 1.5rem;
-      background: var(--theme-background, white);
-    ">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-        <div>
-          <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; color: #636363;">${p.priority}</div>
-          <div style="font-size: 0.95em; font-weight: 500; margin-top: 0.15rem;">${p.metric}</div>
-        </div>
-        <div style="
-          font-size: 1.8em;
-          font-weight: bold;
-          color: ${tl.color};
-          line-height: 1;
-        ">${tl.symbol}</div>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: baseline;">
-        <div>
-          <div style="font-size: 1.6em; font-weight: 700; color: ${tl.color};">${displayValue}</div>
-          <div style="font-size: 0.8em; color: #636363; margin-top: 0.15rem;">Target: ${p.target}</div>
-        </div>
-        <div style="text-align: right;">
-          <div style="
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 999px;
-            font-size: 0.75em;
-            font-weight: 600;
-            background: ${tl.color}18;
-            color: ${tl.color};
-          ">${tl.label}</div>
-          <div style="font-size: 0.75em; color: #636363; margin-top: 0.25rem;">${source}</div>
-        </div>
-      </div>
-    </div>
-  `;
+  return { ...p, value, displayValue, source, tl };
 });
 
-display(html`
-  <div class="stat-grid">
-    ${scorecardCards}
-  </div>
-`);
+// Narrative summary
+{
+  const total = scorecardData.length;
+  const onTrack = scorecardData.filter(d => d.tl.label === "On track").length;
+  const atRisk = scorecardData.filter(d => d.tl.label === "At risk").length;
+  const offTrack = scorecardData.filter(d => d.tl.label === "Off track").length;
+  const noData = scorecardData.filter(d => d.tl.label === "No data").length;
+  const worst = scorecardData.find(d => d.tl.label === "Off track") ?? scorecardData.find(d => d.tl.label === "At risk");
+
+  display(html`<div class="sidenote-container"><p>
+    Of the five GPS priority areas, <span class="fig">${onTrack}</span> ${onTrack === 1 ? "is" : "are"} on track,
+    <span class="fig fig-adverse">${atRisk + offTrack}</span> ${atRisk + offTrack === 1 ? "is" : "are"} at risk or off track,
+    and <span class="fig">${noData}</span> lack public data entirely.${worst ? html` The furthest from target is <strong>${worst.metric}</strong> (${worst.displayValue}, target: ${worst.target}).` : ""}
+  </p><span class="sidenote-number"></span><span class="sidenote">Traffic light thresholds: on track = meeting target; at risk = within 15% of target; off track = beyond 15%. Quality and Value metrics lack public data sources.</span></div>`);
+}
+
+// Minimal table — no coloured cards, just data
+display(Inputs.table(scorecardData.map(d => ({
+  Priority: d.priority,
+  Metric: d.metric,
+  Value: d.displayValue,
+  Target: d.target,
+  Status: `${d.tl.symbol} ${d.tl.label}`,
+  Source: d.source,
+})), {
+  columns: ["Priority", "Metric", "Value", "Target", "Status", "Source"],
+}));
 ```
 
 ```js
-// Computed scorecard narrative headline
-{
-  const statuses = GPS_PRIORITIES.map(p => {
-    let value = null;
-    if (p.priority === "Access") {
-      const row = unmetNeed[0];
-      if (row?.value != null) value = row.value;
-    } else if (p.priority === "Timeliness") {
-      const edRow = latestAccess.find(d => d.service_type === "ed");
-      if (edRow?.pct_within_target != null) value = edRow.pct_within_target;
-    } else if (p.priority === "Workforce") {
-      const row = nurseVacancy[0];
-      if (row?.vacancy_rate != null) value = row.vacancy_rate * 100;
-    }
-    const tl = trafficLight(value, p.greenThreshold, p.direction);
-    return { priority: p.priority, metric: p.metric, status: tl.label, value };
-  });
-
-  const total = statuses.length;
-  const onTrack = statuses.filter(d => d.status === "On track").length;
-  const atRisk = statuses.filter(d => d.status === "At risk").length;
-  const offTrack = statuses.filter(d => d.status === "Off track").length;
-  const noData = statuses.filter(d => d.status === "No data").length;
-
-  // Find the worst performing metric (off track first, then at risk)
-  const worst = statuses.find(d => d.status === "Off track") ?? statuses.find(d => d.status === "At risk");
-  const summaryStatus = offTrack > 0 ? "off track" : atRisk > 0 ? "at risk" : "on track";
-
-  const parts = [];
-  if (onTrack > 0) parts.push(`${onTrack} on track`);
-  if (atRisk > 0) parts.push(`${atRisk} at risk`);
-  if (offTrack > 0) parts.push(`${offTrack} off track`);
-  if (noData > 0) parts.push(`${noData} with no data`);
-
-  display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
-    <strong>${parts.join(", ")}</strong> of ${total} GPS targets.${worst ? html` <strong>${worst.metric}</strong> is the furthest from target.` : ""}
-  </div>`);
-}
+// (narrative summary is now inline above the table)
 ```
 
 ## ED Wait Times — Quarterly Trend
@@ -373,7 +319,7 @@ if (fsaTrend.length > 0) {
 }
 ```
 
-<div class="note">
+<div class="aside">
 <strong>Related:</strong> National targets can mask regional disparities. See <a href="./equity">Equity Gap Explorer</a> for how outcomes vary by ethnicity, and <a href="./workforce">Workforce</a> for the supply constraints behind these numbers.
 </div>
 
@@ -385,6 +331,4 @@ display(dataFreshness(sourceFreshness));
 
 ---
 
-*Source: Health New Zealand, NZHS, Medical Council NZ | Crown Copyright*
-
-*Traffic light: ✓ On track (meeting target) · ⚠ At risk (within 15%) · ✕ Off track (beyond 15%)*
+<p class="source-line">Source: Health New Zealand, NZHS, Medical Council NZ. Crown Copyright. Traffic light thresholds: on track (meeting target), at risk (within 15%), off track (beyond 15%).</p>

@@ -1,10 +1,11 @@
 ---
 title: Indicator Explorer
+
 ---
 
 # Indicator Explorer
 
-Multi-year trends for each health indicator, broken down by ethnicity.
+<p class="lead">Multi-year trends for each health indicator, broken down by ethnicity.</p>
 
 ```js
 import {ciBar} from "./components/ci-bar.js";
@@ -122,7 +123,7 @@ const hasCI = filtered.some(d => d.value_lower_ci != null && d.value_upper_ci !=
     if (bestEth) {
       const displayName = ({"Maori": "Māori"})[bestEth] ?? bestEth;
       const dir = bestChange > 0 ? "increased" : "decreased";
-      display(html`<div class="note" style="font-size: 1.05em; line-height: 1.6;">
+      display(html`<div class="aside" style="font-size: 1.05em; line-height: 1.6;">
         <strong>${ind?.name ?? "Indicator"}</strong> for <strong>${displayName}</strong> has ${dir} by <strong>${Math.abs(bestChange).toFixed(1)}</strong> percentage points since ${earliest}, from ${bestStart.toFixed(1)}% to ${bestEnd.toFixed(1)}%.
       </div>`);
     }
