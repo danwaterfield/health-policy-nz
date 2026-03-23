@@ -107,18 +107,19 @@ if (showAutoresearch) {
 ```
 
 ```js
-// Compute scenario data early — needed by map and stats
+// Scenario data — computed reactively from inputs defined later on the page.
+// Observable resolves the dependency graph regardless of textual order.
 const scenarioActive = fuelMultiplier !== 1 || telehealthOn || pandemicPct > 0;
-let scenarioData = accessData;
-if (pandemicPct > 0) {
-  scenarioData = removeFacilitiesByPercent(facilities, scenarioData, centroids, pandemicPct);
-}
-if (fuelMultiplier !== 1) {
-  scenarioData = applyFuelMultiplier(scenarioData, fuelMultiplier, null);
-}
-if (telehealthOn) {
-  scenarioData = applyTelehealthCap(scenarioData, telehealthCap, null);
-}
+```
+
+```js
+const scenarioData = (() => {
+  let d = accessData;
+  if (pandemicPct > 0) d = removeFacilitiesByPercent(facilities, d, centroids, pandemicPct);
+  if (fuelMultiplier !== 1) d = applyFuelMultiplier(d, fuelMultiplier, null);
+  if (telehealthOn) d = applyTelehealthCap(d, telehealthCap, null);
+  return d;
+})();
 ```
 
 ```js
@@ -383,11 +384,23 @@ if (hasAccess) {
 
 ```js
 const fuelMultiplier = view(Inputs.range([1, 3], {step: 0.1, value: 1, label: "Fuel price multiplier"}));
+```
+
+```js
 const telehealthOn = view(Inputs.toggle({label: "Universal telehealth", value: false}));
+```
+
+```js
 const telehealthCap = telehealthOn
   ? view(Inputs.select([10, 15, 20], {label: "Max effective travel time (min)", value: 15}))
   : 15;
+```
+
+```js
 const pandemicPct = view(Inputs.range([0, 50], {step: 5, value: 0, label: "% facilities removed (pandemic mode)"}));
+```
+
+```js
 const scenarioResetBtn = view(Inputs.button("Reset all scenarios"));
 ```
 
