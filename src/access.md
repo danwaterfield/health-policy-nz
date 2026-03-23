@@ -57,9 +57,6 @@ const topAgentRows = Array.from(await db.query(`
 const topAgent = topAgentRows[0] || null;
 ```
 
-```html
-<link rel="stylesheet" href="npm:leaflet/dist/leaflet.css">
-```
 
 ```js
 // Controls
